@@ -40,6 +40,10 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PaymentDao paymentDao();
     public abstract PhotoDao photoDao();
 
+    private static final int NUMBER_OF_THREADS = 4;
+    public static final java.util.concurrent.ExecutorService databaseWriteExecutor =
+            java.util.concurrent.Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
 
     private static volatile AppDatabase INSTANCE;
     public static AppDatabase getDatabase(final Context context) {
@@ -50,7 +54,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     context.getApplicationContext(),
                                     AppDatabase.class,
                                     "aerodent_database")
-                            .fallbackToDestructiveMigration()
+                            .fallbackToDestructiveMigration(false)
                             .build();
                 }
             }
