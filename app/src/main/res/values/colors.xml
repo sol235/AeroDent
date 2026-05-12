@@ -2,4 +2,25 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Background -->
+    <color name="bg_main">#111111</color>
+    <color name="bg_card">#222222</color>
+    <color name="bg_header_blue">#1A569A</color>
+
+    <!-- Texts -->
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_grey">#AAAAAA</color>
+
+    <!-- Avatars & chips -->
+    <color name="avatar_blue_bg">#253342</color>
+    <color name="avatar_blue_text">#72B2FA</color>
+    <color name="avatar_pink_bg">#422935</color>
+    <color name="avatar_pink_text">#F48FB1</color>
+    <color name="avatar_teal_bg">#213E3B</color>
+    <color name="avatar_teal_text">#80CBC4</color>
+
+    <color name="chip_green_bg">#183318</color>
+    <color name="chip_green_text">#81C784</color>
+    <color name="chip_orange_bg">#3D2A12</color>
+    <color name="chip_orange_text">#FFB74D</color>
 </resources>
