@@ -10,6 +10,11 @@
     <!-- Texts -->
     <color name="text_white">#FFFFFF</color>
     <color name="text_grey">#AAAAAA</color>
+    <color name="text_hint_grey">#666666</color>
+
+    <!-- UI Elements -->
+    <color name="border_grey">#444444</color>
+    <color name="divider_grey">#333333</color>
 
     <!-- Avatars & chips -->
     <color name="avatar_blue_bg">#253342</color>

@@ -6,32 +6,29 @@
     android:layout_marginBottom="12dp"
     app:cardBackgroundColor="@color/bg_card"
     app:cardCornerRadius="16dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/divider_grey">
+    app:strokeWidth="0dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Initials Avatar -->
+        <!-- Avatar -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_avatar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:cardCornerRadius="24dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:cardCornerRadius="22dp"
             app:cardBackgroundColor="@color/avatar_blue_bg"
-            app:strokeWidth="0dp"
-            android:layout_centerVertical="true">
+            app:strokeWidth="0dp">
 
             <TextView
                 android:id="@+id/text_avatar_initials"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="GG"
+                android:text="AA"
                 android:gravity="center"
                 android:textColor="@color/avatar_blue_text"
-                android:textSize="16sp"
                 android:textStyle="bold" />
         </com.google.android.material.card.MaterialCardView>
 
@@ -41,62 +38,53 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_toEndOf="@id/card_avatar"
-            android:layout_toStartOf="@+id/icon_chevron"
+            android:layout_toStartOf="@+id/card_status"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
             android:layout_centerVertical="true">
 
             <TextView
                 android:id="@+id/text_patient_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Georgi Georgiev"
+                android:text="Patient Name"
                 android:textColor="@color/text_white"
                 android:textSize="16sp"
                 android:maxLines="1"
                 android:ellipsize="end"/>
 
             <TextView
-                android:id="@+id/text_patient_phone"
+                android:id="@+id/text_time_treatment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+359 3242352"
+                android:text="00:00 — Treatment"
                 android:textColor="@color/text_grey"
                 android:textSize="13sp"
                 android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:ellipsize="end"/>
-
-            <!-- Status chip -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/text_white"
-                app:strokeWidth="0dp">
-
-                <TextView
-                    android:id="@+id/text_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="4dp"
-                    android:text="НЗОК"
-                    android:textColor="@color/bg_header_blue"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- Arrow Icon -->
-        <ImageView
-            android:id="@+id/icon_chevron"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+        <!-- Status chip -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_arrow_right"
-            app:tint="@color/text_grey" />
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/chip_green_bg"
+            app:strokeWidth="0dp">
+
+            <TextView
+                android:id="@+id/text_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:text="Status"
+                android:textColor="@color/chip_green_text"
+                android:textSize="12sp" />
+        </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

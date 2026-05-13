@@ -34,6 +34,20 @@ public class PatientsFragment extends Fragment {
             }
         });
 
+        root.findViewById(R.id.fab_add_patient).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new AddPatientFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        root.findViewById(R.id.icon_add_patient_top).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new AddPatientFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         return root;
     }
 }

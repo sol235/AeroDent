@@ -26,4 +26,7 @@ public class PatientViewModel extends AndroidViewModel {
         return allPatients;
     }
 
+    public void insert(Patient patient) {
+        patientRepository.insert(patient);
+    }
 }

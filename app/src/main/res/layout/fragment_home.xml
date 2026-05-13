@@ -122,7 +122,7 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- Today's schedule -->
+        <!-- Today's schedule - appointments -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -163,6 +163,7 @@
             android:layout_marginBottom="12dp">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_quick_new_patient"
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 android:layout_weight="1"

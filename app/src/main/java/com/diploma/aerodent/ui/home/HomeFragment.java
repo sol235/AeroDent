@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
+import com.diploma.aerodent.ui.patients.AddPatientFragment;
 
 import java.util.Locale;
 
@@ -70,6 +71,14 @@ public class HomeFragment extends Fragment {
             if (patients != null) {
                 scheduleAdapter.setPatients(patients);
             }
+        });
+
+        // Quick Actions
+        root.findViewById(R.id.btn_quick_new_patient).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new AddPatientFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
 
         return root;
