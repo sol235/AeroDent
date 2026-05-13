@@ -15,8 +15,6 @@ import com.diploma.aerodent.data.repository.AppointmentRepository;
 import com.diploma.aerodent.data.repository.PatientRepository;
 import com.diploma.aerodent.data.repository.PaymentRepository;
 
-
-
 public class HomeViewModel extends AndroidViewModel {
 
     private final PatientRepository patientRepository;
@@ -24,7 +22,8 @@ public class HomeViewModel extends AndroidViewModel {
     private final PaymentRepository paymentRepository;
 
     private LiveData<Integer> totalPatientsCount;
-    private LiveData<Double> pendingPaymentsTotal;
+    private LiveData<Integer> activeTreatmentsCount;
+    private LiveData<Integer> appointmentsLeftCount;
     private LiveData<Integer> todaysAppointmentsCount;
     private LiveData<List<Appointment>> todaysAppointments;
     private LiveData<List<Patient>> allPatients;
@@ -36,9 +35,8 @@ public class HomeViewModel extends AndroidViewModel {
         paymentRepository = new PaymentRepository(application);
 
         totalPatientsCount = patientRepository.getPatientCount();
-        pendingPaymentsTotal = paymentRepository.getTotalPendingAmount();
 
-        // Get today's start and end dates
+        // Get todays start and end dates
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -52,6 +50,15 @@ public class HomeViewModel extends AndroidViewModel {
         Date endOfDay = calendar.getTime();
 
         todaysAppointmentsCount = appointmentRepository.getAppointmentCountBetween(startOfDay, endOfDay);
+
+        // Dummy data
+        androidx.lifecycle.MutableLiveData<Integer> activeDummy = new androidx.lifecycle.MutableLiveData<>();
+        activeDummy.setValue(3);
+        activeTreatmentsCount = activeDummy;
+
+        androidx.lifecycle.MutableLiveData<Integer> leftDummy = new androidx.lifecycle.MutableLiveData<>();
+        leftDummy.setValue(2);
+        appointmentsLeftCount = leftDummy;
         todaysAppointments = appointmentRepository.getAppointmentsBetweenDates(startOfDay, endOfDay);
         allPatients = patientRepository.getAllPatients();
     }
@@ -60,8 +67,12 @@ public class HomeViewModel extends AndroidViewModel {
         return totalPatientsCount;
     }
 
-    public LiveData<Double> getPendingPaymentsTotal() {
-        return pendingPaymentsTotal;
+    public LiveData<Integer> getActiveTreatmentsCount() {
+        return activeTreatmentsCount;
+    }
+
+    public LiveData<Integer> getAppointmentsLeftCount() {
+        return appointmentsLeftCount;
     }
 
     public LiveData<Integer> getTodaysAppointmentsCount() {

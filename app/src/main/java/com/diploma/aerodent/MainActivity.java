@@ -7,17 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
-import android.widget.TextView;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.diploma.aerodent.ui.home.DashboardAppointmentAdapter;
-import com.diploma.aerodent.ui.home.HomeViewModel;
+import com.diploma.aerodent.ui.home.HomeFragment;
+import com.diploma.aerodent.ui.patients.PatientsFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private HomeViewModel homeViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,42 +27,32 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize ViewModel
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
 
-        // Bind UI elements
-        TextView textTotalPatients = findViewById(R.id.text_total_patients);
-        TextView textTodaysAppts = findViewById(R.id.text_todays_appointments);
-        TextView textPlaceholder = findViewById(R.id.text_placeholder_stat);
-        TextView textPlaceholder2 = findViewById(R.id.text_placeholder_stat2);
-
-        homeViewModel.getTotalPatientsCount().observe(this, count -> {
-            if (count != null) textTotalPatients.setText(String.valueOf(count));
-        });
-
-        homeViewModel.getTodaysAppointmentsCount().observe(this, count -> {
-            if (count != null) textTodaysAppts.setText(String.valueOf(count));
-        });
-
-
-        
-        textPlaceholder.setText("0");
-
-        // Schedule RecyclerView Setup
-        RecyclerView recyclerSchedule = findViewById(R.id.recycler_dashboard_schedule);
-        DashboardAppointmentAdapter scheduleAdapter = new DashboardAppointmentAdapter();
-        recyclerSchedule.setAdapter(scheduleAdapter);
-
-        homeViewModel.getTodaysAppointments().observe(this, appointments -> {
-            if (appointments != null) {
-                scheduleAdapter.setAppointments(appointments);
+            if (itemId == R.id.nav_home) {
+                selectedFragment = new HomeFragment();
+            } else if (itemId == R.id.nav_patients) {
+                selectedFragment = new PatientsFragment();
             }
+            // Add other cases for calendar and settings later
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, selectedFragment)
+                        .commit();
+            }
+            return true;
         });
 
-        homeViewModel.getAllPatients().observe(this, patients -> {
-            if (patients != null) {
-                scheduleAdapter.setPatients(patients);
-            }
-        });
+        // Set default fragment
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new HomeFragment())
+                    .commit();
+            bottomNav.setSelectedItemId(R.id.nav_home);
+        }
     }
 }

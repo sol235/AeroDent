@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">AeroDent</string>
+    
+    <!-- Home Screen -->
+    <string name="home_total_patients">Total patients</string>
+    <string name="home_todays_appointments">Today\'s appointments</string>
+    <string name="home_active_treatments">Active treatments</string>
+    <string name="home_appointments_left">Appointments left</string>
+    <string name="home_todays_schedule">TODAY\'S SCHEDULE</string>
+    <string name="home_quick_actions">QUICK ACTIONS</string>
+    <string name="home_new_patient">New patient</string>
+    <string name="home_new_appointment">New appointment</string>
+    <string name="home_take_photo">Take photo</string>
+    <string name="home_export">Export</string>
+
+    <!-- Patients Screen -->
+    <string name="patients_title">Patients</string>
+    <string name="patients_search_hint">Search by name or EGN</string>
+
+    <!-- Statuses -->
+    <string name="status_scheduled">SCHEDULED</string>
+    <string name="status_completed">COMPLETED</string>
+    <string name="status_cancelled">CANCELLED</string>
+    <string name="status_paid">PAID</string>
+    <string name="status_pending">PENDING</string>
 </resources>

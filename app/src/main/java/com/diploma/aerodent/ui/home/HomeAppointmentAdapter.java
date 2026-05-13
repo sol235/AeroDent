@@ -19,7 +19,7 @@ import com.diploma.aerodent.data.local.entity.Patient;
 
 
 
-public class DashboardAppointmentAdapter extends RecyclerView.Adapter<DashboardAppointmentAdapter.ViewHolder> {
+public class HomeAppointmentAdapter extends RecyclerView.Adapter<HomeAppointmentAdapter.ViewHolder> {
 
     private List<Appointment> appointments = new ArrayList<>();
     private Map<Integer, Patient> patientMap = new HashMap<>();
@@ -29,7 +29,7 @@ public class DashboardAppointmentAdapter extends RecyclerView.Adapter<DashboardA
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_dashboard_schedule, parent, false);
+                .inflate(R.layout.item_home_appointment, parent, false);
         return new ViewHolder(view);
     }
 

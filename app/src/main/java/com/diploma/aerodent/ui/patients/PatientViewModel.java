@@ -1,0 +1,29 @@
+package com.diploma.aerodent.ui.patients;
+
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+
+import com.diploma.aerodent.data.local.entity.Patient;
+import com.diploma.aerodent.data.repository.PatientRepository;
+
+import java.util.List;
+
+public class PatientViewModel extends AndroidViewModel {
+
+    private final PatientRepository patientRepository;
+    private final LiveData<List<Patient>> allPatients;
+
+    public PatientViewModel(@NonNull Application application) {
+        super(application);
+        patientRepository = new PatientRepository(application);
+        allPatients = patientRepository.getAllPatients();
+    }
+
+    public LiveData<List<Patient>> getAllPatients() {
+        return allPatients;
+    }
+
+}
