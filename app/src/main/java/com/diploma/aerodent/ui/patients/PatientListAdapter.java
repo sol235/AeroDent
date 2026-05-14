@@ -16,7 +16,16 @@ import java.util.List;
 
 public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.ViewHolder> {
 
+    public interface OnPatientClickListener {
+        void onPatientClick(Patient patient);
+    }
+
     private List<Patient> patients = new ArrayList<>();
+    private OnPatientClickListener listener;
+
+    public void setOnPatientClickListener(OnPatientClickListener listener) {
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -47,7 +56,13 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
         String phone = patient.getPhoneNumber() != null ? patient.getPhoneNumber() : "No phone number";
         holder.textPatientPhone.setText(phone);
 
-        holder.textStatus.setText("НЗОК");
+        holder.textStatus.setText("NZOK");
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onPatientClick(patient);
+            }
+        });
     }
 
     @Override

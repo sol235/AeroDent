@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,17 +29,34 @@ import java.util.Locale;
 
 public class AddPatientFragment extends Fragment {
 
+    private static final String ARG_PATIENT_ID = "patient_id";
+
     private EditText editFirstName, editLastName, editEgn, editDob, editPhone, editEmail, editNhifNumber;
     private Spinner spinnerNhifStatus;
     private PatientViewModel patientViewModel;
     private Calendar calendar = Calendar.getInstance();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private Date selectedDob;
+    
+    private int patientId = -1;
+    private Patient existingPatient;
+
+    public static AddPatientFragment newInstance(int patientId) {
+        AddPatientFragment fragment = new AddPatientFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_PATIENT_ID, patientId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_add_patient, container, false);
+
+        if (getArguments() != null) {
+            patientId = getArguments().getInt(ARG_PATIENT_ID, -1);
+        }
 
         patientViewModel = new ViewModelProvider(this).get(PatientViewModel.class);
 
@@ -50,6 +68,7 @@ public class AddPatientFragment extends Fragment {
         editEmail = root.findViewById(R.id.edit_email);
         editNhifNumber = root.findViewById(R.id.edit_nhif_number);
         spinnerNhifStatus = root.findViewById(R.id.spinner_nhif_status);
+        TextView textTitle = root.findViewById(R.id.text_title);
 
         ImageView btnBack = root.findViewById(R.id.btn_back);
         ImageView btnSaveTop = root.findViewById(R.id.btn_save_top);
@@ -61,6 +80,17 @@ public class AddPatientFragment extends Fragment {
         adapter.setDropDownViewResource(R.layout.spinner_item_custom);
         spinnerNhifStatus.setAdapter(adapter);
 
+        if (patientId != -1) {
+            textTitle.setText("Edit patient");
+            btnSavePatient.setText("Update patient");
+            patientViewModel.getPatientById(patientId).observe(getViewLifecycleOwner(), patient -> {
+                if (patient != null && existingPatient == null) {
+                    existingPatient = patient;
+                    populateFields(patient);
+                }
+            });
+        }
+
         editDob.setOnClickListener(v -> showDatePicker());
 
         btnBack.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
@@ -68,6 +98,29 @@ public class AddPatientFragment extends Fragment {
         btnSavePatient.setOnClickListener(v -> savePatient());
 
         return root;
+    }
+
+    private void populateFields(Patient patient) {
+        editFirstName.setText(patient.getFirstName());
+        editLastName.setText(patient.getLastName());
+        editEgn.setText(patient.getEgn());
+        editPhone.setText(patient.getPhoneNumber());
+        editEmail.setText(patient.getEmail());
+        editNhifNumber.setText(patient.getNhifNumber());
+        
+        if (patient.getDateOfBirth() != null) {
+            selectedDob = patient.getDateOfBirth();
+            calendar.setTime(selectedDob);
+            editDob.setText(dateFormat.format(selectedDob));
+        }
+
+        if (patient.getNhifStatus() != null) {
+            ArrayAdapter adapter = (ArrayAdapter) spinnerNhifStatus.getAdapter();
+            int position = adapter.getPosition(patient.getNhifStatus());
+            if (position >= 0) {
+                spinnerNhifStatus.setSelection(position);
+            }
+        }
     }
 
     private void showDatePicker() {
@@ -94,7 +147,7 @@ public class AddPatientFragment extends Fragment {
             return;
         }
 
-        Patient patient = new Patient();
+        Patient patient = (existingPatient != null) ? existingPatient : new Patient();
         patient.setFirstName(firstName);
         patient.setLastName(lastName);
         patient.setEgn(egn);
@@ -103,10 +156,16 @@ public class AddPatientFragment extends Fragment {
         patient.setNhifNumber(nhifNumber);
         patient.setNhifStatus(nhifStatus);
         patient.setDateOfBirth(selectedDob);
-        patient.setCreatedAt(new Date());
-
-        patientViewModel.insert(patient);
-        Toast.makeText(requireContext(), "Patient saved", Toast.LENGTH_SHORT).show();
+        
+        if (existingPatient == null) {
+            patient.setCreatedAt(new Date());
+            patientViewModel.insert(patient);
+            Toast.makeText(requireContext(), "Patient saved", Toast.LENGTH_SHORT).show();
+        } else {
+            patientViewModel.update(patient);
+            Toast.makeText(requireContext(), "Patient updated", Toast.LENGTH_SHORT).show();
+        }
+        
         requireActivity().getOnBackPressedDispatcher().onBackPressed();
     }
 }

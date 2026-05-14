@@ -27,6 +27,13 @@ public class PatientsFragment extends Fragment {
         adapter = new PatientListAdapter();
         recyclerPatients.setAdapter(adapter);
 
+        adapter.setOnPatientClickListener(patient -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, PatientDetailFragment.newInstance(patient.getId()))
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         patientViewModel = new ViewModelProvider(this).get(PatientViewModel.class);
         patientViewModel.getAllPatients().observe(getViewLifecycleOwner(), patients -> {
             if (patients != null) {

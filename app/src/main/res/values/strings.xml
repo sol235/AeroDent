@@ -41,4 +41,17 @@
     <string name="add_patient_nhif_status">NZOK status</string>
     
     <string name="add_patient_save">Save patient</string>
+
+    <!-- Patient Details Screen -->
+    <string name="patient_details_contact_info">CONTACT INFO</string>
+    <string name="patient_details_tabs">TABS</string>
+    <string name="patient_details_tab_history">History</string>
+    <string name="patient_details_tab_dental_chart">Dental Chart</string>
+    <string name="patient_details_tab_photos">Photos</string>
+    <string name="patient_details_tab_payments">Payments</string>
+    <string name="patient_details_egn">EGN: %1$s</string>
+    <string name="patient_details_nhif">NZOK: %1$s</string>
+    <string name="patient_details_phone_label">Phone</string>
+    <string name="patient_details_email_label">Email</string>
+    <string name="patient_details_dob">Born: %1$s</string>
 </resources>
