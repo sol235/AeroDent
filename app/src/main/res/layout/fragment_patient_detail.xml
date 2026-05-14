@@ -46,7 +46,7 @@
                         android:textColor="@color/text_white"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        tools:text="Иван Петров" />
+                        tools:text="Georgi Georgiev" />
 
                     <ImageView
                         android:id="@+id/btn_edit_patient"
@@ -82,7 +82,7 @@
                             android:textColor="@color/avatar_blue_text"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            tools:text="ИП" />
+                            tools:text="GG" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout
@@ -107,7 +107,7 @@
                             android:layout_marginTop="4dp"
                             android:textColor="@color/text_grey"
                             android:textSize="14sp"
-                            tools:text="EGN: 54212451 • NZOK: 32141321" />
+                            tools:text="EGN: 543534543 • NZOK: 6346435" />
 
                         <TextView
                             android:id="@+id/text_patient_dob"

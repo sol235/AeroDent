@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.diploma.aerodent.ui.calendar.CalendarFragment;
 import com.diploma.aerodent.ui.home.HomeFragment;
 import com.diploma.aerodent.ui.patients.PatientsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -36,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new HomeFragment();
             } else if (itemId == R.id.nav_patients) {
                 selectedFragment = new PatientsFragment();
+            } else if (itemId == R.id.nav_calendar) {
+                selectedFragment = new CalendarFragment();
             }
-            // Add other cases for calendar and settings later
 
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()

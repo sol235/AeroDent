@@ -57,14 +57,6 @@ public interface AppointmentDao {
            "ORDER BY dateTime ASC")
     LiveData<List<Appointment>> getAppointmentsBetweenDates(Date startDate, Date endDate);
 
-    @Query("SELECT * FROM appointments WHERE dateTime BETWEEN :startDate AND :endDate " +
-           "ORDER BY dateTime ASC")
-    List<Appointment> getAppointmentsBetweenDatesSync(Date startDate, Date endDate);
-
-    @Query("SELECT * FROM appointments WHERE status = 'SCHEDULED' AND dateTime >= :now " +
-           "ORDER BY dateTime ASC")
-    LiveData<List<Appointment>> getUpcomingAppointments(Date now);
-
     @Query("SELECT COUNT(*) FROM appointments WHERE dateTime BETWEEN :startDate AND :endDate")
     LiveData<Integer> getAppointmentCountBetween(Date startDate, Date endDate);
 }

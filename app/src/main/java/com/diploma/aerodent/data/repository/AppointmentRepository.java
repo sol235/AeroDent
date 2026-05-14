@@ -42,10 +42,6 @@ public class AppointmentRepository {
         return appointmentDao.getAppointmentsBetweenDates(startDate, endDate);
     }
 
-    public LiveData<List<Appointment>> getUpcomingAppointments(Date now) {
-        return appointmentDao.getUpcomingAppointments(now);
-    }
-
     public LiveData<Integer> getAppointmentCountBetween(Date startDate, Date endDate) {
         return appointmentDao.getAppointmentCountBetween(startDate, endDate);
     }

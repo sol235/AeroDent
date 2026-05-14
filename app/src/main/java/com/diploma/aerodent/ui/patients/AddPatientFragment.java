@@ -75,14 +75,18 @@ public class AddPatientFragment extends Fragment {
         MaterialButton btnSavePatient = root.findViewById(R.id.btn_save_patient);
 
         // Setup dropdown menu with custom layout
-        String[] nhifStatuses = {"Active — verified via NHIF", "Inactive", "Unknown"};
+        String[] nhifStatuses = {
+                getString(R.string.patient_nhif_status_active),
+                getString(R.string.patient_nhif_status_inactive),
+                getString(R.string.unknown)
+        };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, nhifStatuses);
         adapter.setDropDownViewResource(R.layout.spinner_item_custom);
         spinnerNhifStatus.setAdapter(adapter);
 
         if (patientId != -1) {
-            textTitle.setText("Edit patient");
-            btnSavePatient.setText("Update patient");
+            textTitle.setText(R.string.patient_edit_title);
+            btnSavePatient.setText(R.string.patient_update_button);
             patientViewModel.getPatientById(patientId).observe(getViewLifecycleOwner(), patient -> {
                 if (patient != null && existingPatient == null) {
                     existingPatient = patient;
@@ -143,7 +147,7 @@ public class AddPatientFragment extends Fragment {
         String nhifStatus = spinnerNhifStatus.getSelectedItem().toString();
 
         if (TextUtils.isEmpty(egn)) {
-            Toast.makeText(requireContext(), "EGN is required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.patient_error_egn_required, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -160,10 +164,10 @@ public class AddPatientFragment extends Fragment {
         if (existingPatient == null) {
             patient.setCreatedAt(new Date());
             patientViewModel.insert(patient);
-            Toast.makeText(requireContext(), "Patient saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.patient_saved_success, Toast.LENGTH_SHORT).show();
         } else {
             patientViewModel.update(patient);
-            Toast.makeText(requireContext(), "Patient updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.patient_updated_success, Toast.LENGTH_SHORT).show();
         }
         
         requireActivity().getOnBackPressedDispatcher().onBackPressed();

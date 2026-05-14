@@ -39,8 +39,19 @@
     <string name="add_patient_section_insurance">INSURANCE</string>
     <string name="add_patient_nhif_number">NZOK number</string>
     <string name="add_patient_nhif_status">NZOK status</string>
+    <string name="nzok_short">NZOK</string>
     
     <string name="add_patient_save">Save patient</string>
+
+    <!-- Add Appointment Screen -->
+    <string name="add_appointment_title">New appointment</string>
+    <string name="add_appointment_section_details">APPOINTMENT DETAILS</string>
+    <string name="add_appointment_patient">Patient *</string>
+    <string name="add_appointment_date">Date *</string>
+    <string name="add_appointment_time">Time *</string>
+    <string name="add_appointment_treatment">Treatment Type</string>
+    <string name="add_appointment_notes">Notes</string>
+    <string name="add_appointment_save">Schedule appointment</string>
 
     <!-- Patient Details Screen -->
     <string name="patient_details_contact_info">CONTACT INFO</string>
@@ -54,4 +65,43 @@
     <string name="patient_details_phone_label">Phone</string>
     <string name="patient_details_email_label">Email</string>
     <string name="patient_details_dob">Born: %1$s</string>
+
+    <!-- General -->
+    <string name="unknown">Unknown</string>
+    <string name="unknown_patient">Unknown Patient</string>
+    <string name="no_phone">No phone number</string>
+    <string name="checkup">Checkup</string>
+    <string name="not_available_short">---</string>
+
+    <!-- Calendar -->
+    <string name="calendar_title">Calendar</string>
+    <string name="calendar_appointments_count">%1$d APPOINTMENTS</string>
+    <string name="calendar_status_arrived">Arrived</string>
+    <string name="calendar_status_upcoming">Upcoming</string>
+
+    <!-- Patient -->
+    <string name="patient_edit_title">Edit patient</string>
+    <string name="patient_update_button">Update patient</string>
+    <string name="patient_error_egn_required">EGN is required</string>
+    <string name="patient_saved_success">Patient saved</string>
+    <string name="patient_updated_success">Patient updated</string>
+    <string name="patient_nhif_status_active">Active — verified via NHIF</string>
+    <string name="patient_nhif_status_inactive">Inactive</string>
+
+    <!-- Appointment -->
+    <string name="appointment_error_no_patients">No patients available</string>
+    <string name="appointment_error_datetime_required">Date and time are required</string>
+    <string name="appointment_scheduled_success">Appointment scheduled</string>
+
+    <!-- Payment -->
+    <string name="payment_status_paid">Paid %1$.2f eur</string>
+    <string name="payment_status_due">Due %1$.2f eur</string>
+
+    <!-- Hints -->
+    <string name="hint_date_format">DD.MM.YYYY</string>
+    <string name="hint_time_format">HH:MM</string>
+    <string name="hint_treatment_type">Check up</string>
+    <string name="hint_dob_example">01.01.2000</string>
+    <string name="hint_phone_example">+359 087..</string>
+    <string name="hint_email_example">user@abv.bg</string>
 </resources>

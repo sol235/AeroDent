@@ -22,6 +22,7 @@ public class Appointment extends PatientRecordEntity {
     private String status;
     private String notes;
     private String treatmentType;
+    private Date createdAt;
 
     @Ignore public static final String STATUS_SCHEDULED = "SCHEDULED";
     @Ignore public static final String STATUS_COMPLETED = "COMPLETED";
@@ -56,5 +57,12 @@ public class Appointment extends PatientRecordEntity {
     }
     public void setTreatmentType(String treatmentType) {
         this.treatmentType = treatmentType;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

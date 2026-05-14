@@ -3,21 +3,17 @@ plugins {
 }
 
 android {
-    namespace 'com.diploma.aerodent'
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    namespace = 'com.diploma.aerodent'
+    compileSdk 36
 
     defaultConfig {
-        applicationId "com.diploma.aerodent"
-        minSdk 29
-        targetSdk 36
-        versionCode 1
-        versionName "1.0"
+        applicationId = "com.diploma.aerodent"
+        minSdk = 29
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -27,9 +23,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+
 }
 
 dependencies {
@@ -44,8 +41,12 @@ dependencies {
     def room_version = "2.8.4"
 
     implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // LiveData & ViewModel for reactive UI
-    implementation "androidx.lifecycle:lifecycle-livedata:2.7.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.7.0"
+    implementation "androidx.lifecycle:lifecycle-livedata:2.10.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.10.0"
+
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.applandeo:material-calendar-view:1.9.2'
 }

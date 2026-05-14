@@ -38,7 +38,7 @@ public class HomeAppointmentAdapter extends RecyclerView.Adapter<HomeAppointment
         Appointment appointment = appointments.get(position);
         Patient patient = patientMap.get(appointment.getPatientId());
 
-        String patientName = "Unknown Patient";
+        String patientName = holder.itemView.getContext().getString(R.string.unknown_patient);
         String initials = "?";
 
         if (patient != null) {
@@ -57,10 +57,10 @@ public class HomeAppointmentAdapter extends RecyclerView.Adapter<HomeAppointment
         holder.textPatientName.setText(patientName.trim());
 
         String timeStr = appointment.getDateTime() != null ? timeFormat.format(appointment.getDateTime()) : "00:00";
-        String treatmentStr = appointment.getTreatmentType() != null ? appointment.getTreatmentType() : "Unknown";
+        String treatmentStr = appointment.getTreatmentType() != null ? appointment.getTreatmentType() : holder.itemView.getContext().getString(R.string.unknown);
         holder.textTimeTreatment.setText(timeStr + " — " + treatmentStr);
 
-        String status = appointment.getStatus() != null ? appointment.getStatus() : "SCHEDULED";
+        String status = appointment.getStatus() != null ? appointment.getStatus() : holder.itemView.getContext().getString(R.string.status_scheduled);
         holder.textStatus.setText(status);
 
     }

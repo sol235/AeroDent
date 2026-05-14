@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
-                    android:text="НЗОК"
+                    android:text="@string/nzok_short"
                     android:textColor="@color/bg_header_blue"
                     android:textSize="11sp"
                     android:textStyle="bold" />

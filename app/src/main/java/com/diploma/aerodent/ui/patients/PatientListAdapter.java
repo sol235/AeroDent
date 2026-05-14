@@ -53,10 +53,10 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
         holder.textInitials.setText(initials.toUpperCase());
         holder.textPatientName.setText(patientName.trim());
 
-        String phone = patient.getPhoneNumber() != null ? patient.getPhoneNumber() : "No phone number";
+        String phone = patient.getPhoneNumber() != null ? patient.getPhoneNumber() : holder.itemView.getContext().getString(R.string.no_phone);
         holder.textPatientPhone.setText(phone);
 
-        holder.textStatus.setText("NZOK");
+        holder.textStatus.setText(R.string.nzok_short);
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {

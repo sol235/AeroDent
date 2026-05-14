@@ -6,7 +6,8 @@
     android:layout_marginBottom="12dp"
     app:cardBackgroundColor="@color/bg_card"
     app:cardCornerRadius="16dp"
-    app:strokeWidth="0dp">
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/border_grey">
 
     <RelativeLayout
         android:layout_width="match_parent"

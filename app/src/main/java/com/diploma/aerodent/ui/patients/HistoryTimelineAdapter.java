@@ -21,7 +21,7 @@ import java.util.Locale;
 public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimelineAdapter.ViewHolder> {
 
     private List<PatientHistoryItem> items = new ArrayList<>();
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", new Locale("en"));
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
     @NonNull
     @Override
@@ -41,7 +41,7 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
             holder.textDate.setText(dateFormat.format(appointment.getDateTime()));
         }
 
-        holder.textDescription.setText(appointment.getTreatmentType() != null ? appointment.getTreatmentType() : "Checkup");
+        holder.textDescription.setText(appointment.getTreatmentType() != null ? appointment.getTreatmentType() : holder.itemView.getContext().getString(R.string.checkup));
 
         if (payment != null) {
             String statusText;
@@ -49,15 +49,15 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
             int textColor;
 
             if ("PAID".equals(payment.getStatus())) {
-                statusText = "Paid " + payment.getAmount() + " eur";
+                statusText = holder.itemView.getContext().getString(R.string.payment_status_paid, payment.getAmount());
                 bgColor = holder.itemView.getContext().getColor(R.color.chip_green_bg);
                 textColor = holder.itemView.getContext().getColor(R.color.chip_green_text);
             } else if (payment.getNhifCovered() > 0) {
-                statusText = "NZOK";
+                statusText = holder.itemView.getContext().getString(R.string.nzok_short);
                 bgColor = holder.itemView.getContext().getColor(R.color.chip_green_bg);
                 textColor = holder.itemView.getContext().getColor(R.color.chip_green_text);
             } else {
-                statusText = "Due " + payment.getAmount() + " eur";
+                statusText = holder.itemView.getContext().getString(R.string.payment_status_due, payment.getAmount());
                 bgColor = holder.itemView.getContext().getColor(R.color.chip_orange_bg);
                 textColor = holder.itemView.getContext().getColor(R.color.chip_orange_text);
             }
