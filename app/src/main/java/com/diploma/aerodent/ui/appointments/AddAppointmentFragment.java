@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
+import com.diploma.aerodent.util.NameUtils;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
@@ -112,7 +113,7 @@ public class AddAppointmentFragment extends Fragment {
                 patientList = patients;
                 List<String> patientNames = new ArrayList<>();
                 for (Patient p : patients) {
-                    patientNames.add(p.getFirstName() + " " + p.getLastName());
+                    patientNames.add(NameUtils.formatFirstLastName(p));
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, patientNames);
                 adapter.setDropDownViewResource(R.layout.spinner_item_custom);

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Patient;
+import com.diploma.aerodent.util.NameUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,19 +40,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Patient patient = patients.get(position);
 
-        String first = patient.getFirstName() != null ? patient.getFirstName() : "";
-        String last = patient.getLastName() != null ? patient.getLastName() : "";
-        String patientName = first + " " + last;
-        
-        String initials = "?";
-        if (!first.isEmpty() && !last.isEmpty()) {
-            initials = first.substring(0, 1) + last.substring(0, 1);
-        } else if (!first.isEmpty()) {
-            initials = first.substring(0, 1);
-        }
-
-        holder.textInitials.setText(initials.toUpperCase());
-        holder.textPatientName.setText(patientName.trim());
+        holder.textInitials.setText(NameUtils.getInitials(patient));
+        holder.textPatientName.setText(NameUtils.formatFirstLastName(patient));
 
         String phone = patient.getPhoneNumber() != null ? patient.getPhoneNumber() : holder.itemView.getContext().getString(R.string.no_phone);
         holder.textPatientPhone.setText(phone);

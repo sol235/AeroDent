@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
+import com.diploma.aerodent.util.NameUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -95,18 +96,11 @@ public class PatientDetailFragment extends Fragment {
 
         viewModel.getPatient().observe(getViewLifecycleOwner(), patient -> {
             if (patient != null) {
-                String fullName = patient.getFirstName() + " " + patient.getLastName();
+                String fullName = NameUtils.formatFirstLastName(patient);
                 textNameHeader.setText(fullName);
                 textNameProfile.setText(fullName);
 
-                String initials = "";
-                if (patient.getFirstName() != null && !patient.getFirstName().isEmpty()) {
-                    initials += patient.getFirstName().substring(0, 1);
-                }
-                if (patient.getLastName() != null && !patient.getLastName().isEmpty()) {
-                    initials += patient.getLastName().substring(0, 1);
-                }
-                textInitials.setText(initials.toUpperCase());
+                textInitials.setText(NameUtils.getInitials(patient));
 
                 String egn = patient.getEgn() != null ? patient.getEgn() : "---";
                 String nhif = patient.getNhifNumber() != null ? patient.getNhifNumber() : "---";

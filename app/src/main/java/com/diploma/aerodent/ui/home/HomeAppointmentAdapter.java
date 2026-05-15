@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
+import com.diploma.aerodent.util.NameUtils;
 import com.google.android.material.card.MaterialCardView;
 
 
@@ -53,19 +54,12 @@ public class HomeAppointmentAdapter extends RecyclerView.Adapter<HomeAppointment
         String initials = "?";
 
         if (patient != null) {
-            String first = patient.getFirstName() != null ? patient.getFirstName() : "";
-            String last = patient.getLastName() != null ? patient.getLastName() : "";
-            patientName = first + " " + last;
-            
-            if (!first.isEmpty() && !last.isEmpty()) {
-                initials = first.substring(0, 1) + last.substring(0, 1);
-            } else if (!first.isEmpty()) {
-                initials = first.substring(0, 1);
-            }
+            patientName = NameUtils.formatFirstLastName(patient);
+            initials = NameUtils.getInitials(patient);
         }
 
-        holder.textInitials.setText(initials.toUpperCase());
-        holder.textPatientName.setText(patientName.trim());
+        holder.textInitials.setText(initials);
+        holder.textPatientName.setText(patientName);
 
         String timeStr = appointment.getDateTime() != null ? timeFormat.format(appointment.getDateTime()) : "00:00";
         String treatmentStr = appointment.getTreatmentType() != null ? appointment.getTreatmentType() : holder.itemView.getContext().getString(R.string.unknown);

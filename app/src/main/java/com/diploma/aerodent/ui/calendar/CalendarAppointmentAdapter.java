@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
+import com.diploma.aerodent.util.NameUtils;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
@@ -51,12 +52,11 @@ public class CalendarAppointmentAdapter extends RecyclerView.Adapter<CalendarApp
 
         String patientName = holder.itemView.getContext().getString(R.string.unknown_patient);
         if (patient != null) {
-            patientName = (patient.getFirstName() != null ? patient.getFirstName() : "") + " " +
-                         (patient.getLastName() != null ? patient.getLastName() : "");
+            patientName = NameUtils.formatFirstLastName(patient);
         }
 
         String timeStr = appointment.getDateTime() != null ? timeFormat.format(appointment.getDateTime()) : "00:00";
-        holder.textTimePatient.setText(timeStr + " - " + patientName.trim());
+        holder.textTimePatient.setText(timeStr + " - " + patientName);
         holder.textTreatment.setText(appointment.getTreatmentType() != null ? appointment.getTreatmentType() : holder.itemView.getContext().getString(R.string.unknown));
 
         String status = appointment.getStatus() != null ? appointment.getStatus() : Appointment.STATUS_SCHEDULED;
