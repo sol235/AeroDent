@@ -20,8 +20,17 @@ import java.util.Locale;
 
 public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimelineAdapter.ViewHolder> {
 
+    public interface OnHistoryItemClickListener {
+        void onAppointmentClick(Appointment appointment);
+    }
+
     private List<PatientHistoryItem> items = new ArrayList<>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private OnHistoryItemClickListener listener;
+
+    public void setOnHistoryItemClickListener(OnHistoryItemClickListener listener) {
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -71,6 +80,12 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
         }
 
         holder.timelineLine.setVisibility(position == items.size() - 1 ? View.GONE : View.VISIBLE);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onAppointmentClick(appointment);
+            }
+        });
     }
 
     @Override

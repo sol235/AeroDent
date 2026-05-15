@@ -28,4 +28,6 @@
     <color name="chip_green_text">#81C784</color>
     <color name="chip_orange_bg">#3D2A12</color>
     <color name="chip_orange_text">#FFB74D</color>
+    <color name="chip_red_bg">#3D1212</color>
+    <color name="chip_red_text">#E57373</color>
 </resources>

@@ -18,6 +18,7 @@ import com.applandeo.materialcalendarview.CalendarView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.ui.appointments.AddAppointmentFragment;
+import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,16 +69,18 @@ public class CalendarFragment extends Fragment {
         RecyclerView recyclerAppointments = root.findViewById(R.id.recycler_appointments);
         recyclerAppointments.setLayoutManager(new LinearLayoutManager(getContext()));
         appointmentAdapter = new CalendarAppointmentAdapter();
+        appointmentAdapter.setOnAppointmentClickListener(appointment -> {
+            AppointmentDetailFragment detailFragment = AppointmentDetailFragment.newInstance(appointment.getId());
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, detailFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
         recyclerAppointments.setAdapter(appointmentAdapter);
     }
 
     private void setupObservers() {
         viewModel.getSelectedDate().observe(getViewLifecycleOwner(), date -> {
-            try {
-                calendarView.setDate(date);
-            } catch (Exception e) {
-                android.util.Log.e("CalendarFragment", "Failed to set date", e);
-            }
         });
 
         viewModel.getAppointmentsForSelectedDate().observe(getViewLifecycleOwner(), appointments -> {
@@ -88,9 +91,9 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-        viewModel.getAppointmentsForCurrentMonth().observe(getViewLifecycleOwner(), appointments -> {
+        viewModel.getAllAppointments().observe(getViewLifecycleOwner(), appointments -> {
             List<CalendarDay> calendarDays = new ArrayList<>();
-            List<String> addedDays = new ArrayList<>(); //  prevent duplicate icons
+            List<String> addedDays = new ArrayList<>(); // prevent duplicate icons
 
             for (Appointment appt : appointments) {
                 if (appt.getDateTime() == null) continue;

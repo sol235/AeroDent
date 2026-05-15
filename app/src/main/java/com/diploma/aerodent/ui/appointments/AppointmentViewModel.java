@@ -38,6 +38,10 @@ public class AppointmentViewModel extends AndroidViewModel {
         repository.update(appointment);
     }
 
+    public void delete(Appointment appointment) {
+        repository.delete(appointment);
+    }
+
     public LiveData<Appointment> getAppointmentById(int id) {
         return repository.getAppointmentById(id);
     }

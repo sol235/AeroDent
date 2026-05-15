@@ -85,13 +85,22 @@
     <string name="patient_error_egn_required">EGN is required</string>
     <string name="patient_saved_success">Patient saved</string>
     <string name="patient_updated_success">Patient updated</string>
-    <string name="patient_nhif_status_active">Active — verified via NHIF</string>
+    <string name="patient_deleted_success">Patient deleted</string>
+    <string name="patient_nhif_status_active">Active - verified via NHIF</string>
+
+    <string name="delete">Delete</string>
+    <string name="delete_patient_title">Delete Patient</string>
+    <string name="delete_patient_confirmation">Do you want to delete this patient?</string>
+    <string name="cancel">Cancel</string>
     <string name="patient_nhif_status_inactive">Inactive</string>
 
     <!-- Appointment -->
+    <string name="appointment_edit_title">Edit appointment</string>
+    <string name="appointment_update_button">Update appointment</string>
     <string name="appointment_error_no_patients">No patients available</string>
     <string name="appointment_error_datetime_required">Date and time are required</string>
     <string name="appointment_scheduled_success">Appointment scheduled</string>
+    <string name="appointment_updated_success">Appointment updated</string>
 
     <!-- Payment -->
     <string name="payment_status_paid">Paid %1$.2f eur</string>
@@ -104,4 +113,17 @@
     <string name="hint_dob_example">01.01.2000</string>
     <string name="hint_phone_example">+359 087..</string>
     <string name="hint_email_example">user@abv.bg</string>
+    
+    <!-- Appointment Detail -->
+    <string name="appointment_detail_title">Appointment Detail</string>
+    <string name="appointment_detail_section_info">APPOINTMENT INFO</string>
+    <string name="appointment_detail_patient">Patient</string>
+    <string name="appointment_detail_date">Date</string>
+    <string name="appointment_detail_time">Time</string>
+    <string name="appointment_detail_treatment">Treatment</string>
+    <string name="appointment_detail_status">Status</string>
+    <string name="appointment_detail_notes">Notes</string>
+    <string name="delete_appointment_title">Delete Appointment</string>
+    <string name="delete_appointment_confirmation">Do you want to delete this appointment?</string>
+    <string name="appointment_deleted_success">Appointment deleted</string>
 </resources>

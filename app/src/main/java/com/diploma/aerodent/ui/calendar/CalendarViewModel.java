@@ -79,22 +79,8 @@ public class CalendarViewModel extends AndroidViewModel {
         });
     }
 
-    public LiveData<List<Appointment>> getAppointmentsForCurrentMonth() {
-        return Transformations.switchMap(currentMonth, month -> {
-            Calendar start = (Calendar) month.clone();
-            start.set(Calendar.DAY_OF_MONTH, 1);
-            start.set(Calendar.HOUR_OF_DAY, 0);
-            start.set(Calendar.MINUTE, 0);
-            start.set(Calendar.SECOND, 0);
-            
-            Calendar end = (Calendar) month.clone();
-            end.set(Calendar.DAY_OF_MONTH, end.getActualMaximum(Calendar.DAY_OF_MONTH));
-            end.set(Calendar.HOUR_OF_DAY, 23);
-            end.set(Calendar.MINUTE, 59);
-            end.set(Calendar.SECOND, 59);
-
-            return appointmentRepository.getAppointmentsBetweenDates(start.getTime(), end.getTime());
-        });
+    public LiveData<List<Appointment>> getAllAppointments() {
+        return appointmentRepository.getAllAppointments();
     }
 
     public LiveData<List<Patient>> getAllPatients() {

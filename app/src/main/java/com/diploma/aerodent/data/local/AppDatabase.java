@@ -54,6 +54,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     context.getApplicationContext(),
                                     AppDatabase.class,
                                     "aerodent_database")
+                            .addCallback(sRoomDatabaseCallback)
                             .fallbackToDestructiveMigration(false)
                             .build();
                 }
@@ -61,4 +62,16 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+
+    // Load sample data
+    private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@androidx.annotation.NonNull androidx.sqlite.db.SupportSQLiteDatabase db) {
+            super.onCreate(db);
+
+            databaseWriteExecutor.execute(() -> {
+                SampleDataGenerator.seedDatabase(INSTANCE);
+            });
+        }
+    };
 }

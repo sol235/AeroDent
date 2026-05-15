@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.ui.appointments.AddAppointmentFragment;
+import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
 import com.diploma.aerodent.ui.patients.AddPatientFragment;
 
 import java.util.Locale;
@@ -60,6 +61,12 @@ public class HomeFragment extends Fragment {
         // Schedule RecyclerView Setup
         RecyclerView recyclerSchedule = root.findViewById(R.id.recycler_home_schedule);
         HomeAppointmentAdapter scheduleAdapter = new HomeAppointmentAdapter();
+        scheduleAdapter.setOnAppointmentClickListener(appointment -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, AppointmentDetailFragment.newInstance(appointment.getId()))
+                    .addToBackStack(null)
+                    .commit();
+        });
         recyclerSchedule.setAdapter(scheduleAdapter);
 
         homeViewModel.getTodaysAppointments().observe(getViewLifecycleOwner(), appointments -> {

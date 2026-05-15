@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +34,10 @@ import java.util.Locale;
 
 public class AddAppointmentFragment extends Fragment {
 
-    private Spinner spinnerPatient;
+    private static final String ARG_PATIENT_ID = "patient_id";
+    private static final String ARG_APPOINTMENT_ID = "appointment_id";
+
+    private Spinner spinnerPatient, spinnerStatus;
     private EditText editDate, editTime, editTreatmentType, editNotes;
     private AppointmentViewModel viewModel;
     private Calendar calendar = Calendar.getInstance();
@@ -40,12 +45,28 @@ public class AddAppointmentFragment extends Fragment {
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
     
     private List<Patient> patientList = new ArrayList<>();
+    private List<String> statusList = Arrays.asList(
+            Appointment.STATUS_SCHEDULED,
+            Appointment.STATUS_COMPLETED,
+            Appointment.STATUS_CANCELLED
+    );
+    
     private int preselectedPatientId = -1;
+    private int appointmentId = -1;
+    private Appointment existingAppointment;
 
     public static AddAppointmentFragment newInstance(int patientId) {
         AddAppointmentFragment fragment = new AddAppointmentFragment();
         Bundle args = new Bundle();
-        args.putInt("patient_id", patientId);
+        args.putInt(ARG_PATIENT_ID, patientId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static AddAppointmentFragment newInstanceForEdit(int appointmentId) {
+        AddAppointmentFragment fragment = new AddAppointmentFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_APPOINTMENT_ID, appointmentId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,12 +77,14 @@ public class AddAppointmentFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_add_appointment, container, false);
 
         if (getArguments() != null) {
-            preselectedPatientId = getArguments().getInt("patient_id", -1);
+            preselectedPatientId = getArguments().getInt(ARG_PATIENT_ID, -1);
+            appointmentId = getArguments().getInt(ARG_APPOINTMENT_ID, -1);
         }
 
         viewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
 
         spinnerPatient = root.findViewById(R.id.spinner_patient);
+        spinnerStatus = root.findViewById(R.id.spinner_status);
         editDate = root.findViewById(R.id.edit_date);
         editTime = root.findViewById(R.id.edit_time);
         editTreatmentType = root.findViewById(R.id.edit_treatment_type);
@@ -70,25 +93,40 @@ public class AddAppointmentFragment extends Fragment {
         ImageView btnBack = root.findViewById(R.id.btn_back);
         ImageView btnSaveTop = root.findViewById(R.id.btn_save_top);
         MaterialButton btnSaveAppointment = root.findViewById(R.id.btn_save_appointment);
+        TextView textTitle = root.findViewById(R.id.text_title);
+
+        if (appointmentId != -1) {
+            textTitle.setText(R.string.appointment_edit_title);
+            btnSaveAppointment.setText(R.string.appointment_update_button);
+        }
+
+        // Setup status spinner
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, statusList);
+        statusAdapter.setDropDownViewResource(R.layout.spinner_item_custom);
+        spinnerStatus.setAdapter(statusAdapter);
+        spinnerStatus.setSelection(0); // Default to SCHEDULED
 
         // Setup patient spinner
         viewModel.getAllPatients().observe(getViewLifecycleOwner(), patients -> {
             if (patients != null) {
                 patientList = patients;
                 List<String> patientNames = new ArrayList<>();
-                int selection = 0;
-                for (int i = 0; i < patients.size(); i++) {
-                    Patient p = patients.get(i);
+                for (Patient p : patients) {
                     patientNames.add(p.getFirstName() + " " + p.getLastName());
-                    if (p.getId() == preselectedPatientId) {
-                        selection = i;
-                    }
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, patientNames);
                 adapter.setDropDownViewResource(R.layout.spinner_item_custom);
                 spinnerPatient.setAdapter(adapter);
-                if (preselectedPatientId != -1) {
-                    spinnerPatient.setSelection(selection);
+                
+                if (appointmentId != -1) {
+                    loadAppointmentData();
+                } else if (preselectedPatientId != -1) {
+                    for (int i = 0; i < patients.size(); i++) {
+                        if (patients.get(i).getId() == preselectedPatientId) {
+                            spinnerPatient.setSelection(i);
+                            break;
+                        }
+                    }
                 }
             }
         });
@@ -101,6 +139,35 @@ public class AddAppointmentFragment extends Fragment {
         btnSaveAppointment.setOnClickListener(v -> saveAppointment());
 
         return root;
+    }
+
+    private void loadAppointmentData() {
+        viewModel.getAppointmentById(appointmentId).observe(getViewLifecycleOwner(), appointment -> {
+            if (appointment != null && existingAppointment == null) {
+                existingAppointment = appointment;
+                if (appointment.getDateTime() != null) {
+                    calendar.setTime(appointment.getDateTime());
+                    editDate.setText(dateFormat.format(appointment.getDateTime()));
+                    editTime.setText(timeFormat.format(appointment.getDateTime()));
+                }
+                editTreatmentType.setText(appointment.getTreatmentType());
+                editNotes.setText(appointment.getNotes());
+                
+                for (int i = 0; i < patientList.size(); i++) {
+                    if (patientList.get(i).getId() == appointment.getPatientId()) {
+                        spinnerPatient.setSelection(i);
+                        break;
+                    }
+                }
+
+                if (appointment.getStatus() != null) {
+                    int statusIndex = statusList.indexOf(appointment.getStatus());
+                    if (statusIndex >= 0) {
+                        spinnerStatus.setSelection(statusIndex);
+                    }
+                }
+            }
+        });
     }
 
     private void showDatePicker() {
@@ -126,10 +193,12 @@ public class AddAppointmentFragment extends Fragment {
             return;
         }
 
-        int selectedPosition = spinnerPatient.getSelectedItemPosition();
-        if (selectedPosition < 0) return;
+        int patientPos = spinnerPatient.getSelectedItemPosition();
+        int statusPos = spinnerStatus.getSelectedItemPosition();
+        if (patientPos < 0 || statusPos < 0) return;
         
-        Patient selectedPatient = patientList.get(selectedPosition);
+        Patient selectedPatient = patientList.get(patientPos);
+        String selectedStatus = statusList.get(statusPos);
         String dateStr = editDate.getText().toString();
         String timeStr = editTime.getText().toString();
         String treatmentType = editTreatmentType.getText().toString().trim();
@@ -140,16 +209,22 @@ public class AddAppointmentFragment extends Fragment {
             return;
         }
 
-        Appointment appointment = new Appointment();
+        Appointment appointment = existingAppointment != null ? existingAppointment : new Appointment();
         appointment.setPatientId(selectedPatient.getId());
         appointment.setDateTime(calendar.getTime());
         appointment.setTreatmentType(treatmentType);
         appointment.setNotes(notes);
-        appointment.setStatus(Appointment.STATUS_SCHEDULED);
-        appointment.setCreatedAt(new Date());
-
-        viewModel.insert(appointment);
-        Toast.makeText(requireContext(), R.string.appointment_scheduled_success, Toast.LENGTH_SHORT).show();
+        appointment.setStatus(selectedStatus);
+        
+        if (existingAppointment == null) {
+            appointment.setCreatedAt(new Date());
+            viewModel.insert(appointment);
+            Toast.makeText(requireContext(), R.string.appointment_scheduled_success, Toast.LENGTH_SHORT).show();
+        } else {
+            viewModel.update(appointment);
+            Toast.makeText(requireContext(), R.string.appointment_updated_success, Toast.LENGTH_SHORT).show();
+        }
+        
         requireActivity().getOnBackPressedDispatcher().onBackPressed();
     }
 }

@@ -23,9 +23,18 @@ import java.util.Map;
 
 public class CalendarAppointmentAdapter extends RecyclerView.Adapter<CalendarAppointmentAdapter.ViewHolder> {
 
+    public interface OnAppointmentClickListener {
+        void onAppointmentClick(Appointment appointment);
+    }
+
     private List<Appointment> appointments = new ArrayList<>();
     private Map<Integer, Patient> patientMap = new HashMap<>();
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private OnAppointmentClickListener listener;
+
+    public void setOnAppointmentClickListener(OnAppointmentClickListener listener) {
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -47,20 +56,28 @@ public class CalendarAppointmentAdapter extends RecyclerView.Adapter<CalendarApp
         }
 
         String timeStr = appointment.getDateTime() != null ? timeFormat.format(appointment.getDateTime()) : "00:00";
-        holder.textTimePatient.setText(timeStr + " · " + patientName.trim());
+        holder.textTimePatient.setText(timeStr + " - " + patientName.trim());
         holder.textTreatment.setText(appointment.getTreatmentType() != null ? appointment.getTreatmentType() : holder.itemView.getContext().getString(R.string.unknown));
 
-        String status = appointment.getStatus() != null ? appointment.getStatus() : "SCHEDULED";
-        
-        if ("COMPLETED".equals(status)) {
+        String status = appointment.getStatus() != null ? appointment.getStatus() : Appointment.STATUS_SCHEDULED;
+        holder.textStatus.setText(status);
+
+        if (Appointment.STATUS_COMPLETED.equals(status)) {
             holder.cardStatus.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_green_bg));
             holder.textStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_green_text));
-            holder.textStatus.setText(R.string.calendar_status_arrived);
-        } else {
+        } else if (Appointment.STATUS_CANCELLED.equals(status)) {
+            holder.cardStatus.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_red_bg));
+            holder.textStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_red_text));
+        } else { // SCHEDULED
             holder.cardStatus.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_orange_bg));
             holder.textStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_orange_text));
-            holder.textStatus.setText(R.string.calendar_status_upcoming);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onAppointmentClick(appointment);
+            }
+        });
     }
 
     @Override

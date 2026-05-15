@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Patient;
+import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -74,6 +75,12 @@ public class PatientDetailFragment extends Fragment {
         RecyclerView recyclerHistory = root.findViewById(R.id.recycler_history);
         recyclerHistory.setLayoutManager(new LinearLayoutManager(getContext()));
         historyAdapter = new HistoryTimelineAdapter();
+        historyAdapter.setOnHistoryItemClickListener(appointment -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, AppointmentDetailFragment.newInstance(appointment.getId()))
+                    .addToBackStack(null)
+                    .commit();
+        });
         recyclerHistory.setAdapter(historyAdapter);
     }
 
@@ -103,7 +110,7 @@ public class PatientDetailFragment extends Fragment {
 
                 String egn = patient.getEgn() != null ? patient.getEgn() : "---";
                 String nhif = patient.getNhifNumber() != null ? patient.getNhifNumber() : "---";
-                textIds.setText(getString(R.string.patient_details_egn, egn) + " • " + getString(R.string.patient_details_nhif, nhif));
+                textIds.setText(getString(R.string.patient_details_egn, egn) + " - " + getString(R.string.patient_details_nhif, nhif));
 
                 if (patient.getDateOfBirth() != null) {
                     textDob.setText(getString(R.string.patient_details_dob, dobFormat.format(patient.getDateOfBirth())));

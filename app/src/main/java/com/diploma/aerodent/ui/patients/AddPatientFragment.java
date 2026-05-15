@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -72,6 +73,7 @@ public class AddPatientFragment extends Fragment {
 
         ImageView btnBack = root.findViewById(R.id.btn_back);
         ImageView btnSaveTop = root.findViewById(R.id.btn_save_top);
+        ImageView btnDelete = root.findViewById(R.id.btn_delete);
         MaterialButton btnSavePatient = root.findViewById(R.id.btn_save_patient);
 
         // Setup dropdown menu with custom layout
@@ -87,6 +89,7 @@ public class AddPatientFragment extends Fragment {
         if (patientId != -1) {
             textTitle.setText(R.string.patient_edit_title);
             btnSavePatient.setText(R.string.patient_update_button);
+            btnDelete.setVisibility(View.VISIBLE);
             patientViewModel.getPatientById(patientId).observe(getViewLifecycleOwner(), patient -> {
                 if (patient != null && existingPatient == null) {
                     existingPatient = patient;
@@ -100,8 +103,27 @@ public class AddPatientFragment extends Fragment {
         btnBack.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
         btnSaveTop.setOnClickListener(v -> savePatient());
         btnSavePatient.setOnClickListener(v -> savePatient());
+        btnDelete.setOnClickListener(v -> showDeleteConfirmation());
 
         return root;
+    }
+
+    private void showDeleteConfirmation() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.delete_patient_title)
+                .setMessage(R.string.delete_patient_confirmation)
+                .setPositiveButton(R.string.delete, (dialog, which) -> deletePatient())
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void deletePatient() {
+        if (existingPatient != null) {
+            patientViewModel.delete(existingPatient);
+            Toast.makeText(requireContext(), R.string.patient_deleted_success, Toast.LENGTH_SHORT).show();
+            getParentFragmentManager().popBackStack(); // pop edit
+            getParentFragmentManager().popBackStack(); // pop details
+        }
     }
 
     private void populateFields(Patient patient) {

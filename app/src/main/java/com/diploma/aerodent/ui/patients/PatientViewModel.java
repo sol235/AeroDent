@@ -37,4 +37,8 @@ public class PatientViewModel extends AndroidViewModel {
     public void update(Patient patient) {
         patientRepository.update(patient);
     }
+
+    public void delete(Patient patient) {
+        patientRepository.delete(patient);
+    }
 }
