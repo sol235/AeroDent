@@ -7,9 +7,14 @@ import java.util.Date;
 @Entity(tableName = "patients")
 public class Patient extends BaseEntity {
 
+    public static final String GENDER_MALE = "Male";
+    public static final String GENDER_FEMALE = "Female";
+    public static final String GENDER_UNKNOWN = "Unknown";
+
     private String firstName;
     private String lastName;
     private String egn;
+    private String gender;
     private String phoneNumber;
     private String email;
     private Date dateOfBirth;
@@ -45,6 +50,14 @@ public class Patient extends BaseEntity {
 
     public void setEgn(String egn) {
         this.egn = egn;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getPhoneNumber() {

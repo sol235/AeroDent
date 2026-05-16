@@ -27,7 +27,7 @@ import com.diploma.aerodent.data.local.entity.Treatment;
                 Payment.class,
                 Photo.class
         },
-        version = 2,
+        version = 3,
         exportSchema = false
 )
 @TypeConverters({Converters.class})
@@ -55,7 +55,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     AppDatabase.class,
                                     "aerodent_database")
                             .addCallback(sRoomDatabaseCallback)
-                            .fallbackToDestructiveMigration(false)
+                            .fallbackToDestructiveMigration(true)
                             .build();
                 }
             }

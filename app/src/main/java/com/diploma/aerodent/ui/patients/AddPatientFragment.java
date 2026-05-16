@@ -2,7 +2,9 @@ package com.diploma.aerodent.ui.patients;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +35,8 @@ public class AddPatientFragment extends Fragment {
     private static final String ARG_PATIENT_ID = "patient_id";
 
     private EditText editFirstName, editLastName, editEgn, editDob, editPhone, editEmail, editNhifNumber, editNotes;
-    private Spinner spinnerNhifStatus;
+    private Spinner spinnerNhifStatus, spinnerGender;
+    private TextView textEgnError;
     private PatientViewModel patientViewModel;
     private Calendar calendar = Calendar.getInstance();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
@@ -64,12 +67,14 @@ public class AddPatientFragment extends Fragment {
         editFirstName = root.findViewById(R.id.edit_first_name);
         editLastName = root.findViewById(R.id.edit_last_name);
         editEgn = root.findViewById(R.id.edit_egn);
+        textEgnError = root.findViewById(R.id.text_egn_error);
         editDob = root.findViewById(R.id.edit_dob);
         editPhone = root.findViewById(R.id.edit_phone);
         editEmail = root.findViewById(R.id.edit_email);
         editNhifNumber = root.findViewById(R.id.edit_nhif_number);
         editNotes = root.findViewById(R.id.edit_notes);
         spinnerNhifStatus = root.findViewById(R.id.spinner_nhif_status);
+        spinnerGender = root.findViewById(R.id.spinner_gender);
         TextView textTitle = root.findViewById(R.id.text_title);
 
         ImageView btnBack = root.findViewById(R.id.btn_back);
@@ -77,15 +82,8 @@ public class AddPatientFragment extends Fragment {
         ImageView btnDelete = root.findViewById(R.id.btn_delete);
         MaterialButton btnSavePatient = root.findViewById(R.id.btn_save_patient);
 
-        // Setup dropdown menu with custom layout
-        String[] nhifStatuses = {
-                getString(R.string.patient_nhif_status_active),
-                getString(R.string.patient_nhif_status_inactive),
-                getString(R.string.unknown)
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, nhifStatuses);
-        adapter.setDropDownViewResource(R.layout.spinner_item_custom);
-        spinnerNhifStatus.setAdapter(adapter);
+        setupSpinners();
+        observeCalculatedFields();
 
         if (patientId != -1) {
             textTitle.setText(R.string.patient_edit_title);
@@ -99,6 +97,8 @@ public class AddPatientFragment extends Fragment {
             });
         }
 
+        setupEgnWatcher();
+
         editDob.setOnClickListener(v -> showDatePicker());
 
         btnBack.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
@@ -107,6 +107,68 @@ public class AddPatientFragment extends Fragment {
         btnDelete.setOnClickListener(v -> showDeleteConfirmation());
 
         return root;
+    }
+
+    private void setupSpinners() {
+        // NHIF dropdown
+        String[] nhifStatuses = {
+                getString(R.string.patient_nhif_status_active),
+                getString(R.string.patient_nhif_status_inactive),
+                getString(R.string.unknown)
+        };
+        ArrayAdapter<String> nhifAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, nhifStatuses);
+        nhifAdapter.setDropDownViewResource(R.layout.spinner_item_custom);
+        spinnerNhifStatus.setAdapter(nhifAdapter);
+
+        // Gender dropdown
+        String[] genders = {
+                getString(R.string.gender_male),
+                getString(R.string.gender_female),
+                getString(R.string.gender_unknown)
+        };
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, genders);
+        genderAdapter.setDropDownViewResource(R.layout.spinner_item_custom);
+        spinnerGender.setAdapter(genderAdapter);
+        spinnerGender.setSelection(2); // Set to Unknown
+    }
+
+    private void observeCalculatedFields() {
+        patientViewModel.getCalculatedGender().observe(getViewLifecycleOwner(), gender -> {
+            if (gender != null) {
+                if (gender.equals(Patient.GENDER_MALE)) {
+                    spinnerGender.setSelection(0);
+                } else if (gender.equals(Patient.GENDER_FEMALE)) {
+                    spinnerGender.setSelection(1);
+                }
+            }
+        });
+
+        patientViewModel.getCalculatedDob().observe(getViewLifecycleOwner(), dob -> {
+            if (dob != null) {
+                selectedDob = dob;
+                calendar.setTime(selectedDob);
+                editDob.setText(dateFormat.format(selectedDob));
+            }
+        });
+
+        patientViewModel.getIsEgnValid().observe(getViewLifecycleOwner(), isValid -> {
+            textEgnError.setVisibility(isValid ? View.GONE : View.VISIBLE);
+        });
+    }
+
+    private void setupEgnWatcher() {
+        editEgn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                patientViewModel.processEgn(s.toString());
+            }
+        });
     }
 
     private void showDeleteConfirmation() {
@@ -136,6 +198,16 @@ public class AddPatientFragment extends Fragment {
         editNhifNumber.setText(patient.getNhifNumber());
         editNotes.setText(patient.getNotes());
         
+        if (patient.getGender() != null) {
+            if (patient.getGender().equals(Patient.GENDER_MALE)) {
+                spinnerGender.setSelection(0);
+            } else if (patient.getGender().equals(Patient.GENDER_FEMALE)) {
+                spinnerGender.setSelection(1);
+            } else {
+                spinnerGender.setSelection(2);
+            }
+        }
+
         if (patient.getDateOfBirth() != null) {
             selectedDob = patient.getDateOfBirth();
             calendar.setTime(selectedDob);
@@ -170,13 +242,22 @@ public class AddPatientFragment extends Fragment {
         String nhifNumber = editNhifNumber.getText().toString().trim();
         String nhifStatus = spinnerNhifStatus.getSelectedItem().toString();
         String notes = editNotes.getText().toString().trim();
+        
+        String gender = Patient.GENDER_UNKNOWN;
+        if (spinnerGender.getSelectedItemPosition() == 0) gender = Patient.GENDER_MALE;
+        else if (spinnerGender.getSelectedItemPosition() == 1) gender = Patient.GENDER_FEMALE;
 
         if (TextUtils.isEmpty(egn)) {
             Toast.makeText(requireContext(), R.string.patient_error_egn_required, Toast.LENGTH_SHORT).show();
             return;
         }
+        
+        if (!com.diploma.aerodent.util.EgnUtils.isValidEgn(egn)) {
+            textEgnError.setVisibility(View.VISIBLE);
+            return;
+        }
 
-        patientViewModel.savePatient(existingPatient, firstName, lastName, egn, phone, email, nhifNumber, nhifStatus, selectedDob, notes);
+        patientViewModel.savePatient(existingPatient, firstName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, selectedDob, notes);
         
         if (existingPatient == null) {
             Toast.makeText(requireContext(), R.string.patient_saved_success, Toast.LENGTH_SHORT).show();
@@ -193,11 +274,13 @@ public class AddPatientFragment extends Fragment {
         editFirstName = null;
         editLastName = null;
         editEgn = null;
+        textEgnError = null;
         editDob = null;
         editPhone = null;
         editEmail = null;
         editNhifNumber = null;
         editNotes = null;
         spinnerNhifStatus = null;
+        spinnerGender = null;
     }
 }

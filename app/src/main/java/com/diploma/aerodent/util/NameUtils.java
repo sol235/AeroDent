@@ -1,12 +1,10 @@
 package com.diploma.aerodent.util;
 
+import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Patient;
 
 public class NameUtils {
 
-    /**
-     * Returns the patient's first and last name joined by a space.
-     */
     public static String formatFirstLastName(Patient patient) {
         if (patient == null) return "";
         
@@ -16,9 +14,6 @@ public class NameUtils {
         return (first + " " + last).trim();
     }
 
-    /**
-     * Returns initials from the patient's first and last name.
-     */
     public static String getInitials(Patient patient) {
         if (patient == null) return "?";
         
@@ -29,5 +24,11 @@ public class NameUtils {
         
         String initials = first + last;
         return initials.isEmpty() ? "?" : initials;
+    }
+
+    public static int getGenderResourceId(String gender) {
+        if (Patient.GENDER_MALE.equals(gender)) return R.string.gender_male;
+        if (Patient.GENDER_FEMALE.equals(gender)) return R.string.gender_female;
+        return R.string.gender_unknown;
     }
 }

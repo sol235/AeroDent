@@ -31,6 +31,10 @@
     <string name="add_patient_last_name">Last name</string>
     <string name="add_patient_egn">EGN *</string>
     <string name="add_patient_dob">Date of birth</string>
+    <string name="add_patient_gender">Gender</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_unknown">Unknown</string>
     
     <string name="add_patient_section_contact">CONTACT</string>
     <string name="add_patient_phone">Phone</string>
@@ -62,6 +66,7 @@
     <string name="patient_details_tab_photos">Photos</string>
     <string name="patient_details_tab_payments">Payments</string>
     <string name="patient_details_egn">EGN: %1$s</string>
+    <string name="patient_details_gender">Gender: %1$s</string>
     <string name="patient_details_nhif">NZOK: %1$s</string>
     <string name="patient_details_phone_label">Phone</string>
     <string name="patient_details_email_label">Email</string>
@@ -84,6 +89,7 @@
     <string name="patient_edit_title">Edit patient</string>
     <string name="patient_update_button">Update patient</string>
     <string name="patient_error_egn_required">EGN is required</string>
+    <string name="patient_error_egn_invalid">Invalid EGN</string>
     <string name="patient_saved_success">Patient saved</string>
     <string name="patient_updated_success">Patient updated</string>
     <string name="patient_deleted_success">Patient deleted</string>

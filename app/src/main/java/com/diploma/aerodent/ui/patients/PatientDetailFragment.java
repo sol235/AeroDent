@@ -212,6 +212,7 @@ public class PatientDetailFragment extends Fragment {
         TextView textInitials = root.findViewById(R.id.text_avatar_initials);
         TextView textIds = root.findViewById(R.id.text_patient_ids);
         TextView textDob = root.findViewById(R.id.text_patient_dob);
+        TextView textGender = root.findViewById(R.id.text_patient_gender);
         TextView textPhone = root.findViewById(R.id.text_phone);
         TextView textEmail = root.findViewById(R.id.text_email);
         TextView textNotes = root.findViewById(R.id.text_notes);
@@ -236,6 +237,14 @@ public class PatientDetailFragment extends Fragment {
                     textDob.setVisibility(View.VISIBLE);
                 } else {
                     textDob.setVisibility(View.GONE);
+                }
+
+                if (patient.getGender() != null) {
+                    String genderStr = getString(NameUtils.getGenderResourceId(patient.getGender()));
+                    textGender.setText(getString(R.string.patient_details_gender, genderStr));
+                    textGender.setVisibility(View.VISIBLE);
+                } else {
+                    textGender.setVisibility(View.GONE);
                 }
 
                 textPhone.setText(patient.getPhoneNumber() != null ? patient.getPhoneNumber() : "---");
