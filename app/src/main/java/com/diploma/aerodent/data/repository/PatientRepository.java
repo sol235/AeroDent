@@ -12,11 +12,13 @@ import com.diploma.aerodent.data.local.entity.Patient;
 public class PatientRepository {
 
     private PatientDao patientDao;
+    private PhotoRepository photoRepository;
     private LiveData<List<Patient>> allPatients;
 
     public PatientRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         patientDao = db.patientDao();
+        photoRepository = new PhotoRepository(application);
         allPatients = patientDao.getAllPatients();
     }
 
@@ -58,6 +60,7 @@ public class PatientRepository {
 
     public void delete(Patient patient) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
+            photoRepository.deleteAllPhysicalFilesForPatient(patient.getId());
             patientDao.delete(patient);
         });
     }

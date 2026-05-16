@@ -13,8 +13,10 @@ public class PhotoRepository {
 
     private PhotoDao photoDao;
     private LiveData<List<Photo>> allPhotos;
+    private Application application;
 
     public PhotoRepository(Application application) {
+        this.application = application;
         AppDatabase db = AppDatabase.getDatabase(application);
         photoDao = db.photoDao();
         allPhotos = photoDao.getAllPhotos();
@@ -54,7 +56,34 @@ public class PhotoRepository {
 
     public void delete(Photo photo) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (photo.getFilePath() != null) {
+                java.io.File file = new java.io.File(photo.getFilePath());
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
             photoDao.delete(photo);
         });
+    }
+
+    public void deleteAllPhysicalFilesForPatient(int patientId) {
+        // Called from PatientRepository or elsewhere
+        List<String> filePaths = photoDao.getFilePathsForPatient(patientId);
+        if (filePaths != null) {
+            for (String path : filePaths) {
+                if (path != null) {
+                    java.io.File file = new java.io.File(path);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                }
+            }
+        }
+        
+        // Delete the directory
+        java.io.File storageDir = new java.io.File(application.getFilesDir(), "AeroDent/Photos/patient_" + patientId);
+        if (storageDir.exists() && storageDir.isDirectory()) {
+            storageDir.delete();
+        }
     }
 }

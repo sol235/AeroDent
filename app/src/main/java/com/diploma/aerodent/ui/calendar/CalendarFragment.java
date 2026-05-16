@@ -80,9 +80,6 @@ public class CalendarFragment extends Fragment {
     }
 
     private void setupObservers() {
-        viewModel.getSelectedDate().observe(getViewLifecycleOwner(), date -> {
-        });
-
         viewModel.getAppointmentsForSelectedDate().observe(getViewLifecycleOwner(), appointments -> {
             appointmentAdapter.setAppointments(appointments);
             Calendar selectedDate = viewModel.getSelectedDate().getValue();
@@ -91,29 +88,12 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-        viewModel.getAllAppointments().observe(getViewLifecycleOwner(), appointments -> {
+        viewModel.getAppointmentDates().observe(getViewLifecycleOwner(), dates -> {
             List<CalendarDay> calendarDays = new ArrayList<>();
-            List<String> addedDays = new ArrayList<>(); // prevent duplicate icons
-
-            for (Appointment appt : appointments) {
-                if (appt.getDateTime() == null) continue;
-                
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(appt.getDateTime());
-                
-                // Normalize time to 00:00:00
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                
-                String dayKey = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
-                if (!addedDays.contains(dayKey)) {
-                    CalendarDay calendarDay = new CalendarDay((Calendar) cal.clone());
-                    calendarDay.setImageResource(R.drawable.dot_circle);
-                    calendarDays.add(calendarDay);
-                    addedDays.add(dayKey);
-                }
+            for (Calendar cal : dates) {
+                CalendarDay calendarDay = new CalendarDay(cal);
+                calendarDay.setImageResource(R.drawable.dot_circle);
+                calendarDays.add(calendarDay);
             }
             calendarView.setCalendarDays(calendarDays);
         });
@@ -127,5 +107,12 @@ public class CalendarFragment extends Fragment {
         String dateStr = selectedDateFormat.format(date.getTime()).toUpperCase();
         String appointmentStr = getString(R.string.calendar_appointments_count, count);
         textSelectedDateHeader.setText(dateStr + " - " + appointmentStr);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        calendarView = null;
+        textSelectedDateHeader = null;
     }
 }

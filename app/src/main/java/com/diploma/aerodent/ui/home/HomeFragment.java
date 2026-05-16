@@ -15,13 +15,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.ui.appointments.AddAppointmentFragment;
 import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
+import com.diploma.aerodent.ui.appointments.SelectAppointmentDialogFragment;
 import com.diploma.aerodent.ui.patients.AddPatientFragment;
-
-import java.util.Locale;
+import com.diploma.aerodent.ui.photos.PhotoViewModel;
+import com.diploma.aerodent.util.CameraHelper;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private PhotoViewModel photoViewModel;
+    private CameraHelper cameraHelper;
+    
+    private TextView textTotalPatients, textTodaysAppts, textActiveTreatments, textAppointmentsLeft;
+    private RecyclerView recyclerSchedule;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        photoViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+        cameraHelper = new CameraHelper(this, photoViewModel);
+        cameraHelper.setShowSuccessToast(true);
+
+        if (savedInstanceState != null) {
+            cameraHelper.onRestoreInstanceState(savedInstanceState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        cameraHelper.onSaveInstanceState(outState);
+    }
 
     @Nullable
     @Override
@@ -32,10 +57,11 @@ public class HomeFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         // Bind UI Elements
-        TextView textTotalPatients = root.findViewById(R.id.text_total_patients);
-        TextView textTodaysAppts = root.findViewById(R.id.text_todays_appointments);
-        TextView textActiveTreatments = root.findViewById(R.id.text_active_treatments);
-        TextView textAppointmentsLeft = root.findViewById(R.id.text_appointments_left);
+        textTotalPatients = root.findViewById(R.id.text_total_patients);
+        textTodaysAppts = root.findViewById(R.id.text_todays_appointments);
+        textActiveTreatments = root.findViewById(R.id.text_active_treatments);
+        textAppointmentsLeft = root.findViewById(R.id.text_appointments_left);
+        recyclerSchedule = root.findViewById(R.id.recycler_home_schedule);
 
         // Observe Data
         homeViewModel.getTotalPatientsCount().observe(getViewLifecycleOwner(), count -> {
@@ -59,7 +85,6 @@ public class HomeFragment extends Fragment {
         });
 
         // Schedule RecyclerView Setup
-        RecyclerView recyclerSchedule = root.findViewById(R.id.recycler_home_schedule);
         HomeAppointmentAdapter scheduleAdapter = new HomeAppointmentAdapter();
         scheduleAdapter.setOnAppointmentClickListener(appointment -> {
             getParentFragmentManager().beginTransaction()
@@ -96,6 +121,26 @@ public class HomeFragment extends Fragment {
                     .commit();
         });
 
+        root.findViewById(R.id.btn_quick_take_photo).setOnClickListener(v -> showAppointmentSelection());
+
         return root;
+    }
+
+    private void showAppointmentSelection() {
+        SelectAppointmentDialogFragment dialog = new SelectAppointmentDialogFragment();
+        dialog.setOnAppointmentSelectedListener(appointment -> {
+            cameraHelper.takePhoto(appointment.getPatientId(), appointment.getId(), null);
+        });
+        dialog.show(getParentFragmentManager(), "SelectAppointmentDialog");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        textTotalPatients = null;
+        textTodaysAppts = null;
+        textActiveTreatments = null;
+        textAppointmentsLeft = null;
+        recyclerSchedule = null;
     }
 }

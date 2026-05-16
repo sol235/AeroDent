@@ -14,11 +14,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
+import com.diploma.aerodent.data.local.entity.Photo;
 import com.diploma.aerodent.ui.patients.PatientViewModel;
+import com.diploma.aerodent.ui.photos.FullScreenPhotoDialogFragment;
+import com.diploma.aerodent.ui.photos.PhotoAdapter;
+import com.diploma.aerodent.ui.photos.PhotoViewModel;
+import com.diploma.aerodent.util.CameraHelper;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
@@ -29,9 +36,10 @@ public class AppointmentDetailFragment extends Fragment {
     private static final String ARG_APPOINTMENT_ID = "appointment_id";
 
     private AppointmentViewModel viewModel;
-    private PatientViewModel patientViewModel;
+    private PhotoViewModel photoViewModel;
     private int appointmentId;
     private Appointment currentAppointment;
+    private CameraHelper cameraHelper;
 
     private TextView textPatientName;
     private TextView textDate;
@@ -40,6 +48,10 @@ public class AppointmentDetailFragment extends Fragment {
     private TextView textStatus;
     private MaterialCardView cardStatus;
     private TextView textNotes;
+
+    private View textPhotosLabel;
+    private RecyclerView recyclerPhotos;
+    private PhotoAdapter photoAdapter;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
@@ -58,6 +70,19 @@ public class AppointmentDetailFragment extends Fragment {
         if (getArguments() != null) {
             appointmentId = getArguments().getInt(ARG_APPOINTMENT_ID);
         }
+        
+        photoViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+        cameraHelper = new CameraHelper(this, photoViewModel);
+        
+        if (savedInstanceState != null) {
+            cameraHelper.onRestoreInstanceState(savedInstanceState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        cameraHelper.onSaveInstanceState(outState);
     }
 
     @Nullable
@@ -71,7 +96,6 @@ public class AppointmentDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
-        patientViewModel = new ViewModelProvider(this).get(PatientViewModel.class);
 
         initViews(view);
         observeData();
@@ -86,9 +110,23 @@ public class AppointmentDetailFragment extends Fragment {
         cardStatus = view.findViewById(R.id.card_status);
         textNotes = view.findViewById(R.id.text_notes);
 
+        textPhotosLabel = view.findViewById(R.id.text_photos_label);
+        recyclerPhotos = view.findViewById(R.id.recycler_appointment_photos);
+        
+        recyclerPhotos.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        photoAdapter = new PhotoAdapter();
+        photoAdapter.setOnPhotoClickListener(this::openFullScreen);
+        recyclerPhotos.setAdapter(photoAdapter);
+
         view.findViewById(R.id.btn_back).setOnClickListener(v -> getParentFragmentManager().popBackStack());
         view.findViewById(R.id.btn_delete_appointment).setOnClickListener(v -> showDeleteConfirmationDialog());
         
+        view.findViewById(R.id.fab_take_photo).setOnClickListener(v -> {
+            if (currentAppointment != null) {
+                cameraHelper.takePhoto(currentAppointment.getPatientId(), currentAppointment.getId(), null);
+            }
+        });
+
         ImageView btnEdit = view.findViewById(R.id.btn_edit_appointment);
         btnEdit.setOnClickListener(v -> {
             if (currentAppointment != null) {
@@ -100,17 +138,30 @@ public class AppointmentDetailFragment extends Fragment {
         });
     }
 
+    private void openFullScreen(Photo photo) {
+        FullScreenPhotoDialogFragment dialog = FullScreenPhotoDialogFragment.newInstance(photo.getId());
+        dialog.show(getChildFragmentManager(), "FullScreenPhoto");
+    }
+
     private void observeData() {
-        viewModel.getAppointmentById(appointmentId).observe(getViewLifecycleOwner(), appointment -> {
-            if (appointment != null) {
-                currentAppointment = appointment;
-                bindAppointmentData(appointment);
-                
-                patientViewModel.getPatientById(appointment.getPatientId()).observe(getViewLifecycleOwner(), patient -> {
-                    if (patient != null) {
-                        bindPatientData(patient);
-                    }
-                });
+        viewModel.getAppointmentWithPatient(appointmentId).observe(getViewLifecycleOwner(), result -> {
+            if (result != null) {
+                currentAppointment = result.appointment;
+                bindAppointmentData(result.appointment);
+                if (result.patient != null) {
+                    bindPatientData(result.patient);
+                }
+            }
+        });
+
+        photoViewModel.getPhotosForAppointment(appointmentId).observe(getViewLifecycleOwner(), photos -> {
+            if (photos != null && !photos.isEmpty()) {
+                photoAdapter.setPhotos(photos);
+                textPhotosLabel.setVisibility(View.VISIBLE);
+                recyclerPhotos.setVisibility(View.VISIBLE);
+            } else {
+                textPhotosLabel.setVisibility(View.GONE);
+                recyclerPhotos.setVisibility(View.GONE);
             }
         });
     }
@@ -160,5 +211,19 @@ public class AppointmentDetailFragment extends Fragment {
             Toast.makeText(requireContext(), R.string.appointment_deleted_success, Toast.LENGTH_SHORT).show();
             getParentFragmentManager().popBackStack();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        textPatientName = null;
+        textDate = null;
+        textTime = null;
+        textTreatment = null;
+        textStatus = null;
+        cardStatus = null;
+        textNotes = null;
+        textPhotosLabel = null;
+        recyclerPhotos = null;
     }
 }

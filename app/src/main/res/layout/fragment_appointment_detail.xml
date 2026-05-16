@@ -9,7 +9,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_header_blue">
+        android:background="@color/bg_header_blue"
+        app:liftOnScroll="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -346,7 +347,40 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Photos -->
+            <TextView
+                android:id="@+id/text_photos_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/patient_details_tab_photos"
+                android:textColor="@color/text_grey"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_appointment_photos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="3"
+                tools:listitem="@layout/item_photo_gallery"
+                android:visibility="gone" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_take_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_camera"
+        app:backgroundTint="@color/bg_header_blue"
+        app:tint="@color/text_white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

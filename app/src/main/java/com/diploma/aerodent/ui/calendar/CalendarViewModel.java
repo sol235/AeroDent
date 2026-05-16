@@ -13,9 +13,11 @@ import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.repository.AppointmentRepository;
 import com.diploma.aerodent.data.repository.PatientRepository;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CalendarViewModel extends AndroidViewModel {
 
@@ -76,6 +78,29 @@ public class CalendarViewModel extends AndroidViewModel {
             end.set(Calendar.MILLISECOND, 999);
 
             return appointmentRepository.getAppointmentsBetweenDates(start.getTime(), end.getTime());
+        });
+    }
+
+    public LiveData<List<Calendar>> getAppointmentDates() {
+        return Transformations.map(appointmentRepository.getAllAppointments(), appointments -> {
+            Set<String> seenDates = new HashSet<>();
+            List<Calendar> appointmentDates = new ArrayList<>();
+            for (Appointment appt : appointments) {
+                if (appt.getDateTime() != null) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(appt.getDateTime());
+                    cal.set(Calendar.HOUR_OF_DAY, 0);
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
+                    
+                    String key = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
+                    if (seenDates.add(key)) {
+                        appointmentDates.add(cal);
+                    }
+                }
+            }
+            return appointmentDates;
         });
     }
 

@@ -173,25 +173,27 @@ public class AddPatientFragment extends Fragment {
             return;
         }
 
-        Patient patient = (existingPatient != null) ? existingPatient : new Patient();
-        patient.setFirstName(firstName);
-        patient.setLastName(lastName);
-        patient.setEgn(egn);
-        patient.setPhoneNumber(phone);
-        patient.setEmail(email);
-        patient.setNhifNumber(nhifNumber);
-        patient.setNhifStatus(nhifStatus);
-        patient.setDateOfBirth(selectedDob);
+        patientViewModel.savePatient(existingPatient, firstName, lastName, egn, phone, email, nhifNumber, nhifStatus, selectedDob);
         
         if (existingPatient == null) {
-            patient.setCreatedAt(new Date());
-            patientViewModel.insert(patient);
             Toast.makeText(requireContext(), R.string.patient_saved_success, Toast.LENGTH_SHORT).show();
         } else {
-            patientViewModel.update(patient);
             Toast.makeText(requireContext(), R.string.patient_updated_success, Toast.LENGTH_SHORT).show();
         }
         
         requireActivity().getOnBackPressedDispatcher().onBackPressed();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        editFirstName = null;
+        editLastName = null;
+        editEgn = null;
+        editDob = null;
+        editPhone = null;
+        editEmail = null;
+        editNhifNumber = null;
+        spinnerNhifStatus = null;
     }
 }

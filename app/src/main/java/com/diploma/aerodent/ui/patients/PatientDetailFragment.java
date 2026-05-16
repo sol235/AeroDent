@@ -8,15 +8,20 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
-import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
+import com.diploma.aerodent.ui.photos.PatientGalleryFragment;
+import com.diploma.aerodent.ui.photos.PhotoViewModel;
+import com.diploma.aerodent.util.CameraHelper;
 import com.diploma.aerodent.util.NameUtils;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -24,9 +29,17 @@ import java.util.Locale;
 public class PatientDetailFragment extends Fragment {
 
     private static final String ARG_PATIENT_ID = "patient_id";
+    private int patientId;
     private PatientDetailViewModel viewModel;
+    private PhotoViewModel photoViewModel;
+    private CameraHelper cameraHelper;
     private HistoryTimelineAdapter historyAdapter;
     private SimpleDateFormat dobFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+
+    private MaterialCardView tabHistory, tabDentalChart, tabPhotos, tabPayments;
+    private View recyclerHistory, photosContainer;
+    private FloatingActionButton fabTakePhoto;
+    private View root;
 
     public static PatientDetailFragment newInstance(int patientId) {
         PatientDetailFragment fragment = new PatientDetailFragment();
@@ -36,21 +49,48 @@ public class PatientDetailFragment extends Fragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_patient_detail, container, false);
-
-        int patientId = -1;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             patientId = getArguments().getInt(ARG_PATIENT_ID);
         }
 
+        photoViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+        cameraHelper = new CameraHelper(this, photoViewModel);
+
+        if (savedInstanceState != null) {
+            cameraHelper.onRestoreInstanceState(savedInstanceState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        cameraHelper.onSaveInstanceState(outState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        root = inflater.inflate(R.layout.fragment_patient_detail, container, false);
+
         viewModel = new ViewModelProvider(this).get(PatientDetailViewModel.class);
         viewModel.setPatientId(patientId);
 
+        tabHistory = root.findViewById(R.id.tab_history);
+        tabDentalChart = root.findViewById(R.id.tab_dental_chart);
+        tabPhotos = root.findViewById(R.id.tab_photos);
+        tabPayments = root.findViewById(R.id.tab_payments);
+
+        recyclerHistory = root.findViewById(R.id.recycler_history);
+        photosContainer = root.findViewById(R.id.photos_container);
+        fabTakePhoto = root.findViewById(R.id.fab_take_photo);
+
         setupToolbar(root);
         setupRecyclerView(root);
+        setupTabs();
+        setupFab();
         observeViewModel(root);
 
         return root;
@@ -59,10 +99,6 @@ public class PatientDetailFragment extends Fragment {
     private void setupToolbar(View root) {
         root.findViewById(R.id.btn_back).setOnClickListener(v -> getParentFragmentManager().popBackStack());
         root.findViewById(R.id.btn_edit_patient).setOnClickListener(v -> {
-            int patientId = -1;
-            if (getArguments() != null) {
-                patientId = getArguments().getInt(ARG_PATIENT_ID);
-            }
             if (patientId != -1) {
                 getParentFragmentManager().beginTransaction()
                         .replace(R.id.nav_host_fragment, AddPatientFragment.newInstance(patientId))
@@ -73,8 +109,8 @@ public class PatientDetailFragment extends Fragment {
     }
 
     private void setupRecyclerView(View root) {
-        RecyclerView recyclerHistory = root.findViewById(R.id.recycler_history);
-        recyclerHistory.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerView recyclerHistoryView = root.findViewById(R.id.recycler_history);
+        recyclerHistoryView.setLayoutManager(new LinearLayoutManager(getContext()));
         historyAdapter = new HistoryTimelineAdapter();
         historyAdapter.setOnHistoryItemClickListener(appointment -> {
             getParentFragmentManager().beginTransaction()
@@ -82,7 +118,71 @@ public class PatientDetailFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-        recyclerHistory.setAdapter(historyAdapter);
+        recyclerHistoryView.setAdapter(historyAdapter);
+    }
+
+    private void setupTabs() {
+        tabHistory.setOnClickListener(v -> selectTab(tabHistory));
+        tabDentalChart.setOnClickListener(v -> selectTab(tabDentalChart));
+        tabPhotos.setOnClickListener(v -> selectTab(tabPhotos));
+        tabPayments.setOnClickListener(v -> selectTab(tabPayments));
+    }
+
+    private void setupFab() {
+        fabTakePhoto.setOnClickListener(v -> {
+            cameraHelper.takePhoto(patientId, null, null);
+        });
+    }
+
+    private void selectTab(MaterialCardView selectedTab) {
+        // Reset all tabs
+        resetTabStyle(tabHistory, root.findViewById(R.id.text_tab_history));
+        resetTabStyle(tabDentalChart, root.findViewById(R.id.text_tab_dental_chart));
+        resetTabStyle(tabPhotos, root.findViewById(R.id.text_tab_photos));
+        resetTabStyle(tabPayments, root.findViewById(R.id.text_tab_payments));
+
+        // Highlight selected tab
+        selectedTab.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.text_white));
+        selectedTab.setStrokeWidth(0);
+        
+        TextView label = null;
+        if (selectedTab == tabHistory) label = root.findViewById(R.id.text_tab_history);
+        else if (selectedTab == tabDentalChart) label = root.findViewById(R.id.text_tab_dental_chart);
+        else if (selectedTab == tabPhotos) label = root.findViewById(R.id.text_tab_photos);
+        else if (selectedTab == tabPayments) label = root.findViewById(R.id.text_tab_payments);
+        
+        if (label != null) {
+            label.setTextColor(ContextCompat.getColor(requireContext(), R.color.bg_header_blue));
+        }
+
+        // Show or Hide content
+        if (selectedTab == tabHistory) {
+            recyclerHistory.setVisibility(View.VISIBLE);
+            photosContainer.setVisibility(View.GONE);
+            fabTakePhoto.setVisibility(View.GONE);
+        } else if (selectedTab == tabPhotos) {
+            recyclerHistory.setVisibility(View.GONE);
+            photosContainer.setVisibility(View.VISIBLE);
+            fabTakePhoto.setVisibility(View.VISIBLE);
+            
+            if (getChildFragmentManager().findFragmentById(R.id.photos_container) == null) {
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.photos_container, PatientGalleryFragment.newInstance(patientId))
+                        .commit();
+            }
+        } else {
+            recyclerHistory.setVisibility(View.GONE);
+            photosContainer.setVisibility(View.GONE);
+            fabTakePhoto.setVisibility(View.GONE);
+        }
+    }
+
+    private void resetTabStyle(MaterialCardView tab, TextView label) {
+        if (tab == null || label == null) return;
+        tab.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.bg_card));
+        tab.setStrokeWidth(1);
+        tab.setStrokeColor(ContextCompat.getColor(requireContext(), R.color.border_grey));
+        label.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_grey));
     }
 
     private void observeViewModel(View root) {
@@ -104,7 +204,8 @@ public class PatientDetailFragment extends Fragment {
 
                 String egn = patient.getEgn() != null ? patient.getEgn() : "---";
                 String nhif = patient.getNhifNumber() != null ? patient.getNhifNumber() : "---";
-                textIds.setText(getString(R.string.patient_details_egn, egn) + " - " + getString(R.string.patient_details_nhif, nhif));
+                String ids = getString(R.string.patient_details_egn, egn) + " - " + getString(R.string.patient_details_nhif, nhif);
+                textIds.setText(ids);
 
                 if (patient.getDateOfBirth() != null) {
                     textDob.setText(getString(R.string.patient_details_dob, dobFormat.format(patient.getDateOfBirth())));
@@ -123,5 +224,18 @@ public class PatientDetailFragment extends Fragment {
                 historyAdapter.setItems(items);
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        tabHistory = null;
+        tabDentalChart = null;
+        tabPhotos = null;
+        tabPayments = null;
+        recyclerHistory = null;
+        photosContainer = null;
+        fabTakePhoto = null;
+        root = null;
     }
 }

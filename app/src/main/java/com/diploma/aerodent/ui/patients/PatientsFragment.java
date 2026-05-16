@@ -17,13 +17,14 @@ public class PatientsFragment extends Fragment {
 
     private PatientViewModel patientViewModel;
     private PatientListAdapter adapter;
+    private RecyclerView recyclerPatients;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_patients, container, false);
 
-        RecyclerView recyclerPatients = root.findViewById(R.id.recycler_patients);
+        recyclerPatients = root.findViewById(R.id.recycler_patients);
         adapter = new PatientListAdapter();
         recyclerPatients.setAdapter(adapter);
 
@@ -56,5 +57,11 @@ public class PatientsFragment extends Fragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        recyclerPatients = null;
     }
 }

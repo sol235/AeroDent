@@ -39,6 +39,7 @@ dependencies {
     androidTestImplementation libs.ext.junit
 
     def room_version = "2.8.4"
+    def glide_version = "4.16.0"
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -49,4 +50,8 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.13.0'
     implementation 'com.applandeo:material-calendar-view:1.9.2'
+
+    // Glide for images
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 }

@@ -210,22 +210,26 @@ public class AddAppointmentFragment extends Fragment {
             return;
         }
 
-        Appointment appointment = existingAppointment != null ? existingAppointment : new Appointment();
-        appointment.setPatientId(selectedPatient.getId());
-        appointment.setDateTime(calendar.getTime());
-        appointment.setTreatmentType(treatmentType);
-        appointment.setNotes(notes);
-        appointment.setStatus(selectedStatus);
+        viewModel.saveAppointment(existingAppointment, selectedPatient.getId(), calendar.getTime(), 
+                                treatmentType, notes, selectedStatus);
         
         if (existingAppointment == null) {
-            appointment.setCreatedAt(new Date());
-            viewModel.insert(appointment);
             Toast.makeText(requireContext(), R.string.appointment_scheduled_success, Toast.LENGTH_SHORT).show();
         } else {
-            viewModel.update(appointment);
             Toast.makeText(requireContext(), R.string.appointment_updated_success, Toast.LENGTH_SHORT).show();
         }
         
         requireActivity().getOnBackPressedDispatcher().onBackPressed();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        spinnerPatient = null;
+        spinnerStatus = null;
+        editDate = null;
+        editTime = null;
+        editTreatmentType = null;
+        editNotes = null;
     }
 }

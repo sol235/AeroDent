@@ -9,23 +9,90 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_header_blue">
+        android:background="@color/bg_header_blue"
+        app:liftOnScroll="false">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="@color/bg_header_blue">
 
+            <!-- Profile Info  -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="24dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="72dp"
+                android:paddingBottom="24dp"
+                app:layout_collapseMode="parallax">
 
-                <!-- Header -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    app:cardBackgroundColor="@color/avatar_blue_bg"
+                    app:cardCornerRadius="36dp"
+                    app:strokeWidth="0dp">
+
+                    <TextView
+                        android:id="@+id/text_avatar_initials"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/avatar_blue_text"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        tools:text="GG" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_patient_name_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_white"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        tools:text="Georgi Georgiev" />
+
+                    <TextView
+                        android:id="@+id/text_patient_ids"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/text_grey"
+                        android:textSize="14sp"
+                        tools:text="EGN: 543534543 • NZOK: 6346435" />
+
+                    <TextView
+                        android:id="@+id/text_patient_dob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/text_grey"
+                        android:textSize="14sp"
+                        tools:text="Born: 01.01.2000" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Header -->
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                app:layout_collapseMode="pin"
+                app:contentInsetStart="0dp"
+                android:background="@color/bg_header_blue">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="match_parent"
                     android:paddingHorizontal="16dp">
 
                     <ImageView
@@ -57,70 +124,7 @@
                         android:src="@drawable/ic_edit"
                         app:tint="@color/text_white" />
                 </RelativeLayout>
-
-                <!-- Profile Info -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="24dp"
-                    android:paddingTop="8dp">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        app:cardBackgroundColor="@color/avatar_blue_bg"
-                        app:cardCornerRadius="36dp"
-                        app:strokeWidth="0dp">
-
-                        <TextView
-                            android:id="@+id/text_avatar_initials"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:textColor="@color/avatar_blue_text"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            tools:text="GG" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/text_patient_name_profile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/text_white"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            tools:text="Georgi Georgiev" />
-
-                        <TextView
-                            android:id="@+id/text_patient_ids"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:textColor="@color/text_grey"
-                            android:textSize="14sp"
-                            tools:text="EGN: 543534543 • NZOK: 6346435" />
-
-                        <TextView
-                            android:id="@+id/text_patient_dob"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textColor="@color/text_grey"
-                            android:textSize="14sp"
-                            tools:text="Born: 01.01.2000" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -273,6 +277,7 @@
                         app:strokeWidth="0dp">
 
                         <TextView
+                            android:id="@+id/text_tab_history"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="20dp"
@@ -293,6 +298,7 @@
                         app:strokeWidth="1dp">
 
                         <TextView
+                            android:id="@+id/text_tab_dental_chart"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="20dp"
@@ -313,6 +319,7 @@
                         app:strokeWidth="1dp">
 
                         <TextView
+                            android:id="@+id/text_tab_photos"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="20dp"
@@ -333,6 +340,7 @@
                         app:strokeWidth="1dp">
 
                         <TextView
+                            android:id="@+id/text_tab_payments"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="20dp"
@@ -355,7 +363,26 @@
                 tools:itemCount="3"
                 tools:listitem="@layout/item_history_timeline" />
 
+            <!-- Gallery -->
+            <FrameLayout
+                android:id="@+id/photos_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_take_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_camera"
+        android:visibility="gone"
+        app:backgroundTint="@color/bg_header_blue"
+        app:tint="@color/text_white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

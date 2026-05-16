@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.repository.PatientRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public class PatientViewModel extends AndroidViewModel {
@@ -28,6 +29,26 @@ public class PatientViewModel extends AndroidViewModel {
 
     public LiveData<Patient> getPatientById(int id) {
         return patientRepository.getPatientById(id);
+    }
+
+    public void savePatient(Patient existingPatient, String firstName, String lastName, String egn, 
+                            String phone, String email, String nhifNumber, String nhifStatus, Date dob) {
+        Patient patient = (existingPatient != null) ? existingPatient : new Patient();
+        patient.setFirstName(firstName);
+        patient.setLastName(lastName);
+        patient.setEgn(egn);
+        patient.setPhoneNumber(phone);
+        patient.setEmail(email);
+        patient.setNhifNumber(nhifNumber);
+        patient.setNhifStatus(nhifStatus);
+        patient.setDateOfBirth(dob);
+        
+        if (existingPatient == null) {
+            patient.setCreatedAt(new Date());
+            insert(patient);
+        } else {
+            update(patient);
+        }
     }
 
     public void insert(Patient patient) {

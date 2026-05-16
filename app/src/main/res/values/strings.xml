@@ -126,4 +126,12 @@
     <string name="delete_appointment_title">Delete Appointment</string>
     <string name="delete_appointment_confirmation">Do you want to delete this appointment?</string>
     <string name="appointment_deleted_success">Appointment deleted</string>
+
+    <!-- Photo -->
+    <string name="photo_delete_confirmation">Do you want to delete this photo?</string>
+    <string name="photo_taken_on">Photo taken on </string>
+    <string name="select_appointment_for_photo">Select Appointment for Photo</string>
+    <string name="camera_permission_required">Camera permission is required</string>
+    <string name="photo_saved_success">Photo saved to gallery</string>
+    <string name="photo_save_error">Error saving photo</string>
 </resources>
