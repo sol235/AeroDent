@@ -27,12 +27,6 @@ public interface PatientDao {
     @Delete
     void delete(Patient patient);
 
-    @Query("DELETE FROM patients WHERE id = :patientId")
-    void deleteById(int patientId);
-
-    @Query("DELETE FROM patients")
-    void deleteAll();
-
     @Query("SELECT * FROM patients ORDER BY lastName ASC, firstName ASC")
     LiveData<List<Patient>> getAllPatients();
 
@@ -41,9 +35,6 @@ public interface PatientDao {
 
     @Query("SELECT * FROM patients WHERE id = :patientId LIMIT 1")
     LiveData<Patient> getPatientById(int patientId);
-
-    @Query("SELECT * FROM patients WHERE id = :patientId LIMIT 1")
-    Patient getPatientByIdSync(int patientId);
 
     // Case-insensitive search by name
     @Query("SELECT * FROM patients WHERE firstName LIKE '%' || :query || '%' OR lastName LIKE '%' || :query || '%' ORDER BY lastName ASC")

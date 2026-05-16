@@ -134,4 +134,5 @@
     <string name="camera_permission_required">Camera permission is required</string>
     <string name="photo_saved_success">Photo saved to gallery</string>
     <string name="photo_save_error">Error saving photo</string>
+    <string name="photo_uploaded_success">Photo uploaded successfully</string>
 </resources>

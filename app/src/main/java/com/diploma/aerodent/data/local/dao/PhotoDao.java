@@ -24,14 +24,8 @@ public interface PhotoDao {
     @Delete
     void delete(Photo photo);
 
-    @Query("DELETE FROM photos WHERE id = :photoId")
-    void deleteById(int photoId);
-
     @Query("SELECT * FROM photos WHERE patientId = :patientId ORDER BY takenAt DESC")
     LiveData<List<Photo>> getPhotosForPatient(int patientId);
-
-    @Query("SELECT * FROM photos WHERE patientId = :patientId ORDER BY takenAt DESC")
-    List<Photo> getPhotosForPatientSync(int patientId);
 
     @Query("SELECT * FROM photos WHERE appointmentId = :appointmentId ORDER BY takenAt DESC")
     LiveData<List<Photo>> getPhotosForAppointment(int appointmentId);

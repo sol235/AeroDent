@@ -2,6 +2,7 @@ package com.diploma.aerodent.ui.photos;
 
 import android.app.Application;
 import android.content.Context;
+import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -71,6 +72,29 @@ public class PhotoViewModel extends AndroidViewModel {
         photo.setDescription(getApplication().getString(R.string.photo_taken_on) + new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(now));
         
         repository.insert(photo);
+    }
+
+    public void savePhotoFromUri(Uri uri, int patientId, Integer appointmentId) {
+        try {
+            File photoFile = createImageFile(getApplication(), patientId);
+            java.io.InputStream inputStream = getApplication().getContentResolver().openInputStream(uri);
+            if (inputStream == null) return;
+            
+            java.io.OutputStream outputStream = new java.io.FileOutputStream(photoFile);
+            
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buf)) > 0) {
+                outputStream.write(buf, 0, len);
+            }
+            
+            outputStream.close();
+            inputStream.close();
+            
+            savePhoto(patientId, appointmentId, photoFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deletePhoto(Photo photo) {

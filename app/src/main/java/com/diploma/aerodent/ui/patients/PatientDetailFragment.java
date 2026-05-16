@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -39,7 +43,18 @@ public class PatientDetailFragment extends Fragment {
     private MaterialCardView tabHistory, tabDentalChart, tabPhotos, tabPayments;
     private View recyclerHistory, photosContainer;
     private FloatingActionButton fabTakePhoto;
+    private ImageView btnUploadPhoto;
     private View root;
+
+    private final ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null && patientId != -1) {
+                    photoViewModel.savePhotoFromUri(uri, patientId, null);
+                    Toast.makeText(requireContext(), R.string.photo_uploaded_success, Toast.LENGTH_SHORT).show();
+                }
+            }
+    );
 
     public static PatientDetailFragment newInstance(int patientId) {
         PatientDetailFragment fragment = new PatientDetailFragment();
@@ -86,6 +101,7 @@ public class PatientDetailFragment extends Fragment {
         recyclerHistory = root.findViewById(R.id.recycler_history);
         photosContainer = root.findViewById(R.id.photos_container);
         fabTakePhoto = root.findViewById(R.id.fab_take_photo);
+        btnUploadPhoto = root.findViewById(R.id.btn_upload_photo);
 
         setupToolbar(root);
         setupRecyclerView(root);
@@ -106,6 +122,8 @@ public class PatientDetailFragment extends Fragment {
                         .commit();
             }
         });
+        
+        btnUploadPhoto.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
     }
 
     private void setupRecyclerView(View root) {
@@ -160,10 +178,12 @@ public class PatientDetailFragment extends Fragment {
             recyclerHistory.setVisibility(View.VISIBLE);
             photosContainer.setVisibility(View.GONE);
             fabTakePhoto.setVisibility(View.GONE);
+            btnUploadPhoto.setVisibility(View.GONE);
         } else if (selectedTab == tabPhotos) {
             recyclerHistory.setVisibility(View.GONE);
             photosContainer.setVisibility(View.VISIBLE);
             fabTakePhoto.setVisibility(View.VISIBLE);
+            btnUploadPhoto.setVisibility(View.VISIBLE);
             
             if (getChildFragmentManager().findFragmentById(R.id.photos_container) == null) {
                 getChildFragmentManager().beginTransaction()
@@ -174,6 +194,7 @@ public class PatientDetailFragment extends Fragment {
             recyclerHistory.setVisibility(View.GONE);
             photosContainer.setVisibility(View.GONE);
             fabTakePhoto.setVisibility(View.GONE);
+            btnUploadPhoto.setVisibility(View.GONE);
         }
     }
 
@@ -236,6 +257,7 @@ public class PatientDetailFragment extends Fragment {
         recyclerHistory = null;
         photosContainer = null;
         fabTakePhoto = null;
+        btnUploadPhoto = null;
         root = null;
     }
 }

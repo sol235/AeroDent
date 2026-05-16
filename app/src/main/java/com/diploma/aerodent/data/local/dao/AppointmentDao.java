@@ -29,10 +29,6 @@ public interface AppointmentDao {
     @Delete
     void delete(Appointment appointment);
 
-    @Query("DELETE FROM appointments WHERE id = :appointmentId")
-    void deleteById(int appointmentId);
-
-
     @Query("SELECT * FROM appointments ORDER BY dateTime DESC")
     LiveData<List<Appointment>> getAllAppointments();
 

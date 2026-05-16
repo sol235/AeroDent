@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -55,6 +57,16 @@ public class AppointmentDetailFragment extends Fragment {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+    private final ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null && currentAppointment != null) {
+                    photoViewModel.savePhotoFromUri(uri, currentAppointment.getPatientId(), currentAppointment.getId());
+                    Toast.makeText(requireContext(), R.string.photo_uploaded_success, Toast.LENGTH_SHORT).show();
+                }
+            }
+    );
 
     public static AppointmentDetailFragment newInstance(int appointmentId) {
         AppointmentDetailFragment fragment = new AppointmentDetailFragment();
@@ -126,6 +138,8 @@ public class AppointmentDetailFragment extends Fragment {
                 cameraHelper.takePhoto(currentAppointment.getPatientId(), currentAppointment.getId(), null);
             }
         });
+
+        view.findViewById(R.id.btn_upload_photo).setOnClickListener(v -> pickImageLauncher.launch("image/*"));
 
         ImageView btnEdit = view.findViewById(R.id.btn_edit_appointment);
         btnEdit.setOnClickListener(v -> {
