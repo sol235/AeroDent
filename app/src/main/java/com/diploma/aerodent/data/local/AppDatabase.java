@@ -27,7 +27,7 @@ import com.diploma.aerodent.data.local.entity.Treatment;
                 Payment.class,
                 Photo.class
         },
-        version = 1,
+        version = 2,
         exportSchema = false
 )
 @TypeConverters({Converters.class})

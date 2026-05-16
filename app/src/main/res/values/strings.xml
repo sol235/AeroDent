@@ -40,6 +40,7 @@
     <string name="add_patient_nhif_number">NZOK number</string>
     <string name="add_patient_nhif_status">NZOK status</string>
     <string name="nzok_short">NZOK</string>
+    <string name="add_patient_notes">Notes</string>
     
     <string name="add_patient_save">Save patient</string>
 

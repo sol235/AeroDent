@@ -32,7 +32,7 @@ public class PatientViewModel extends AndroidViewModel {
     }
 
     public void savePatient(Patient existingPatient, String firstName, String lastName, String egn, 
-                            String phone, String email, String nhifNumber, String nhifStatus, Date dob) {
+                            String phone, String email, String nhifNumber, String nhifStatus, Date dob, String notes) {
         Patient patient = (existingPatient != null) ? existingPatient : new Patient();
         patient.setFirstName(firstName);
         patient.setLastName(lastName);
@@ -42,6 +42,7 @@ public class PatientViewModel extends AndroidViewModel {
         patient.setNhifNumber(nhifNumber);
         patient.setNhifStatus(nhifStatus);
         patient.setDateOfBirth(dob);
+        patient.setNotes(notes);
         
         if (existingPatient == null) {
             patient.setCreatedAt(new Date());

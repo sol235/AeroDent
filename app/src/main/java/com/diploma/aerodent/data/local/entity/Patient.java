@@ -16,6 +16,7 @@ public class Patient extends BaseEntity {
     private String address;
     private String nhifNumber; // НЗОК номер
     private String nhifStatus; // НЗОК статус
+    private String notes;
     private Date createdAt;
 
     // empty constructor for room db
@@ -92,6 +93,14 @@ public class Patient extends BaseEntity {
 
     public void setNhifStatus(String nhifStatus) {
         this.nhifStatus = nhifStatus;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Date getCreatedAt() {

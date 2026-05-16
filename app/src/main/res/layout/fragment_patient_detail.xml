@@ -258,6 +258,37 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Notes -->
+            <TextView
+                android:id="@+id/text_notes_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/add_patient_notes"
+                android:textColor="@color/text_grey"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="12dp"
+                app:strokeColor="@color/border_grey"
+                app:strokeWidth="1dp">
+
+                <TextView
+                    android:id="@+id/text_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="14sp"
+                    tools:text="Allergies, conditions.." />
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Tabs -->
             <TextView
                 android:layout_width="wrap_content"

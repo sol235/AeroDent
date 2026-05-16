@@ -32,7 +32,7 @@ public class AddPatientFragment extends Fragment {
 
     private static final String ARG_PATIENT_ID = "patient_id";
 
-    private EditText editFirstName, editLastName, editEgn, editDob, editPhone, editEmail, editNhifNumber;
+    private EditText editFirstName, editLastName, editEgn, editDob, editPhone, editEmail, editNhifNumber, editNotes;
     private Spinner spinnerNhifStatus;
     private PatientViewModel patientViewModel;
     private Calendar calendar = Calendar.getInstance();
@@ -68,6 +68,7 @@ public class AddPatientFragment extends Fragment {
         editPhone = root.findViewById(R.id.edit_phone);
         editEmail = root.findViewById(R.id.edit_email);
         editNhifNumber = root.findViewById(R.id.edit_nhif_number);
+        editNotes = root.findViewById(R.id.edit_notes);
         spinnerNhifStatus = root.findViewById(R.id.spinner_nhif_status);
         TextView textTitle = root.findViewById(R.id.text_title);
 
@@ -133,6 +134,7 @@ public class AddPatientFragment extends Fragment {
         editPhone.setText(patient.getPhoneNumber());
         editEmail.setText(patient.getEmail());
         editNhifNumber.setText(patient.getNhifNumber());
+        editNotes.setText(patient.getNotes());
         
         if (patient.getDateOfBirth() != null) {
             selectedDob = patient.getDateOfBirth();
@@ -167,13 +169,14 @@ public class AddPatientFragment extends Fragment {
         String email = editEmail.getText().toString().trim();
         String nhifNumber = editNhifNumber.getText().toString().trim();
         String nhifStatus = spinnerNhifStatus.getSelectedItem().toString();
+        String notes = editNotes.getText().toString().trim();
 
         if (TextUtils.isEmpty(egn)) {
             Toast.makeText(requireContext(), R.string.patient_error_egn_required, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        patientViewModel.savePatient(existingPatient, firstName, lastName, egn, phone, email, nhifNumber, nhifStatus, selectedDob);
+        patientViewModel.savePatient(existingPatient, firstName, lastName, egn, phone, email, nhifNumber, nhifStatus, selectedDob, notes);
         
         if (existingPatient == null) {
             Toast.makeText(requireContext(), R.string.patient_saved_success, Toast.LENGTH_SHORT).show();
@@ -194,6 +197,7 @@ public class AddPatientFragment extends Fragment {
         editPhone = null;
         editEmail = null;
         editNhifNumber = null;
+        editNotes = null;
         spinnerNhifStatus = null;
     }
 }

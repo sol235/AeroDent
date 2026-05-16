@@ -214,6 +214,9 @@ public class PatientDetailFragment extends Fragment {
         TextView textDob = root.findViewById(R.id.text_patient_dob);
         TextView textPhone = root.findViewById(R.id.text_phone);
         TextView textEmail = root.findViewById(R.id.text_email);
+        TextView textNotes = root.findViewById(R.id.text_notes);
+        View cardNotes = root.findViewById(R.id.card_notes);
+        View textNotesLabel = root.findViewById(R.id.text_notes_label);
 
         viewModel.getPatient().observe(getViewLifecycleOwner(), patient -> {
             if (patient != null) {
@@ -237,6 +240,15 @@ public class PatientDetailFragment extends Fragment {
 
                 textPhone.setText(patient.getPhoneNumber() != null ? patient.getPhoneNumber() : "---");
                 textEmail.setText(patient.getEmail() != null ? patient.getEmail() : "---");
+
+                if (patient.getNotes() != null && !patient.getNotes().trim().isEmpty()) {
+                    textNotes.setText(patient.getNotes());
+                    cardNotes.setVisibility(View.VISIBLE);
+                    textNotesLabel.setVisibility(View.VISIBLE);
+                } else {
+                    cardNotes.setVisibility(View.GONE);
+                    textNotesLabel.setVisibility(View.GONE);
+                }
             }
         });
 
