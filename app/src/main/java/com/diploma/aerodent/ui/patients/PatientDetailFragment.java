@@ -161,7 +161,7 @@ public class PatientDetailFragment extends Fragment {
         resetTabStyle(tabPayments, root.findViewById(R.id.text_tab_payments));
 
         // Highlight selected tab
-        selectedTab.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.text_white));
+        selectedTab.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white));
         selectedTab.setStrokeWidth(0);
         
         TextView label = null;
@@ -171,7 +171,7 @@ public class PatientDetailFragment extends Fragment {
         else if (selectedTab == tabPayments) label = root.findViewById(R.id.text_tab_payments);
         
         if (label != null) {
-            label.setTextColor(ContextCompat.getColor(requireContext(), R.color.bg_header_blue));
+            label.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary));
         }
 
         // Show or Hide content
@@ -206,10 +206,10 @@ public class PatientDetailFragment extends Fragment {
 
     private void resetTabStyle(MaterialCardView tab, TextView label) {
         if (tab == null || label == null) return;
-        tab.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.bg_card));
+        tab.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white));
         tab.setStrokeWidth(1);
         tab.setStrokeColor(ContextCompat.getColor(requireContext(), R.color.border_grey));
-        label.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_grey));
+        label.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
     }
 
     private void observeViewModel(View root) {

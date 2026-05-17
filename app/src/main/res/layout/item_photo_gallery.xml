@@ -28,9 +28,9 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             tools:text="15.05.2026"
-            android:textColor="@color/text_white"
+            android:textColor="@color/black"
             android:textSize="10sp"
-            android:background="@color/bg_card"
+            android:background="@color/white"
             android:gravity="center" />
     </LinearLayout>
 

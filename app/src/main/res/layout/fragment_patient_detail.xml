@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main">
+    android:background="@color/background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_header_blue"
+        android:background="@drawable/bg_header_gradient"
         app:liftOnScroll="false">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="@color/bg_header_blue">
+            app:contentScrim="@drawable/bg_header_gradient">
 
             <!-- Profile Info  -->
             <LinearLayout
@@ -32,7 +32,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="72dp"
                     android:layout_height="72dp"
-                    app:cardBackgroundColor="@color/avatar_blue_bg"
+                    app:cardBackgroundColor="@color/tertiary"
                     app:cardCornerRadius="36dp"
                     app:strokeWidth="0dp">
 
@@ -41,7 +41,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/avatar_blue_text"
+                        android:textColor="@color/primary"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         tools:text="GG" />
@@ -57,7 +57,7 @@
                         android:id="@+id/text_patient_name_profile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_white"
+                        android:textColor="@color/white"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         tools:text="Georgi Georgiev" />
@@ -67,7 +67,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/text_grey"
+                        android:textColor="@color/white"
                         android:textSize="14sp"
                         tools:text="EGN: 543534543 • NZOK: 6346435" />
 
@@ -76,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:textColor="@color/text_grey"
+                        android:textColor="@color/white"
                         android:textSize="14sp"
                         tools:text="Gender: Male" />
 
@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:textColor="@color/text_grey"
+                        android:textColor="@color/white"
                         android:textSize="14sp"
                         tools:text="Born: 01.01.2000" />
                 </LinearLayout>
@@ -97,7 +97,7 @@
                 android:layout_height="64dp"
                 app:layout_collapseMode="pin"
                 app:contentInsetStart="0dp"
-                android:background="@color/bg_header_blue">
+                android:background="@android:color/transparent">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -110,7 +110,7 @@
                         android:layout_height="24dp"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_back"
-                        app:tint="@color/text_white" />
+                        app:tint="@color/white" />
 
                     <TextView
                         android:id="@+id/text_patient_name_header"
@@ -120,7 +120,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_toEndOf="@id/btn_back"
                         android:text="@string/patient_details_title"
-                        android:textColor="@color/text_white"
+                        android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -133,7 +133,7 @@
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/ic_upload"
                         android:visibility="gone"
-                        app:tint="@color/text_white" />
+                        app:tint="@color/white" />
 
                     <ImageView
                         android:id="@+id/btn_edit_patient"
@@ -142,7 +142,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_edit"
-                        app:tint="@color/text_white" />
+                        app:tint="@color/white" />
                 </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>
 
@@ -165,7 +165,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/patient_details_contact_info"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -173,7 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@color/bg_card"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:strokeColor="@color/border_grey"
                 app:strokeWidth="1dp">
@@ -206,7 +206,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/patient_details_phone_label"
-                                android:textColor="@color/text_grey"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="12sp" />
 
                             <TextView
@@ -214,7 +214,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:textColor="@color/text_white"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 tools:text="+359 087358242" />
@@ -249,7 +249,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/patient_details_email_label"
-                                android:textColor="@color/text_grey"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="12sp" />
 
                             <TextView
@@ -257,7 +257,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:textColor="@color/text_white"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 tools:text="abv@abv.bg" />
@@ -274,7 +274,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/add_patient_notes"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -283,7 +283,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@color/bg_card"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:strokeColor="@color/border_grey"
                 app:strokeWidth="1dp">
@@ -293,7 +293,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:textColor="@color/text_white"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     tools:text="Allergies, conditions.." />
             </com.google.android.material.card.MaterialCardView>
@@ -304,7 +304,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/patient_details_tabs"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -323,7 +323,7 @@
                         android:id="@+id/tab_history"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/text_white"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="20dp"
                         app:strokeWidth="0dp">
 
@@ -334,7 +334,7 @@
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
                             android:text="@string/patient_details_tab_history"
-                            android:textColor="@color/bg_header_blue"
+                            android:textColor="@color/primary"
                             android:textStyle="bold" />
                     </com.google.android.material.card.MaterialCardView>
 
@@ -343,7 +343,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="20dp"
                         app:strokeColor="@color/border_grey"
                         app:strokeWidth="1dp">
@@ -355,7 +355,7 @@
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
                             android:text="@string/patient_details_tab_dental_chart"
-                            android:textColor="@color/text_grey"
+                            android:textColor="@color/text_secondary"
                             android:textStyle="bold" />
                     </com.google.android.material.card.MaterialCardView>
 
@@ -364,7 +364,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="20dp"
                         app:strokeColor="@color/border_grey"
                         app:strokeWidth="1dp">
@@ -376,7 +376,7 @@
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
                             android:text="@string/patient_details_tab_photos"
-                            android:textColor="@color/text_grey"
+                            android:textColor="@color/text_secondary"
                             android:textStyle="bold" />
                     </com.google.android.material.card.MaterialCardView>
 
@@ -385,7 +385,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="20dp"
                         app:strokeColor="@color/border_grey"
                         app:strokeWidth="1dp">
@@ -397,7 +397,7 @@
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
                             android:text="@string/patient_details_tab_payments"
-                            android:textColor="@color/text_grey"
+                            android:textColor="@color/text_secondary"
                             android:textStyle="bold" />
                     </com.google.android.material.card.MaterialCardView>
 
@@ -433,7 +433,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_camera"
         android:visibility="gone"
-        app:backgroundTint="@color/bg_header_blue"
-        app:tint="@color/text_white" />
+        app:backgroundTint="@color/primary"
+        app:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

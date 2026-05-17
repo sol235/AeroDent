@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_card"
+    android:background="@color/white"
     android:padding="16dp">
 
     <LinearLayout
@@ -26,7 +26,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
             android:text=" Зъб 18"
-            android:textColor="@color/text_white"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="Активни състояния"
-            android:textColor="@color/text_hint_grey"
+            android:textColor="@color/text_hint"
             android:textSize="12sp"
             android:textAllCaps="true"
             android:textStyle="bold" />
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="Добави състояние"
-            android:textColor="@color/text_hint_grey"
+            android:textColor="@color/text_hint"
             android:textSize="12sp"
             android:textAllCaps="true"
             android:textStyle="bold" />
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Повърхности за Кариес:"
-                android:textColor="@color/text_white"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
 
             <LinearLayout
@@ -133,7 +133,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="@string/surface_legend"
-                android:textColor="@color/text_hint_grey"
+                android:textColor="@color/text_hint"
                 android:textSize="10sp" />
 
             <com.google.android.material.button.MaterialButton
@@ -142,8 +142,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Запази"
-                app:backgroundTint="@color/bg_header_blue" />
+                app:backgroundTint="@color/primary" />
         </LinearLayout>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
+

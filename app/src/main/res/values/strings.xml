@@ -5,7 +5,7 @@
     <string name="home_total_patients">Общо пациенти</string>
     <string name="home_todays_appointments">Прегледи за днес</string>
     <string name="home_active_treatments">Активни лечения</string>
-    <string name="home_appointments_left">Оставащи часове</string>
+    <string name="home_appointments_left">Оставащи посещения</string>
     <string name="home_todays_schedule">ГРАФИК ЗА ДНЕС</string>
     <string name="home_quick_actions">БЪРЗО МЕНЮ</string>
     <string name="home_new_patient">Нов пациент</string>
@@ -140,7 +140,7 @@
     <!-- Photo -->
     <string name="photo_delete_confirmation">Желаете ли да изтриете тази снимка?</string>
     <string name="photo_taken_on">Направена на </string>
-    <string name="select_appointment_for_photo">Изберете посещение към снимката</string>
+    <string name="select_appointment_for_photo">Изберете посещение за прикачване</string>
     <string name="camera_permission_required">Необходим е достъп до камерата</string>
     <string name="photo_saved_success">Снимката е запазена в галерията</string>
     <string name="photo_save_error">Грешка при запис на снимката</string>

@@ -23,7 +23,7 @@ import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Photo;
-import com.diploma.aerodent.ui.patients.PatientViewModel;
+import com.diploma.aerodent.ui.dentalchart.DentalChartFragment;
 import com.diploma.aerodent.ui.photos.FullScreenPhotoDialogFragment;
 import com.diploma.aerodent.ui.photos.PhotoAdapter;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
@@ -140,6 +140,15 @@ public class AppointmentDetailFragment extends Fragment {
         });
 
         view.findViewById(R.id.btn_upload_photo).setOnClickListener(v -> pickImageLauncher.launch("image/*"));
+
+        view.findViewById(R.id.fab_dental_chart).setOnClickListener(v -> {
+            if (currentAppointment != null) {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, DentalChartFragment.newInstance(currentAppointment.getPatientId()))
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         ImageView btnEdit = view.findViewById(R.id.btn_edit_appointment);
         btnEdit.setOnClickListener(v -> {

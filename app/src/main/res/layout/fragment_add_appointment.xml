@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main">
+    android:background="@color/background">
 
     <!-- Top bar -->
     <com.google.android.material.card.MaterialCardView
@@ -12,13 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:cardBackgroundColor="@color/bg_header_blue"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="0dp"
         app:strokeWidth="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/bg_header_gradient"
             android:paddingHorizontal="16dp">
 
             <ImageView
@@ -28,7 +29,7 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_arrow_right"
                 android:rotation="180"
-                app:tint="@color/text_white" />
+                app:tint="@color/white" />
 
             <TextView
                 android:id="@+id/text_title"
@@ -38,7 +39,7 @@
                 android:layout_toEndOf="@id/btn_back"
                 android:layout_marginStart="16dp"
                 android:text="@string/add_appointment_title"
-                android:textColor="@color/text_white"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
@@ -49,7 +50,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_check"
-                app:tint="@color/text_white" />
+                app:tint="@color/white" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -70,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_appointment_section_details"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.05" />
@@ -81,14 +82,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/add_appointment_patient"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="4dp"
-                app:cardBackgroundColor="@color/bg_card"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/border_grey">
@@ -97,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingHorizontal="12dp"
-                    android:popupBackground="@color/bg_card" />
+                    android:popupBackground="@color/white" />
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Date Selection -->
@@ -106,14 +107,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/add_appointment_date"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="4dp"
-                app:cardBackgroundColor="@color/bg_card"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/border_grey">
@@ -123,11 +124,11 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
                     android:paddingHorizontal="12dp"
-                    android:textColor="@color/text_white"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     android:focusable="false"
                     android:hint="@string/hint_date_format"
-                    android:textColorHint="@color/text_hint_grey" />
+                    android:textColorHint="@color/text_hint" />
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Time Selection -->
@@ -136,14 +137,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/add_appointment_time"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="4dp"
-                app:cardBackgroundColor="@color/bg_card"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/border_grey">
@@ -153,11 +154,11 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
                     android:paddingHorizontal="12dp"
-                    android:textColor="@color/text_white"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     android:focusable="false"
                     android:hint="@string/hint_time_format"
-                    android:textColorHint="@color/text_hint_grey" />
+                    android:textColorHint="@color/text_hint" />
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Treatment Type -->
@@ -166,14 +167,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/add_appointment_treatment"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="4dp"
-                app:cardBackgroundColor="@color/bg_card"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/border_grey">
@@ -183,11 +184,11 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
                     android:paddingHorizontal="12dp"
-                    android:textColor="@color/text_white"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     android:inputType="text"
                     android:hint="@string/hint_treatment_type"
-                    android:textColorHint="@color/text_hint_grey" />
+                    android:textColorHint="@color/text_hint" />
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Status Selection -->
@@ -196,14 +197,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/appointment_detail_status"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="4dp"
-                app:cardBackgroundColor="@color/bg_card"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/border_grey">
@@ -212,7 +213,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingHorizontal="12dp"
-                    android:popupBackground="@color/bg_card" />
+                    android:popupBackground="@color/white" />
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Notes -->
@@ -221,14 +222,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/add_appointment_notes"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                app:cardBackgroundColor="@color/bg_card"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/border_grey">
@@ -239,7 +240,7 @@
                     android:minHeight="100dp"
                     android:background="@android:color/transparent"
                     android:padding="12dp"
-                    android:textColor="@color/text_white"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     android:gravity="top"
                     android:inputType="textMultiLine" />
@@ -256,7 +257,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:cornerRadius="8dp"
-                app:backgroundTint="@color/bg_header_blue" />
+                app:backgroundTint="@color/primary" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

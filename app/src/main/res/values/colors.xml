@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <!-- Background -->
-    <color name="bg_main">#111111</color>
-    <color name="bg_card">#222222</color>
-    <color name="bg_header_blue">#1A569A</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Colors Palette -->
+    <color name="black">#04080F</color>
+    <color name="primary">#1E6091</color>
+    <color name="secondary">#58999B</color>
+    <color name="tertiary">#BBD1EA</color>
+    <color name="background">#DAE3E5</color>
 
     <!-- Texts -->
-    <color name="text_white">#FFFFFF</color>
-    <color name="text_grey">#AAAAAA</color>
-    <color name="text_hint_grey">#666666</color>
+    <color name="text_secondary">#6C757D</color>
+    <color name="text_hint">#ADB5BD</color>
 
     <!-- UI Elements -->
-    <color name="border_grey">#444444</color>
-    <color name="divider_grey">#333333</color>
+    <color name="border_grey">#E9ECEF</color>
+    <color name="divider_grey">#F1F3F5</color>
 
-    <!-- Avatars & chips -->
-    <color name="avatar_blue_bg">#253342</color>
-    <color name="avatar_blue_text">#72B2FA</color>
-    <color name="avatar_pink_bg">#422935</color>
-    <color name="avatar_pink_text">#F48FB1</color>
-    <color name="avatar_teal_bg">#213E3B</color>
-    <color name="avatar_teal_text">#80CBC4</color>
+    <!-- Chips -->
+    <color name="chip_green_bg">#E8F5E9</color>
+    <color name="chip_green_text">#2E7D32</color>
+    <color name="chip_orange_bg">#FFF3E0</color>
+    <color name="chip_orange_text">#EF6C00</color>
+    <color name="chip_red_bg">#FFEBEE</color>
+    <color name="chip_red_text">#C62828</color>
 
-    <color name="chip_green_bg">#183318</color>
-    <color name="chip_green_text">#81C784</color>
-    <color name="chip_orange_bg">#3D2A12</color>
-    <color name="chip_orange_text">#FFB74D</color>
-    <color name="chip_red_bg">#3D1212</color>
-    <color name="chip_red_text">#E57373</color>
 
     <!-- Dental Colors -->
     <color name="dental_red">#E53935</color>        <!-- Pathology -->

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="@color/bg_card"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="12dp"
     app:strokeWidth="0dp">
 
@@ -25,7 +25,7 @@
                 android:id="@+id/text_time_patient"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="09:00" />
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="@string/checkup"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
         </LinearLayout>
 

@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main">
+    android:background="@color/background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_header_blue"
+        android:background="@drawable/bg_header_gradient"
         app:liftOnScroll="false">
 
         <RelativeLayout
@@ -23,7 +23,7 @@
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_back"
-                app:tint="@color/text_white" />
+                app:tint="@color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_toEndOf="@id/btn_back"
                 android:text="@string/appointment_detail_title"
-                android:textColor="@color/text_white"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -44,7 +44,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_upload"
-                app:tint="@color/text_white" />
+                app:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/btn_edit_appointment"
@@ -54,7 +54,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_edit"
-                app:tint="@color/text_white" />
+                app:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/btn_delete_appointment"
@@ -63,7 +63,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_delete"
-                app:tint="@color/text_white" />
+                app:tint="@color/white" />
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/appointment_detail_section_info"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@color/bg_card"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:strokeColor="@color/border_grey"
                 app:strokeWidth="1dp">
@@ -112,7 +112,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_patients"
-                            app:tint="@color/text_grey" />
+                            app:tint="@color/text_secondary" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -124,7 +124,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/appointment_detail_patient"
-                                android:textColor="@color/text_grey"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="12sp" />
 
                             <TextView
@@ -132,7 +132,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:textColor="@color/text_white"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 tools:text="Georgi Georgiev" />
@@ -162,7 +162,7 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_calendar"
-                                app:tint="@color/text_grey" />
+                                app:tint="@color/text_secondary" />
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -174,7 +174,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/appointment_detail_date"
-                                    android:textColor="@color/text_grey"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="12sp" />
 
                                 <TextView
@@ -182,7 +182,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    android:textColor="@color/text_white"
+                                    android:textColor="@color/black"
                                     android:textSize="16sp"
                                     android:textStyle="bold"
                                     tools:text="01.01.2026" />
@@ -212,7 +212,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/appointment_detail_time"
-                                    android:textColor="@color/text_grey"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="12sp" />
 
                                 <TextView
@@ -220,7 +220,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    android:textColor="@color/text_white"
+                                    android:textColor="@color/black"
                                     android:textSize="16sp"
                                     android:textStyle="bold"
                                     tools:text="12:00" />
@@ -245,7 +245,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_check"
-                            app:tint="@color/text_grey" />
+                            app:tint="@color/text_secondary" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -257,7 +257,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/appointment_detail_treatment"
-                                android:textColor="@color/text_grey"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="12sp" />
 
                             <TextView
@@ -265,7 +265,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:textColor="@color/text_white"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 tools:text="Caries removal" />
@@ -289,7 +289,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_settings"
-                            app:tint="@color/text_grey" />
+                            app:tint="@color/text_secondary" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -301,7 +301,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/appointment_detail_status"
-                                android:textColor="@color/text_grey"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="12sp" />
 
                             <com.google.android.material.card.MaterialCardView
@@ -341,7 +341,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/appointment_detail_notes"
-                            android:textColor="@color/text_grey"
+                            android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
 
                         <TextView
@@ -349,7 +349,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textColor="@color/text_white"
+                            android:textColor="@color/black"
                             android:textSize="14sp"
                             tools:text="Patient mentioned pain in upper jaw." />
                     </LinearLayout>
@@ -364,7 +364,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/patient_details_tab_photos"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
@@ -383,14 +383,29 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_take_photo"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_camera"
-        app:backgroundTint="@color/bg_header_blue"
-        app:tint="@color/text_white" />
+        android:orientation="horizontal">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_dental_chart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_tooth"
+            app:backgroundTint="@color/primary"
+            app:tint="@color/white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_take_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_camera"
+            app:backgroundTint="@color/primary"
+            app:tint="@color/white" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
