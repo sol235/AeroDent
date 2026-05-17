@@ -190,18 +190,23 @@ public class AppointmentDetailFragment extends Fragment {
         textNotes.setText(appointment.getNotes() != null && !appointment.getNotes().isEmpty() ? appointment.getNotes() : "-");
 
         String status = appointment.getStatus() != null ? appointment.getStatus() : Appointment.STATUS_SCHEDULED;
-        textStatus.setText(status);
-
+        
+        int statusResId;
         if (Appointment.STATUS_COMPLETED.equals(status)) {
+            statusResId = R.string.status_completed;
             cardStatus.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.chip_green_bg));
             textStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.chip_green_text));
         } else if (Appointment.STATUS_CANCELLED.equals(status)) {
+            statusResId = R.string.status_cancelled;
             cardStatus.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.chip_red_bg));
             textStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.chip_red_text));
         } else { // SCHEDULED
+            statusResId = R.string.status_scheduled;
             cardStatus.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.chip_orange_bg));
             textStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.chip_orange_text));
         }
+        
+        textStatus.setText(getString(statusResId));
     }
 
     private void bindPatientData(Patient patient) {

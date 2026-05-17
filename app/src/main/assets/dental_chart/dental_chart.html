@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+        body {
+            background-color: transparent;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #upper-jaw-container,
+        #lower-jaw-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="upper-jaw-container"></div>
+    <div id="lower-jaw-container"></div>
+    <script>
+        (function (window) {
+            var state = {
+                svgLoadedCount: 0,
+                fillElements: []
+            };
+
+            function loadSVG(url, containerId) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", url, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)) {
+                        var parser = new DOMParser();
+                        var doc = parser.parseFromString(xhr.responseText, "image/svg+xml");
+                        var svg = doc.documentElement;
+
+                        if (!svg.getAttribute('viewBox')) {
+                            var w = svg.getAttribute('width').replace(/[^0-9.]/g, '');
+                            var h = svg.getAttribute('height').replace(/[^0-9.]/g, '');
+                            svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+                        }
+
+                        svg.removeAttribute('width');
+                        svg.removeAttribute('height');
+
+                        var elements = svg.querySelectorAll('*');
+                        for (var i = 0; i < elements.length; i++) {
+                            var label = elements[i].getAttribute('inkscape:label');
+                            if (label && (label.indexOf('tooth_') === 0 || label.indexOf('fill_') === 0)) {
+                                elements[i].id = label;
+                            }
+                        }
+
+                        document.getElementById(containerId).appendChild(svg);
+                        state.svgLoadedCount++;
+
+                        if (state.svgLoadedCount === 2) {
+                            initializeEvents();
+                            if (window.Android && window.Android.onChartLoaded) {
+                                window.Android.onChartLoaded();
+                            }
+                        }
+                    }
+                };
+                xhr.send();
+            }
+
+            function initializeEvents() {
+                var toothGroups = document.querySelectorAll('[id^="tooth_"]');
+                for (var i = 0; i < toothGroups.length; i++) {
+                    toothGroups[i].onclick = function () {
+                        if (window.Android) {
+                            window.Android.onToothClicked(this.id.replace('tooth_', ''));
+                        }
+                    };
+                }
+                state.fillElements = document.querySelectorAll('[id^="fill_"]');
+            }
+
+            window.updateToothColor = function (toothNumber, color) {
+                var element = document.getElementById('fill_' + toothNumber);
+                if (element) {
+                    element.style.fill = color;
+                }
+            };
+
+            window.resetAllTeeth = function (color) {
+                var defaultColor = color || "#FFFFFF";
+                for (var i = 0; i < state.fillElements.length; i++) {
+                    state.fillElements[i].style.fill = defaultColor;
+                }
+            };
+
+            window.updateChart = function (colorsMap) {
+                console.log("updateChart called with: " + JSON.stringify(colorsMap));
+                window.resetAllTeeth('#FFFFFF');
+                if (!colorsMap) return;
+                
+                for (var toothNumber in colorsMap) {
+                    var color = colorsMap[toothNumber];
+                    var element = document.getElementById('fill_' + toothNumber);
+                    if (element) {
+                        element.style.fill = color;
+                    } else {
+                        console.log("Element not found: fill_" + toothNumber);
+                    }
+                }
+            };
+
+            window.onload = function () {
+                loadSVG('upper_jaw.svg', 'upper-jaw-container');
+                loadSVG('lower_jaw.svg', 'lower-jaw-container');
+            };
+        })(window);
+    </script>
+</body>
+
+</html>

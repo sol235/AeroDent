@@ -2,144 +2,192 @@
     <string name="app_name">AeroDent</string>
     
     <!-- Home Screen -->
-    <string name="home_total_patients">Total patients</string>
-    <string name="home_todays_appointments">Today\'s appointments</string>
-    <string name="home_active_treatments">Active treatments</string>
-    <string name="home_appointments_left">Appointments left</string>
-    <string name="home_todays_schedule">TODAY\'S SCHEDULE</string>
-    <string name="home_quick_actions">QUICK ACTIONS</string>
-    <string name="home_new_patient">New patient</string>
-    <string name="home_new_appointment">New appointment</string>
-    <string name="home_take_photo">Take photo</string>
-    <string name="home_export">Export</string>
+    <string name="home_total_patients">Общо пациенти</string>
+    <string name="home_todays_appointments">Прегледи за днес</string>
+    <string name="home_active_treatments">Активни лечения</string>
+    <string name="home_appointments_left">Оставащи часове</string>
+    <string name="home_todays_schedule">ГРАФИК ЗА ДНЕС</string>
+    <string name="home_quick_actions">БЪРЗО МЕНЮ</string>
+    <string name="home_new_patient">Нов пациент</string>
+    <string name="home_new_appointment">Нов час</string>
+    <string name="home_take_photo">Снимка</string>
+    <string name="home_export">Експорт</string>
+    <string name="home_title">Начало</string>
+    <string name="settings_title">Настройки</string>
 
     <!-- Patients Screen -->
-    <string name="patients_title">Patients</string>
-    <string name="patients_search_hint">Search by name or EGN</string>
+    <string name="patients_title">Пациенти</string>
+    <string name="patients_search_hint">Търсене по име или ЕГН</string>
 
     <!-- Statuses -->
-    <string name="status_scheduled">SCHEDULED</string>
-    <string name="status_completed">COMPLETED</string>
-    <string name="status_cancelled">CANCELLED</string>
-    <string name="status_paid">PAID</string>
-    <string name="status_pending">PENDING</string>
+    <string name="status_scheduled">ЗАПИСАН</string>
+    <string name="status_completed">ЗАВЪРШЕН</string>
+    <string name="status_cancelled">ОТМЕНЕН</string>
+    <string name="status_paid">ПЛАТЕНО</string>
+    <string name="status_pending">НЕПЛАТЕНО</string>
 
     <!-- Add Patient Screen -->
-    <string name="add_patient_title">New patient</string>
-    <string name="add_patient_section_personal">PERSONAL INFORMATION</string>
-    <string name="add_patient_first_name">First name</string>
-    <string name="add_patient_last_name">Last name</string>
-    <string name="add_patient_egn">EGN *</string>
-    <string name="add_patient_dob">Date of birth</string>
-    <string name="add_patient_gender">Gender</string>
-    <string name="gender_male">Male</string>
-    <string name="gender_female">Female</string>
-    <string name="gender_unknown">Unknown</string>
+    <string name="add_patient_title">Нов пациент</string>
+    <string name="add_patient_section_personal">ЛИЧНА ИНФОРМАЦИЯ</string>
+    <string name="add_patient_first_name">Име</string>
+    <string name="add_patient_last_name">Фамилия</string>
+    <string name="add_patient_egn">ЕГН *</string>
+    <string name="add_patient_dob">Дата на раждане</string>
+    <string name="add_patient_gender">Пол</string>
+    <string name="gender_male">Мъж</string>
+    <string name="gender_female">Жена</string>
+    <string name="gender_unknown">Неизвестен</string>
     
-    <string name="add_patient_section_contact">CONTACT</string>
-    <string name="add_patient_phone">Phone</string>
-    <string name="add_patient_email">Email</string>
+    <string name="add_patient_section_contact">КОНТАКТИ</string>
+    <string name="add_patient_phone">Телефон</string>
+    <string name="add_patient_email">Имейл</string>
     
-    <string name="add_patient_section_insurance">INSURANCE</string>
-    <string name="add_patient_nhif_number">NZOK number</string>
-    <string name="add_patient_nhif_status">NZOK status</string>
-    <string name="nzok_short">NZOK</string>
-    <string name="add_patient_notes">Notes</string>
+    <string name="add_patient_section_insurance">ЗДРАВНО ОСИГУРЯВАНЕ</string>
+    <string name="add_patient_nhif_number">НЗОК номер</string>
+    <string name="add_patient_nhif_status">НЗОК статус</string>
+    <string name="nzok_short">НЗОК</string>
+    <string name="add_patient_notes">Бележки</string>
     
-    <string name="add_patient_save">Save patient</string>
+    <string name="add_patient_save">Запази пациента</string>
 
     <!-- Add Appointment Screen -->
-    <string name="add_appointment_title">New appointment</string>
-    <string name="add_appointment_section_details">APPOINTMENT DETAILS</string>
-    <string name="add_appointment_patient">Patient *</string>
-    <string name="add_appointment_date">Date *</string>
-    <string name="add_appointment_time">Time *</string>
-    <string name="add_appointment_treatment">Treatment Type</string>
-    <string name="add_appointment_notes">Notes</string>
-    <string name="add_appointment_save">Schedule appointment</string>
+    <string name="add_appointment_title">Нов час</string>
+    <string name="add_appointment_section_details">ДЕТАЙЛИ ЗА ЧАСА</string>
+    <string name="add_appointment_patient">Пациент *</string>
+    <string name="add_appointment_date">Дата *</string>
+    <string name="add_appointment_time">Час *</string>
+    <string name="add_appointment_treatment">Вид лечение</string>
+    <string name="add_appointment_notes">Бележки</string>
+    <string name="add_appointment_save">Запиши час</string>
 
     <!-- Patient Details Screen -->
-    <string name="patient_details_contact_info">CONTACT INFO</string>
-    <string name="patient_details_tabs">TABS</string>
-    <string name="patient_details_tab_history">History</string>
-    <string name="patient_details_tab_dental_chart">Dental Chart</string>
-    <string name="patient_details_tab_photos">Photos</string>
-    <string name="patient_details_tab_payments">Payments</string>
-    <string name="patient_details_egn">EGN: %1$s</string>
-    <string name="patient_details_gender">Gender: %1$s</string>
-    <string name="patient_details_nhif">NZOK: %1$s</string>
-    <string name="patient_details_phone_label">Phone</string>
-    <string name="patient_details_email_label">Email</string>
-    <string name="patient_details_dob">Born: %1$s</string>
+    <string name="patient_details_title">Детайли за пациента</string>
+    <string name="patient_details_contact_info">ИНФОРМАЦИЯ ЗА КОНТАКТ</string>
+    <string name="patient_details_tabs">РАЗДЕЛИ</string>
+    <string name="patient_details_tab_history">История</string>
+    <string name="patient_details_tab_dental_chart">Зъбен статус</string>
+    <string name="patient_details_tab_photos">Снимки</string>
+    <string name="patient_details_tab_payments">Плащания</string>
+    <string name="patient_details_egn">ЕГН: %1$s</string>
+    <string name="patient_details_gender">Пол: %1$s</string>
+    <string name="patient_details_nhif">НЗОК: %1$s</string>
+    <string name="patient_details_phone_label">Телефон</string>
+    <string name="patient_details_email_label">Имейл</string>
+    <string name="patient_details_dob">Роден: %1$s</string>
 
     <!-- General -->
-    <string name="unknown">Unknown</string>
-    <string name="unknown_patient">Unknown Patient</string>
-    <string name="no_phone">No phone number</string>
-    <string name="checkup">Checkup</string>
+    <string name="unknown">Неизвестно</string>
+    <string name="unknown_patient">Неизвестен пациент</string>
+    <string name="no_phone">Няма телефонен номер</string>
+    <string name="checkup">Профилактичен преглед</string>
     <string name="not_available_short">---</string>
 
     <!-- Calendar -->
-    <string name="calendar_title">Calendar</string>
-    <string name="calendar_appointments_count">%1$d APPOINTMENTS</string>
-    <string name="calendar_status_arrived">Arrived</string>
-    <string name="calendar_status_upcoming">Upcoming</string>
+    <string name="calendar_title">Календар</string>
+    <string name="calendar_appointments_count">%1$d ЗАПИСАНИ ЧАСА</string>
+    <string name="calendar_status_arrived">Пристигнал</string>
+    <string name="calendar_status_upcoming">Предстоящ</string>
 
     <!-- Patient -->
-    <string name="patient_edit_title">Edit patient</string>
-    <string name="patient_update_button">Update patient</string>
-    <string name="patient_error_egn_required">EGN is required</string>
-    <string name="patient_error_egn_invalid">Invalid EGN</string>
-    <string name="patient_saved_success">Patient saved</string>
-    <string name="patient_updated_success">Patient updated</string>
-    <string name="patient_deleted_success">Patient deleted</string>
-    <string name="patient_nhif_status_active">Active - verified via NHIF</string>
+    <string name="patient_edit_title">Редактирай пациент</string>
+    <string name="patient_update_button">Обнови данните</string>
+    <string name="patient_error_egn_required">ЕГН е задължително поле</string>
+    <string name="patient_error_egn_invalid">Невалидно ЕГН</string>
+    <string name="patient_saved_success">Пациентът е записан</string>
+    <string name="patient_updated_success">Данните са обновени</string>
+    <string name="patient_deleted_success">Пациентът е изтрит</string>
+    <string name="patient_nhif_status_active">Осигурен</string>
 
-    <string name="delete">Delete</string>
-    <string name="delete_patient_title">Delete Patient</string>
-    <string name="delete_patient_confirmation">Do you want to delete this patient?</string>
-    <string name="cancel">Cancel</string>
-    <string name="patient_nhif_status_inactive">Inactive</string>
+    <string name="delete">Изтрий</string>
+    <string name="delete_patient_title">Изтриване на пациент</string>
+    <string name="delete_patient_confirmation">Желаете ли да изтриете този пациент?</string>
+    <string name="cancel">Отказ</string>
+    <string name="patient_nhif_status_inactive">Неосигурен</string>
 
     <!-- Appointment -->
-    <string name="appointment_edit_title">Edit appointment</string>
-    <string name="appointment_update_button">Update appointment</string>
-    <string name="appointment_error_no_patients">No patients available</string>
-    <string name="appointment_error_datetime_required">Date and time are required</string>
-    <string name="appointment_scheduled_success">Appointment scheduled</string>
-    <string name="appointment_updated_success">Appointment updated</string>
+    <string name="appointment_edit_title">Редактирай час</string>
+    <string name="appointment_update_button">Обнови часа</string>
+    <string name="appointment_error_no_patients">Няма намерени пациенти</string>
+    <string name="appointment_error_datetime_required">Датата и часът са задължителни</string>
+    <string name="appointment_scheduled_success">Часът е записан успешно</string>
+    <string name="appointment_updated_success">Часът е обновен</string>
 
     <!-- Payment -->
-    <string name="payment_status_paid">Paid %1$.2f eur</string>
-    <string name="payment_status_due">Due %1$.2f eur</string>
+    <string name="payment_status_paid">Платено %1$.2f eur</string>
+    <string name="payment_status_due">Дължимо %1$.2f eur</string>
 
     <!-- Hints -->
-    <string name="hint_date_format">DD.MM.YYYY</string>
-    <string name="hint_time_format">HH:MM</string>
-    <string name="hint_treatment_type">Check up</string>
+    <string name="hint_date_format">ДД.ММ.ГГГГ</string>
+    <string name="hint_time_format">ЧЧ:ММ</string>
+    <string name="hint_treatment_type">Преглед</string>
     <string name="hint_dob_example">01.01.2000</string>
     <string name="hint_phone_example">+359 087..</string>
     <string name="hint_email_example">user@abv.bg</string>
     
     <!-- Appointment Detail -->
-    <string name="appointment_detail_title">Appointment Detail</string>
-    <string name="appointment_detail_section_info">APPOINTMENT INFO</string>
-    <string name="appointment_detail_patient">Patient</string>
-    <string name="appointment_detail_date">Date</string>
-    <string name="appointment_detail_time">Time</string>
-    <string name="appointment_detail_treatment">Treatment</string>
-    <string name="appointment_detail_status">Status</string>
-    <string name="appointment_detail_notes">Notes</string>
-    <string name="delete_appointment_title">Delete Appointment</string>
-    <string name="delete_appointment_confirmation">Do you want to delete this appointment?</string>
-    <string name="appointment_deleted_success">Appointment deleted</string>
+    <string name="appointment_detail_title">Детайли за посещението</string>
+    <string name="appointment_detail_section_info">ИНФОРМАЦИЯ ЗА ЧАСА</string>
+    <string name="appointment_detail_patient">Пациент</string>
+    <string name="appointment_detail_date">Дата</string>
+    <string name="appointment_detail_time">Час</string>
+    <string name="appointment_detail_treatment">Лечение</string>
+    <string name="appointment_detail_status">Статус</string>
+    <string name="appointment_detail_notes">Бележки</string>
+    <string name="delete_appointment_title">Изтриване на час</string>
+    <string name="delete_appointment_confirmation">Желаете ли да изтриете записания час?</string>
+    <string name="appointment_deleted_success">Часът е изтрит</string>
 
     <!-- Photo -->
-    <string name="photo_delete_confirmation">Do you want to delete this photo?</string>
-    <string name="photo_taken_on">Photo taken on </string>
-    <string name="select_appointment_for_photo">Select Appointment for Photo</string>
-    <string name="camera_permission_required">Camera permission is required</string>
-    <string name="photo_saved_success">Photo saved to gallery</string>
-    <string name="photo_save_error">Error saving photo</string>
-    <string name="photo_uploaded_success">Photo uploaded successfully</string>
+    <string name="photo_delete_confirmation">Желаете ли да изтриете тази снимка?</string>
+    <string name="photo_taken_on">Направена на </string>
+    <string name="select_appointment_for_photo">Изберете посещение към снимката</string>
+    <string name="camera_permission_required">Необходим е достъп до камерата</string>
+    <string name="photo_saved_success">Снимката е запазена в галерията</string>
+    <string name="photo_save_error">Грешка при запис на снимката</string>
+    <string name="photo_uploaded_success">Снимката е качена успешно</string>
+
+    <!-- Dental Chart -->
+    <string name="dental_chart_title">Зъбен статус</string>
+    <string name="dental_chart_tooth_label">Зъб №%1$d</string>
+    <string name="dental_chart_tooth_title">Зъб %1$d</string>
+    <string name="dental_chart_surfaces_for">Повърхности за %1$s:</string>
+
+    <!-- Tooth Surfaces -->
+    <string name="surface_mesial">М</string>
+    <string name="surface_occlusal">О</string>
+    <string name="surface_distal">Д</string>
+    <string name="surface_vestibular">В</string>
+    <string name="surface_lingual">Л</string>
+    <string name="surface_legend">М: Мезиална, О: Оклузална, Д: Дистална, В: Вестибуларна, Л: Лингвална</string>
+
+    <!-- Dental Categories -->
+    <string name="category_pathology">Патология</string>
+    <string name="category_restoration">Възстановявания</string>
+    <string name="category_periodontology">Пародонтология</string>
+    <string name="category_prosthetics">Липсващи и Протезиране</string>
+    <string name="category_general">Общи</string>
+
+    <!-- Dental Conditions -->
+    <string name="condition_caries">Кариес</string>
+    <string name="condition_pulpitis">Пулпит</string>
+    <string name="condition_fracture">Фрактура</string>
+    <string name="condition_obturation">Обтурация</string>
+    <string name="condition_root_canal">Налична ендодонтска процедура</string>
+    <string name="condition_radicular_post">Радикуларен щифт</string>
+    <string name="condition_crown">Корона - самостоятелна</string>
+    <string name="condition_crown_retainer">Корона - мостокрепител</string>
+    <string name="condition_splint">Шина / Адхезивен мост</string>
+    <string name="condition_calculus">Зъбен камък</string>
+    <string name="condition_periodontitis">Периодонтит</string>
+    <string name="condition_periodontitis_pa">Пародонтит / Периимплантит</string>
+    <string name="condition_mobility_1">Подвижност (I-ва степен)</string>
+    <string name="condition_mobility_2">Подвижност (II-ра степен)</string>
+    <string name="condition_mobility_3">Подвижност (III-та степен)</string>
+    <string name="condition_missing">Липсващ зъб</string>
+    <string name="condition_implant">Имплант</string>
+    <string name="condition_pontic_fixed">Изкуствен зъб (фиксирано)</string>
+    <string name="condition_pontic_removable">Изкуствен зъб (подвижно)</string>
+    <string name="condition_supernumerary">Свръхброен зъб</string>
+    <string name="condition_impacted">Ретиниран зъб</string>
+    <string name="condition_healthy">Интактен зъб</string>
 </resources>

@@ -102,7 +102,12 @@ public class AddAppointmentFragment extends Fragment {
         }
 
         // Setup status spinner
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, statusList);
+        List<String> statusDisplayNames = Arrays.asList(
+                getString(R.string.status_scheduled),
+                getString(R.string.status_completed),
+                getString(R.string.status_cancelled)
+        );
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, statusDisplayNames);
         statusAdapter.setDropDownViewResource(R.layout.spinner_item_custom);
         spinnerStatus.setAdapter(statusAdapter);
         spinnerStatus.setSelection(0); // Default to SCHEDULED

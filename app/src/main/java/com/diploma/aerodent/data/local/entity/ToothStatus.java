@@ -25,6 +25,16 @@ public class ToothStatus extends PatientRecordEntity {
     @ColumnInfo(name = "conditionCode")
     private DentalCondition condition;
     
+    public static final String SURFACE_MESIAL = "M";
+    public static final String SURFACE_OCCLUSAL = "O";
+    public static final String SURFACE_DISTAL = "D";
+    public static final String SURFACE_BUCCAL = "B";
+    public static final String SURFACE_LINGUAL = "L";
+
+    public static final String[] ALL_SURFACES = {
+        SURFACE_MESIAL, SURFACE_OCCLUSAL, SURFACE_DISTAL, SURFACE_BUCCAL, SURFACE_LINGUAL
+    };
+
     private String surfaces; // O,M,D,B,L
     private Date dateRecorded;
 

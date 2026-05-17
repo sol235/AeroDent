@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
+import com.diploma.aerodent.ui.dentalchart.DentalChartFragment;
 import com.diploma.aerodent.ui.photos.PatientGalleryFragment;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
 import com.diploma.aerodent.util.CameraHelper;
@@ -190,6 +191,11 @@ public class PatientDetailFragment extends Fragment {
                         .replace(R.id.photos_container, PatientGalleryFragment.newInstance(patientId))
                         .commit();
             }
+        } else if (selectedTab == tabDentalChart) {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, DentalChartFragment.newInstance(patientId))
+                    .addToBackStack(null)
+                    .commit();
         } else {
             recyclerHistory.setVisibility(View.GONE);
             photosContainer.setVisibility(View.GONE);
@@ -222,7 +228,7 @@ public class PatientDetailFragment extends Fragment {
         viewModel.getPatient().observe(getViewLifecycleOwner(), patient -> {
             if (patient != null) {
                 String fullName = NameUtils.formatFirstLastName(patient);
-                textNameHeader.setText(fullName);
+                textNameHeader.setText(R.string.patient_details_title);
                 textNameProfile.setText(fullName);
 
                 textInitials.setText(NameUtils.getInitials(patient));

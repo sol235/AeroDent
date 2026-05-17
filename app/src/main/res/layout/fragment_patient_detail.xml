@@ -119,10 +119,10 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="16dp"
                         android:layout_toEndOf="@id/btn_back"
+                        android:text="@string/patient_details_title"
                         android:textColor="@color/text_white"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        tools:text="Georgi Georgiev" />
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/btn_upload_photo"

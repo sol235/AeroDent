@@ -60,18 +60,23 @@ public class CalendarAppointmentAdapter extends RecyclerView.Adapter<CalendarApp
         holder.textTreatment.setText(appointment.getTreatmentType() != null ? appointment.getTreatmentType() : holder.itemView.getContext().getString(R.string.unknown));
 
         String status = appointment.getStatus() != null ? appointment.getStatus() : Appointment.STATUS_SCHEDULED;
-        holder.textStatus.setText(status);
-
+        
+        int statusResId;
         if (Appointment.STATUS_COMPLETED.equals(status)) {
+            statusResId = R.string.status_completed;
             holder.cardStatus.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_green_bg));
             holder.textStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_green_text));
         } else if (Appointment.STATUS_CANCELLED.equals(status)) {
+            statusResId = R.string.status_cancelled;
             holder.cardStatus.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_red_bg));
             holder.textStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_red_text));
         } else { // SCHEDULED
+            statusResId = R.string.status_scheduled;
             holder.cardStatus.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_orange_bg));
             holder.textStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chip_orange_text));
         }
+
+        holder.textStatus.setText(holder.itemView.getContext().getString(statusResId));
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
