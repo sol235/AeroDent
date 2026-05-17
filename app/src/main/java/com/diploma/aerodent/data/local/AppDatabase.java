@@ -2,6 +2,7 @@ package com.diploma.aerodent.data.local;
 
 import android.content.Context;
 
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -11,11 +12,13 @@ import com.diploma.aerodent.data.local.dao.AppointmentDao;
 import com.diploma.aerodent.data.local.dao.PatientDao;
 import com.diploma.aerodent.data.local.dao.PaymentDao;
 import com.diploma.aerodent.data.local.dao.PhotoDao;
+import com.diploma.aerodent.data.local.dao.ToothStatusDao;
 import com.diploma.aerodent.data.local.dao.TreatmentDao;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Payment;
 import com.diploma.aerodent.data.local.entity.Photo;
+import com.diploma.aerodent.data.local.entity.ToothStatus;
 import com.diploma.aerodent.data.local.entity.Treatment;
 
 
@@ -25,10 +28,14 @@ import com.diploma.aerodent.data.local.entity.Treatment;
                 Appointment.class,
                 Treatment.class,
                 Payment.class,
-                Photo.class
+                Photo.class,
+                ToothStatus.class
         },
-        version = 3,
-        exportSchema = false
+        version = 6,
+        autoMigrations = {
+                @AutoMigration(from = 5, to = 6)
+        },
+        exportSchema = true
 )
 @TypeConverters({Converters.class})
 
@@ -39,6 +46,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract TreatmentDao treatmentDao();
     public abstract PaymentDao paymentDao();
     public abstract PhotoDao photoDao();
+    public abstract ToothStatusDao toothStatusDao();
 
     private static final int NUMBER_OF_THREADS = 4;
     public static final java.util.concurrent.ExecutorService databaseWriteExecutor =
@@ -55,7 +63,6 @@ public abstract class AppDatabase extends RoomDatabase {
                                     AppDatabase.class,
                                     "aerodent_database")
                             .addCallback(sRoomDatabaseCallback)
-                            .fallbackToDestructiveMigration(true)
                             .build();
                 }
             }
