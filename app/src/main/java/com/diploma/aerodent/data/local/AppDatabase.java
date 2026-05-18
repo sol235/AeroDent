@@ -2,7 +2,6 @@ package com.diploma.aerodent.data.local;
 
 import android.content.Context;
 
-import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -13,28 +12,25 @@ import com.diploma.aerodent.data.local.dao.PatientDao;
 import com.diploma.aerodent.data.local.dao.PaymentDao;
 import com.diploma.aerodent.data.local.dao.PhotoDao;
 import com.diploma.aerodent.data.local.dao.ToothStatusDao;
-import com.diploma.aerodent.data.local.dao.TreatmentDao;
+import com.diploma.aerodent.data.local.dao.ProcedureLogDao;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Payment;
 import com.diploma.aerodent.data.local.entity.Photo;
 import com.diploma.aerodent.data.local.entity.ToothStatus;
-import com.diploma.aerodent.data.local.entity.Treatment;
+import com.diploma.aerodent.data.local.entity.ProcedureLog;
 
 
 @Database(
         entities = {
                 Patient.class,
                 Appointment.class,
-                Treatment.class,
+                ProcedureLog.class,
                 Payment.class,
                 Photo.class,
                 ToothStatus.class
         },
-        version = 6,
-        autoMigrations = {
-                @AutoMigration(from = 5, to = 6)
-        },
+        version = 7,
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -43,7 +39,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract PatientDao patientDao();
     public abstract AppointmentDao appointmentDao();
-    public abstract TreatmentDao treatmentDao();
+    public abstract ProcedureLogDao procedureLogDao();
     public abstract PaymentDao paymentDao();
     public abstract PhotoDao photoDao();
     public abstract ToothStatusDao toothStatusDao();

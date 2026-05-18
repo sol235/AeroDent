@@ -4,8 +4,10 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
+import java.util.Date;
 
-@Entity(tableName = "treatments",
+
+@Entity(tableName = "procedure_logs",
         foreignKeys = {
                 @ForeignKey(
                         entity = Patient.class,
@@ -16,28 +18,32 @@ import androidx.room.Index;
                         entity = Appointment.class,
                         parentColumns = "id",
                         childColumns = "appointmentId",
-                        onDelete = ForeignKey.CASCADE)
+                        onDelete = ForeignKey.SET_NULL)
         },
         indices = {
                 @Index("patientId"),
                 @Index("appointmentId")
         })
+public class ProcedureLog extends PatientRecordEntity {
 
-public class Treatment extends PatientRecordEntity {
-
-    private int appointmentId;
+    private Integer appointmentId;
     private int toothNumber;
-    private String procedure;
+    private Date dateLogged;
+    private String entryType;
     private String diagnosis;
+    private String actionTaken;
+    private String surfaces;
     private String notes;
 
-    public Treatment() {}
+    public static final String TYPE_STATUS = "STATUS";
+    public static final String TYPE_PROCEDURE = "PROCEDURE";
 
+    public ProcedureLog() {}
 
-    public int getAppointmentId() {
+    public Integer getAppointmentId() {
         return appointmentId;
     }
-    public void setAppointmentId(int appointmentId) {
+    public void setAppointmentId(Integer appointmentId) {
         this.appointmentId = appointmentId;
     }
 
@@ -48,11 +54,18 @@ public class Treatment extends PatientRecordEntity {
         this.toothNumber = toothNumber;
     }
 
-    public String getProcedure() {
-        return procedure;
+    public Date getDateLogged() {
+        return dateLogged;
     }
-    public void setProcedure(String procedure) {
-        this.procedure = procedure;
+    public void setDateLogged(Date dateLogged) {
+        this.dateLogged = dateLogged;
+    }
+
+    public String getEntryType() {
+        return entryType;
+    }
+    public void setEntryType(String entryType) {
+        this.entryType = entryType;
     }
 
     public String getDiagnosis() {
@@ -60,6 +73,20 @@ public class Treatment extends PatientRecordEntity {
     }
     public void setDiagnosis(String diagnosis) {
         this.diagnosis = diagnosis;
+    }
+
+    public String getActionTaken() {
+        return actionTaken;
+    }
+    public void setActionTaken(String actionTaken) {
+        this.actionTaken = actionTaken;
+    }
+
+    public String getSurfaces() {
+        return surfaces;
+    }
+    public void setSurfaces(String surfaces) {
+        this.surfaces = surfaces;
     }
 
     public String getNotes() {
