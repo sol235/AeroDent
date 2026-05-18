@@ -63,6 +63,7 @@
 
                 <!-- Total Patients -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_total_patients"
                     android:layout_width="0dp"
                     android:layout_height="90dp"
                     android:layout_weight="1"
@@ -79,6 +80,7 @@
 
                 <!-- Today's appointments -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_todays_appointments"
                     android:layout_width="0dp"
                     android:layout_height="90dp"
                     android:layout_weight="1"
@@ -104,6 +106,7 @@
 
                 <!-- Active Treatments -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_active_treatments"
                     android:layout_width="0dp"
                     android:layout_height="90dp"
                     android:layout_weight="1"
@@ -120,6 +123,7 @@
 
                 <!-- Appointments left -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_appointments_left"
                     android:layout_width="0dp"
                     android:layout_height="90dp"
                     android:layout_weight="1"

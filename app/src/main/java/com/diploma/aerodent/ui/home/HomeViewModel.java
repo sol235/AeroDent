@@ -56,9 +56,7 @@ public class HomeViewModel extends AndroidViewModel {
         activeDummy.setValue(3);
         activeTreatmentsCount = activeDummy;
 
-        androidx.lifecycle.MutableLiveData<Integer> leftDummy = new androidx.lifecycle.MutableLiveData<>();
-        leftDummy.setValue(2);
-        appointmentsLeftCount = leftDummy;
+        appointmentsLeftCount = appointmentRepository.getAppointmentCountBetweenByStatus(startOfDay, endOfDay, Appointment.STATUS_SCHEDULED);
         todaysAppointments = appointmentRepository.getAppointmentsBetweenDates(startOfDay, endOfDay);
         allPatients = patientRepository.getAllPatients();
     }

@@ -55,4 +55,7 @@ public interface AppointmentDao {
 
     @Query("SELECT COUNT(*) FROM appointments WHERE dateTime BETWEEN :startDate AND :endDate")
     LiveData<Integer> getAppointmentCountBetween(Date startDate, Date endDate);
+
+    @Query("SELECT COUNT(*) FROM appointments WHERE dateTime BETWEEN :startDate AND :endDate AND status = :status")
+    LiveData<Integer> getAppointmentCountBetweenByStatus(Date startDate, Date endDate, String status);
 }

@@ -1,9 +1,12 @@
 package com.diploma.aerodent.ui.patients;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +21,7 @@ public class PatientsFragment extends Fragment {
     private PatientViewModel patientViewModel;
     private PatientListAdapter adapter;
     private RecyclerView recyclerPatients;
+    private EditText editSearch;
 
     @Nullable
     @Override
@@ -36,10 +40,26 @@ public class PatientsFragment extends Fragment {
         });
 
         patientViewModel = new ViewModelProvider(this).get(PatientViewModel.class);
-        patientViewModel.getAllPatients().observe(getViewLifecycleOwner(), patients -> {
+        patientViewModel.getSearchResults().observe(getViewLifecycleOwner(), patients -> {
             if (patients != null) {
                 adapter.setPatients(patients);
             }
+        });
+
+        editSearch = root.findViewById(R.id.edit_search);
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (patientViewModel != null) {
+                    patientViewModel.setSearchQuery(s != null ? s.toString() : "");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
         root.findViewById(R.id.fab_add_patient).setOnClickListener(v -> {
@@ -63,5 +83,6 @@ public class PatientsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         recyclerPatients = null;
+        editSearch = null;
     }
 }

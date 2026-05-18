@@ -46,6 +46,10 @@ public class AppointmentRepository {
         return appointmentDao.getAppointmentCountBetween(startDate, endDate);
     }
 
+    public LiveData<Integer> getAppointmentCountBetweenByStatus(Date startDate, Date endDate, String status) {
+        return appointmentDao.getAppointmentCountBetweenByStatus(startDate, endDate, status);
+    }
+
     public void insert(Appointment appointment) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             appointmentDao.insert(appointment);

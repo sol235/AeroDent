@@ -79,7 +79,8 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
             holder.cardPaymentStatus.setVisibility(View.GONE);
         }
 
-        holder.timelineLine.setVisibility(position == items.size() - 1 ? View.GONE : View.VISIBLE);
+        holder.timelineLineTop.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
+        holder.timelineLineBottom.setVisibility(position == items.size() - 1 ? View.INVISIBLE : View.VISIBLE);
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -103,7 +104,8 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
         TextView textDescription;
         TextView textPaymentStatus;
         MaterialCardView cardPaymentStatus;
-        View timelineLine;
+        View timelineLineTop;
+        View timelineLineBottom;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -111,7 +113,8 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
             textDescription = itemView.findViewById(R.id.text_description);
             textPaymentStatus = itemView.findViewById(R.id.text_payment_status);
             cardPaymentStatus = itemView.findViewById(R.id.card_payment_status);
-            timelineLine = itemView.findViewById(R.id.timeline_line);
+            timelineLineTop = itemView.findViewById(R.id.timeline_line_top);
+            timelineLineBottom = itemView.findViewById(R.id.timeline_line_bottom);
         }
     }
 }

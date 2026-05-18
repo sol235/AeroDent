@@ -7,14 +7,25 @@
 
     <!-- Vertical  Line -->
     <View
-        android:id="@+id/timeline_line"
+        android:id="@+id/timeline_line_top"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/divider_grey"
+        app:layout_constraintBottom_toTopOf="@id/timeline_dot"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Timeline Line Bottom -->
+    <View
+        android:id="@+id/timeline_line_bottom"
         android:layout_width="2dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:background="@color/divider_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/timeline_dot" />
 
     <!-- Timeline Dot -->
     <View
@@ -24,8 +35,8 @@
         android:background="@drawable/dot_circle"
         android:backgroundTint="@color/primary"
         app:layout_constraintBottom_toBottomOf="@id/card_history"
-        app:layout_constraintEnd_toEndOf="@id/timeline_line"
-        app:layout_constraintStart_toStartOf="@id/timeline_line"
+        app:layout_constraintEnd_toEndOf="@id/timeline_line_top"
+        app:layout_constraintStart_toStartOf="@id/timeline_line_top"
         app:layout_constraintTop_toTopOf="@id/card_history" />
 
     <com.google.android.material.card.MaterialCardView
@@ -40,7 +51,7 @@
         app:cardCornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/timeline_line"
+        app:layout_constraintStart_toEndOf="@id/timeline_line_top"
         app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="@color/border_grey"
         app:strokeWidth="1dp">

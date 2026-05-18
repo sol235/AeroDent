@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.repository.PatientRepository;
@@ -17,7 +18,8 @@ import java.util.List;
 public class PatientViewModel extends AndroidViewModel {
 
     private final PatientRepository patientRepository;
-    private final LiveData<List<Patient>> allPatients;
+    private final MutableLiveData<String> searchQuery = new MutableLiveData<>("");
+    private final LiveData<List<Patient>> searchResults;
 
     private final MutableLiveData<String> calculatedGender = new MutableLiveData<>();
     private final MutableLiveData<Date> calculatedDob = new MutableLiveData<>();
@@ -26,11 +28,24 @@ public class PatientViewModel extends AndroidViewModel {
     public PatientViewModel(@NonNull Application application) {
         super(application);
         patientRepository = new PatientRepository(application);
-        allPatients = patientRepository.getAllPatients();
+        searchResults = Transformations.switchMap(searchQuery, query -> {
+            if (query == null || query.trim().isEmpty()) {
+                return patientRepository.getAllPatients();
+            } else {
+                return patientRepository.searchPatients(query.trim());
+            }
+        });
     }
 
-    public LiveData<List<Patient>> getAllPatients() {
-        return allPatients;
+    public LiveData<List<Patient>> getSearchResults() {
+        return searchResults;
+    }
+
+    public void setSearchQuery(String query) {
+        if (query == null) query = "";
+        if (!query.equals(searchQuery.getValue())) {
+            searchQuery.setValue(query);
+        }
     }
 
     public LiveData<Patient> getPatientById(int id) {

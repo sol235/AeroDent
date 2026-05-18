@@ -253,8 +253,10 @@ public class PatientDetailFragment extends Fragment {
                     textGender.setVisibility(View.GONE);
                 }
 
-                textPhone.setText(patient.getPhoneNumber() != null ? patient.getPhoneNumber() : "---");
-                textEmail.setText(patient.getEmail() != null ? patient.getEmail() : "---");
+                textPhone.setText(patient.getPhoneNumber() != null && !patient.getPhoneNumber().isEmpty() 
+                        ? patient.getPhoneNumber() : getString(R.string.not_available_short));
+                textEmail.setText(patient.getEmail() != null && !patient.getEmail().isEmpty() 
+                        ? patient.getEmail() : getString(R.string.not_available_short));
 
                 if (patient.getNotes() != null && !patient.getNotes().trim().isEmpty()) {
                     textNotes.setText(patient.getNotes());

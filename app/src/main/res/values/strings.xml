@@ -17,7 +17,8 @@
 
     <!-- Patients Screen -->
     <string name="patients_title">Пациенти</string>
-    <string name="patients_search_hint">Търсене по име или ЕГН</string>
+    <string name="patients_search_hint">Търсене по име, ЕГН или тел.</string>
+    <string name="patient_phone_format">тел: %1$s</string>
 
     <!-- Statuses -->
     <string name="status_scheduled">ЗАПИСАН</string>

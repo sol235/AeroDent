@@ -17,6 +17,8 @@ import com.diploma.aerodent.ui.appointments.AddAppointmentFragment;
 import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
 import com.diploma.aerodent.ui.appointments.SelectAppointmentDialogFragment;
 import com.diploma.aerodent.ui.patients.AddPatientFragment;
+import com.diploma.aerodent.ui.patients.PatientsFragment;
+import com.diploma.aerodent.ui.calendar.CalendarFragment;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
 import com.diploma.aerodent.util.CameraHelper;
 
@@ -107,6 +109,27 @@ public class HomeFragment extends Fragment {
         });
 
         // Quick Actions
+        root.findViewById(R.id.card_total_patients).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new PatientsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        root.findViewById(R.id.card_todays_appointments).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new CalendarFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        root.findViewById(R.id.card_appointments_left).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new CalendarFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         root.findViewById(R.id.btn_quick_new_patient).setOnClickListener(v -> {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment, new AddPatientFragment())
