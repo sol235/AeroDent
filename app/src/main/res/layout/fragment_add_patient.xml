@@ -279,6 +279,16 @@
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
+                android:id="@+id/text_phone_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/patient_error_phone_invalid"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="11sp"
+                android:visibility="gone" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -306,6 +316,16 @@
                     android:hint="@string/hint_email_example"
                     android:textColorHint="@color/text_hint" />
             </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/text_email_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/patient_error_email_invalid"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="11sp"
+                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"

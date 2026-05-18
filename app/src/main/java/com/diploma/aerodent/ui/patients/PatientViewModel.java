@@ -11,6 +11,7 @@ import androidx.lifecycle.Transformations;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.repository.PatientRepository;
 import com.diploma.aerodent.util.EgnUtils;
+import com.diploma.aerodent.util.ValidationUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,9 @@ public class PatientViewModel extends AndroidViewModel {
 
     private final MutableLiveData<String> calculatedGender = new MutableLiveData<>();
     private final MutableLiveData<Date> calculatedDob = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isEgnValid = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isEgnValid = new MutableLiveData<>(true);
+    private final MutableLiveData<Boolean> isPhoneValid = new MutableLiveData<>(true);
+    private final MutableLiveData<Boolean> isEmailValid = new MutableLiveData<>(true);
 
     public PatientViewModel(@NonNull Application application) {
         super(application);
@@ -64,6 +67,14 @@ public class PatientViewModel extends AndroidViewModel {
         return isEgnValid;
     }
 
+    public LiveData<Boolean> getIsPhoneValid() {
+        return isPhoneValid;
+    }
+
+    public LiveData<Boolean> getIsEmailValid() {
+        return isEmailValid;
+    }
+
     public void processEgn(String egn) {
         if (egn != null && egn.length() == 10) {
             boolean valid = EgnUtils.isValidEgn(egn);
@@ -80,6 +91,18 @@ public class PatientViewModel extends AndroidViewModel {
             calculatedGender.setValue(null);
             calculatedDob.setValue(null);
         }
+    }
+
+    public boolean validatePatientData(String egn, String phone, String email) {
+        boolean egnValid = EgnUtils.isValidEgn(egn);
+        boolean phoneValid = ValidationUtils.isValidPhoneNumber(phone);
+        boolean emailValid = ValidationUtils.isValidEmail(email);
+
+        isEgnValid.setValue(egnValid);
+        isPhoneValid.setValue(phoneValid);
+        isEmailValid.setValue(emailValid);
+
+        return egnValid && phoneValid && emailValid;
     }
 
     public void savePatient(Patient existingPatient, String firstName, String lastName, String egn, String gender,

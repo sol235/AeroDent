@@ -94,6 +94,8 @@
     <string name="patient_update_button">Обнови данните</string>
     <string name="patient_error_egn_required">ЕГН е задължително поле</string>
     <string name="patient_error_egn_invalid">Невалидно ЕГН</string>
+    <string name="patient_error_phone_invalid">Невалиден телефонен номер</string>
+    <string name="patient_error_email_invalid">Невалиден имейл адрес</string>
     <string name="patient_saved_success">Пациентът е записан</string>
     <string name="patient_updated_success">Данните са обновени</string>
     <string name="patient_deleted_success">Пациентът е изтрит</string>

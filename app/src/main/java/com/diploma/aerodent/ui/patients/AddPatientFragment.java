@@ -36,7 +36,7 @@ public class AddPatientFragment extends Fragment {
 
     private EditText editFirstName, editLastName, editEgn, editDob, editPhone, editEmail, editNhifNumber, editNotes;
     private Spinner spinnerNhifStatus, spinnerGender;
-    private TextView textEgnError;
+    private TextView textEgnError, textPhoneError, textEmailError;
     private PatientViewModel patientViewModel;
     private Calendar calendar = Calendar.getInstance();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
@@ -70,7 +70,9 @@ public class AddPatientFragment extends Fragment {
         textEgnError = root.findViewById(R.id.text_egn_error);
         editDob = root.findViewById(R.id.edit_dob);
         editPhone = root.findViewById(R.id.edit_phone);
+        textPhoneError = root.findViewById(R.id.text_phone_error);
         editEmail = root.findViewById(R.id.edit_email);
+        textEmailError = root.findViewById(R.id.text_email_error);
         editNhifNumber = root.findViewById(R.id.edit_nhif_number);
         editNotes = root.findViewById(R.id.edit_notes);
         spinnerNhifStatus = root.findViewById(R.id.spinner_nhif_status);
@@ -153,6 +155,14 @@ public class AddPatientFragment extends Fragment {
 
         patientViewModel.getIsEgnValid().observe(getViewLifecycleOwner(), isValid -> {
             textEgnError.setVisibility(isValid ? View.GONE : View.VISIBLE);
+        });
+
+        patientViewModel.getIsPhoneValid().observe(getViewLifecycleOwner(), isValid -> {
+            textPhoneError.setVisibility(isValid ? View.GONE : View.VISIBLE);
+        });
+
+        patientViewModel.getIsEmailValid().observe(getViewLifecycleOwner(), isValid -> {
+            textEmailError.setVisibility(isValid ? View.GONE : View.VISIBLE);
         });
     }
 
@@ -252,8 +262,7 @@ public class AddPatientFragment extends Fragment {
             return;
         }
         
-        if (!com.diploma.aerodent.util.EgnUtils.isValidEgn(egn)) {
-            textEgnError.setVisibility(View.VISIBLE);
+        if (!patientViewModel.validatePatientData(egn, phone, email)) {
             return;
         }
 
@@ -277,7 +286,9 @@ public class AddPatientFragment extends Fragment {
         textEgnError = null;
         editDob = null;
         editPhone = null;
+        textPhoneError = null;
         editEmail = null;
+        textEmailError = null;
         editNhifNumber = null;
         editNotes = null;
         spinnerNhifStatus = null;
