@@ -66,18 +66,7 @@
                     android:id="@+id/calendarView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:headerColor="@color/white"
-                    app:headerLabelColor="@color/black"
-                    app:pagesColor="@color/white"
-                    app:daysLabelsColor="@color/black"
-                    app:abbreviationsBarColor="@color/white"
-                    app:abbreviationsLabelsColor="@color/text_secondary"
-                    app:selectionColor="@color/primary"
-                    app:selectionLabelColor="@color/white"
-                    app:type="one_day_picker"
-                    app:eventsEnabled="true"
-                    app:forwardButtonSrc="@drawable/ic_arrow_right"
-                    app:previousButtonSrc="@drawable/ic_back" />
+                    app:headerColor="@color/primary"/>
 
             </com.google.android.material.card.MaterialCardView>
 

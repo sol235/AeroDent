@@ -25,7 +25,8 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
     }
 
     private List<PatientHistoryItem> items = new ArrayList<>();
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private final Locale bulgarianLocale = new Locale("bg", "BG");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", bulgarianLocale);
     private OnHistoryItemClickListener listener;
 
     public void setOnHistoryItemClickListener(OnHistoryItemClickListener listener) {

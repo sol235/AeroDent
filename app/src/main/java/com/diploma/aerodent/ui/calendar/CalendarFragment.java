@@ -33,7 +33,7 @@ public class CalendarFragment extends Fragment {
     private CalendarView calendarView;
     private TextView textSelectedDateHeader;
     
-    private SimpleDateFormat selectedDateFormat = new SimpleDateFormat("EEE, d MMM", Locale.getDefault());
+    private final SimpleDateFormat selectedDateFormat = new SimpleDateFormat("EEE, d MMM", new Locale("bg", "BG"));
 
     @Nullable
     @Override

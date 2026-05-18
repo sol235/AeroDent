@@ -193,4 +193,28 @@
     <string name="condition_supernumerary">Свръхброен зъб</string>
     <string name="condition_impacted">Ретиниран зъб</string>
     <string name="condition_healthy">Интактен зъб</string>
+
+    <!-- Custom Calendar Overrides -->
+    <string-array name="material_calendar_months_array">
+        <item>Януари</item>
+        <item>Февруари</item>
+        <item>Март</item>
+        <item>Април</item>
+        <item>Май</item>
+        <item>Юни</item>
+        <item>Юли</item>
+        <item>Август</item>
+        <item>Септември</item>
+        <item>Октомври</item>
+        <item>Ноември</item>
+        <item>Декември</item>
+    </string-array>
+
+    <string name="material_calendar_monday">Пн</string>
+    <string name="material_calendar_tuesday">Вт</string>
+    <string name="material_calendar_wednesday">Ср</string>
+    <string name="material_calendar_thursday">Чт</string>
+    <string name="material_calendar_friday">Пт</string>
+    <string name="material_calendar_saturday">Сб</string>
+    <string name="material_calendar_sunday">Нд</string>
 </resources>

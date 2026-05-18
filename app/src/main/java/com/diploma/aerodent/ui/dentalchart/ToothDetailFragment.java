@@ -37,6 +37,7 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
     private MaterialButton btnSaveCondition;
 
     private DentalCondition pendingCondition;
+    private List<com.diploma.aerodent.data.local.entity.ToothStatus> currentStatuses;
 
     public static ToothDetailFragment newInstance(int toothNumber) {
         ToothDetailFragment fragment = new ToothDetailFragment();
@@ -152,8 +153,24 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
             textSelectedCondition
                     .setText(getString(R.string.dental_chart_surfaces_for, condition.getDisplayName(getContext())));
             layoutSurfaceSelector.setVisibility(View.VISIBLE);
-            for (ToggleButton tb : surfaceToggles)
-                tb.setChecked(false);
+
+            java.util.List<String> existingSurfaces = new java.util.ArrayList<>();
+            if (currentStatuses != null) {
+                for (com.diploma.aerodent.data.local.entity.ToothStatus status : currentStatuses) {
+                    if (status.getCondition() == condition) {
+                        String surfacesStr = status.getSurfaces();
+                        if (surfacesStr != null && !surfacesStr.isEmpty()) {
+                            java.util.Collections.addAll(existingSurfaces, surfacesStr.split(","));
+                        }
+                        break;
+                    }
+                }
+            }
+
+            String[] codes = viewModel.getSurfaceCodes();
+            for (int i = 0; i < surfaceToggles.length; i++) {
+                surfaceToggles[i].setChecked(existingSurfaces.contains(codes[i]));
+            }
         } else {
             viewModel.updateToothStatus(toothNumber, condition, "");
             layoutSurfaceSelector.setVisibility(View.GONE);
@@ -179,6 +196,7 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
 
     private void observeToothData() {
         viewModel.getToothStatusesForTooth(toothNumber).observe(getViewLifecycleOwner(), statuses -> {
+            currentStatuses = statuses;
             activeAdapter.setStatuses(statuses);
         });
     }

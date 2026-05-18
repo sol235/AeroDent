@@ -1,5 +1,7 @@
 package com.diploma.aerodent;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -14,7 +16,17 @@ import com.diploma.aerodent.ui.home.HomeFragment;
 import com.diploma.aerodent.ui.patients.PatientsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        Locale locale = new Locale("bg", "BG");
+        Locale.setDefault(locale);
+        Configuration config = newBase.getResources().getConfiguration();
+        config.setLocale(locale);
+        super.attachBaseContext(newBase.createConfigurationContext(config));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
