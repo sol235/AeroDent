@@ -19,6 +19,8 @@ public interface ProcedureLogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(ProcedureLog log);
 
+    @Update
+    void update(ProcedureLog log);
 
     @Query("SELECT * FROM procedure_logs WHERE appointmentId = :appointmentId")
     LiveData<List<ProcedureLog>> getProcedureLogsForAppointment(int appointmentId);

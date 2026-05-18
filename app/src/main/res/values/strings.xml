@@ -129,6 +129,7 @@
     
     <!-- Appointment Detail -->
     <string name="appointment_detail_title">Детайли за посещението</string>
+    <string name="procedures_dental_chart">Процедури - Зъбен Статус</string>
     <string name="appointment_detail_section_info">ИНФОРМАЦИЯ ЗА ЧАСА</string>
     <string name="appointment_detail_patient">Пациент</string>
     <string name="appointment_detail_date">Дата</string>
@@ -139,6 +140,7 @@
     <string name="delete_appointment_title">Изтриване на час</string>
     <string name="delete_appointment_confirmation">Желаете ли да изтриете записания час?</string>
     <string name="appointment_deleted_success">Часът е изтрит</string>
+    <string name="add_procedure_edit_chart">Зъбен Статус</string>
 
     <!-- Photo -->
     <string name="photo_delete_confirmation">Желаете ли да изтриете тази снимка?</string>
@@ -151,9 +153,22 @@
 
     <!-- Dental Chart -->
     <string name="dental_chart_title">Зъбен статус</string>
+    <string name="active_conditions">Активни състояния</string>
+    <string name="add_condition">Добави състояние</string>
     <string name="dental_chart_tooth_label">Зъб №%1$d</string>
     <string name="dental_chart_tooth_title">Зъб %1$d</string>
     <string name="dental_chart_surfaces_for">Повърхности за %1$s:</string>
+    <string name="context_appointment">По време на посещение</string>
+    <string name="context_previous">Предишна работа</string>
+    <string name="surfaces_label">Повърхности: %1$s</string>
+    <string name="entry_context">Контекст на записа</string>
+    <string name="previous_work">Предишна работа</string>
+    <string name="current_treatment">Текущо лечение</string>
+    <string name="save">Запази</string>
+    <string name="annul_record_title">Анулиране на запис</string>
+    <string name="annul_record_message">Желаете ли да анулирате този запис?</string>
+    <string name="annul_record">Анулирай</string>
+    <string name="annulled_badge">АНУЛИРАН</string>
 
     <!-- Tooth Surfaces -->
     <string name="surface_mesial">М</string>

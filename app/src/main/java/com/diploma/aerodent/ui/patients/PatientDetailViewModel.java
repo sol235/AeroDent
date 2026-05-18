@@ -12,11 +12,11 @@ import androidx.lifecycle.Transformations;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Payment;
-import com.diploma.aerodent.data.local.entity.Treatment;
+import com.diploma.aerodent.data.local.entity.ProcedureLog;
 import com.diploma.aerodent.data.repository.AppointmentRepository;
 import com.diploma.aerodent.data.repository.PatientRepository;
 import com.diploma.aerodent.data.repository.PaymentRepository;
-import com.diploma.aerodent.data.repository.TreatmentRepository;
+import com.diploma.aerodent.data.repository.ProcedureLogRepository;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class PatientDetailViewModel extends AndroidViewModel {
 
     private PatientRepository patientRepository;
     private AppointmentRepository appointmentRepository;
-    private TreatmentRepository treatmentRepository;
+    private ProcedureLogRepository procedureLogRepository;
     private PaymentRepository paymentRepository;
 
     private MutableLiveData<Integer> patientId = new MutableLiveData<>();
@@ -37,7 +37,7 @@ public class PatientDetailViewModel extends AndroidViewModel {
         super(application);
         patientRepository = new PatientRepository(application);
         appointmentRepository = new AppointmentRepository(application);
-        treatmentRepository = new TreatmentRepository(application);
+        procedureLogRepository = new ProcedureLogRepository(application);
         paymentRepository = new PaymentRepository(application);
 
         patient = Transformations.switchMap(patientId, id -> patientRepository.getPatientById(id));
@@ -79,8 +79,8 @@ public class PatientDetailViewModel extends AndroidViewModel {
         return historyItems;
     }
 
-    public LiveData<List<Treatment>> getTreatmentsForAppointment(int appointmentId) {
-        return treatmentRepository.getTreatmentsForAppointment(appointmentId);
+    public LiveData<List<ProcedureLog>> getProcedureLogsForAppointment(int appointmentId) {
+        return procedureLogRepository.getProcedureLogsForAppointment(appointmentId);
     }
 
     public LiveData<Payment> getPaymentForAppointment(int appointmentId) {

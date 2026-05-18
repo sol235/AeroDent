@@ -19,14 +19,15 @@ import java.util.List;
 
 public class ActiveConditionsAdapter extends RecyclerView.Adapter<ActiveConditionsAdapter.ViewHolder> {
     private List<ToothStatus> statuses = new ArrayList<>();
-    private final OnDeleteClickListener deleteListener;
+    private final OnConditionInteractionListener listener;
 
-    public interface OnDeleteClickListener {
+    public interface OnConditionInteractionListener {
         void onDeleteClick(ToothStatus status);
+        void onConditionClick(ToothStatus status);
     }
 
-    public ActiveConditionsAdapter(OnDeleteClickListener deleteListener) {
-        this.deleteListener = deleteListener;
+    public ActiveConditionsAdapter(OnConditionInteractionListener listener) {
+        this.listener = listener;
     }
 
     public void setStatuses(List<ToothStatus> statuses) {
@@ -63,7 +64,16 @@ public class ActiveConditionsAdapter extends RecyclerView.Adapter<ActiveConditio
             holder.viewColor.setVisibility(View.GONE);
         }
 
-        holder.btnDelete.setOnClickListener(v -> deleteListener.onDeleteClick(status));
+        if (holder.textEntryContext != null) {
+            String formattedContext = com.diploma.aerodent.util.FormatUtils.formatEntryContext(
+                holder.itemView.getContext(), status.getDateRecorded(), status.getAppointmentId()
+            );
+            holder.textEntryContext.setText(formattedContext);
+            holder.textEntryContext.setVisibility(View.VISIBLE);
+        }
+
+        holder.btnDelete.setOnClickListener(v -> listener.onDeleteClick(status));
+        holder.itemView.setOnClickListener(v -> listener.onConditionClick(status));
     }
 
     @Override
@@ -73,7 +83,7 @@ public class ActiveConditionsAdapter extends RecyclerView.Adapter<ActiveConditio
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         View viewColor;
-        TextView textName, textDetails;
+        TextView textName, textDetails, textEntryContext;
         View btnDelete;
 
         ViewHolder(View view) {
@@ -81,6 +91,7 @@ public class ActiveConditionsAdapter extends RecyclerView.Adapter<ActiveConditio
             viewColor = view.findViewById(R.id.view_condition_color);
             textName = view.findViewById(R.id.text_condition_name);
             textDetails = view.findViewById(R.id.text_condition_details);
+            textEntryContext = view.findViewById(R.id.text_entry_context);
             btnDelete = view.findViewById(R.id.btn_delete_condition);
         }
     }

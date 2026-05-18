@@ -30,7 +30,7 @@ import com.diploma.aerodent.data.local.entity.ProcedureLog;
                 Photo.class,
                 ToothStatus.class
         },
-        version = 7,
+        version = 8,
         exportSchema = true
 )
 @TypeConverters({Converters.class})

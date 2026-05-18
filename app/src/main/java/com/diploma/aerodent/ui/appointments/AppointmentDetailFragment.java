@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
@@ -24,10 +25,12 @@ import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Photo;
 import com.diploma.aerodent.ui.dentalchart.DentalChartFragment;
+import com.diploma.aerodent.ui.dentalchart.ProcedureLogAdapter;
 import com.diploma.aerodent.ui.photos.FullScreenPhotoDialogFragment;
 import com.diploma.aerodent.ui.photos.PhotoAdapter;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
 import com.diploma.aerodent.util.CameraHelper;
+import com.diploma.aerodent.util.DialogUtils;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
@@ -54,6 +57,10 @@ public class AppointmentDetailFragment extends Fragment {
     private View textPhotosLabel;
     private RecyclerView recyclerPhotos;
     private PhotoAdapter photoAdapter;
+    
+    private TextView textProcedureLogsLabel;
+    private RecyclerView recyclerProcedureLogs;
+    private ProcedureLogAdapter procedureLogAdapter;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
@@ -130,6 +137,21 @@ public class AppointmentDetailFragment extends Fragment {
         photoAdapter.setOnPhotoClickListener(this::openFullScreen);
         recyclerPhotos.setAdapter(photoAdapter);
 
+        textProcedureLogsLabel = view.findViewById(R.id.text_procedure_logs_label);
+        recyclerProcedureLogs = view.findViewById(R.id.recycler_procedure_logs);
+        recyclerProcedureLogs.setLayoutManager(new LinearLayoutManager(getContext()));
+        procedureLogAdapter = new ProcedureLogAdapter(new ProcedureLogAdapter.OnProcedureLogInteractionListener() {
+            @Override
+            public void onAnnulClick(com.diploma.aerodent.data.local.entity.ProcedureLog log) {
+                showAnnulDialog(log);
+            }
+
+            @Override
+            public void onLogClick(com.diploma.aerodent.data.local.entity.ProcedureLog log) {
+            }
+        });
+        recyclerProcedureLogs.setAdapter(procedureLogAdapter);
+
         view.findViewById(R.id.btn_back).setOnClickListener(v -> getParentFragmentManager().popBackStack());
         view.findViewById(R.id.btn_delete_appointment).setOnClickListener(v -> showDeleteConfirmationDialog());
         
@@ -144,7 +166,7 @@ public class AppointmentDetailFragment extends Fragment {
         view.findViewById(R.id.fab_dental_chart).setOnClickListener(v -> {
             if (currentAppointment != null) {
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, DentalChartFragment.newInstance(currentAppointment.getPatientId()))
+                        .replace(R.id.nav_host_fragment, DentalChartFragment.newInstance(currentAppointment.getPatientId(), currentAppointment.getId()))
                         .addToBackStack(null)
                         .commit();
             }
@@ -174,6 +196,20 @@ public class AppointmentDetailFragment extends Fragment {
                 if (result.patient != null) {
                     bindPatientData(result.patient);
                 }
+            }
+        });
+
+        viewModel.getProcedureLogsForAppointment(appointmentId).observe(getViewLifecycleOwner(), logs -> {
+            View dividerNotes = getView() != null ? getView().findViewById(R.id.divider_notes) : null;
+            if (logs != null && !logs.isEmpty()) {
+                procedureLogAdapter.setProcedureLogs(logs);
+                textProcedureLogsLabel.setVisibility(View.VISIBLE);
+                recyclerProcedureLogs.setVisibility(View.VISIBLE);
+                if (dividerNotes != null) dividerNotes.setVisibility(View.VISIBLE);
+            } else {
+                textProcedureLogsLabel.setVisibility(View.GONE);
+                recyclerProcedureLogs.setVisibility(View.GONE);
+                if (dividerNotes != null) dividerNotes.setVisibility(View.GONE);
             }
         });
 
@@ -241,6 +277,13 @@ public class AppointmentDetailFragment extends Fragment {
         }
     }
 
+    private void showAnnulDialog(com.diploma.aerodent.data.local.entity.ProcedureLog log) {
+        DialogUtils.showAnnulDialog(requireContext(), () -> {
+            log.setAnnulled(true);
+            viewModel.updateProcedureLog(log);
+        });
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -253,5 +296,7 @@ public class AppointmentDetailFragment extends Fragment {
         textNotes = null;
         textPhotosLabel = null;
         recyclerPhotos = null;
+        textProcedureLogsLabel = null;
+        recyclerProcedureLogs = null;
     }
 }

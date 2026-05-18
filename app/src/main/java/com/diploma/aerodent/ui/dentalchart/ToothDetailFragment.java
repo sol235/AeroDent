@@ -31,12 +31,17 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
     private RecyclerView recyclerActiveConditions;
     private ActiveConditionsAdapter activeAdapter;
     private LinearLayout containerCategories;
-    private LinearLayout layoutSurfaceSelector;
+    private LinearLayout layoutConfirmation;
     private TextView textSelectedCondition;
+    private LinearLayout containerSurfaceToggles;
+    private TextView textSurfaceLegend;
     private ToggleButton[] surfaceToggles;
+    private com.google.android.material.button.MaterialButtonToggleGroup toggleContext;
+    private com.google.android.material.button.MaterialButton btnContextAppointment;
     private MaterialButton btnSaveCondition;
 
     private DentalCondition pendingCondition;
+    private TextView selectedConditionView;
     private List<com.diploma.aerodent.data.local.entity.ToothStatus> currentStatuses;
 
     public static ToothDetailFragment newInstance(int toothNumber) {
@@ -80,8 +85,22 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
     private void setupActiveConditions(View view) {
         recyclerActiveConditions = view.findViewById(R.id.recycler_active_conditions);
         recyclerActiveConditions.setLayoutManager(new LinearLayoutManager(getContext()));
-        activeAdapter = new ActiveConditionsAdapter(status -> {
-            viewModel.deleteToothStatus(toothNumber, status.getCondition());
+        activeAdapter = new ActiveConditionsAdapter(new ActiveConditionsAdapter.OnConditionInteractionListener() {
+            @Override
+            public void onDeleteClick(com.diploma.aerodent.data.local.entity.ToothStatus status) {
+                viewModel.deleteToothStatus(toothNumber, status.getCondition());
+            }
+
+            @Override
+            public void onConditionClick(com.diploma.aerodent.data.local.entity.ToothStatus status) {
+                if (status.getAppointmentId() != null) {
+                    dismiss();
+                    androidx.fragment.app.Fragment parent = getParentFragment();
+                    if (parent instanceof DentalChartFragment) {
+                        ((DentalChartFragment) parent).navigateToAppointment(status.getAppointmentId());
+                    }
+                }
+            }
         });
         recyclerActiveConditions.setAdapter(activeAdapter);
     }
@@ -128,7 +147,7 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
         for (DentalCondition condition : conditions) {
             TextView item = new TextView(getContext(), null, 0, R.style.ConditionButtonStyle);
             item.setText(condition.getDisplayName(getContext()));
-            item.setOnClickListener(v -> onConditionClicked(condition));
+            item.setOnClickListener(v -> onConditionClicked(condition, item));
             itemsContainer.addView(item);
         }
 
@@ -137,8 +156,12 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
     }
 
     private void setupSurfaceSelector(View view) {
-        layoutSurfaceSelector = view.findViewById(R.id.layout_surface_selector);
+        layoutConfirmation = view.findViewById(R.id.layout_confirmation);
         textSelectedCondition = view.findViewById(R.id.text_selected_condition);
+        containerSurfaceToggles = view.findViewById(R.id.container_surface_toggles);
+        textSurfaceLegend = view.findViewById(R.id.text_surface_legend);
+        toggleContext = view.findViewById(R.id.toggle_context);
+        btnContextAppointment = view.findViewById(R.id.btn_context_appointment);
         btnSaveCondition = view.findViewById(R.id.btn_save_condition);
 
         surfaceToggles = new ToggleButton[] { view.findViewById(R.id.toggle_m), view.findViewById(R.id.toggle_o),
@@ -147,12 +170,34 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
         btnSaveCondition.setOnClickListener(v -> savePendingCondition());
     }
 
-    private void onConditionClicked(DentalCondition condition) {
+    private void onConditionClicked(DentalCondition condition, TextView clickedView) {
+        if (selectedConditionView != null) {
+            selectedConditionView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            selectedConditionView.setTypeface(null, android.graphics.Typeface.NORMAL);
+            selectedConditionView.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary));
+        }
+
+        selectedConditionView = clickedView;
+        selectedConditionView.setBackgroundColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.tertiary));
+        selectedConditionView.setTypeface(null, android.graphics.Typeface.BOLD);
+        selectedConditionView.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.primary));
+
+        pendingCondition = condition;
+        layoutConfirmation.setVisibility(View.VISIBLE);
+
+        if (viewModel.getAppointmentId().getValue() == null) {
+            btnContextAppointment.setEnabled(false);
+            toggleContext.check(R.id.btn_context_previous);
+        } else {
+            btnContextAppointment.setEnabled(true);
+            toggleContext.check(R.id.btn_context_appointment);
+        }
+
         if (condition.requiresSurfaces()) {
-            pendingCondition = condition;
-            textSelectedCondition
-                    .setText(getString(R.string.dental_chart_surfaces_for, condition.getDisplayName(getContext())));
-            layoutSurfaceSelector.setVisibility(View.VISIBLE);
+            textSelectedCondition.setText(getString(R.string.dental_chart_surfaces_for, condition.getDisplayName(getContext())));
+            textSelectedCondition.setVisibility(View.VISIBLE);
+            containerSurfaceToggles.setVisibility(View.VISIBLE);
+            textSurfaceLegend.setVisibility(View.VISIBLE);
 
             java.util.List<String> existingSurfaces = new java.util.ArrayList<>();
             if (currentStatuses != null) {
@@ -172,8 +217,9 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
                 surfaceToggles[i].setChecked(existingSurfaces.contains(codes[i]));
             }
         } else {
-            viewModel.updateToothStatus(toothNumber, condition, "");
-            layoutSurfaceSelector.setVisibility(View.GONE);
+            textSelectedCondition.setVisibility(View.GONE);
+            containerSurfaceToggles.setVisibility(View.GONE);
+            textSurfaceLegend.setVisibility(View.GONE);
         }
     }
 
@@ -181,17 +227,28 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
         if (pendingCondition == null)
             return;
 
+        boolean isCurrentAppointment = toggleContext.getCheckedButtonId() == R.id.btn_context_appointment;
+
         java.util.List<String> selectedSurfaces = new java.util.ArrayList<>();
-        String[] codes = viewModel.getSurfaceCodes();
-        for (int i = 0; i < surfaceToggles.length; i++) {
-            if (surfaceToggles[i].isChecked()) {
-                selectedSurfaces.add(codes[i]);
+        if (pendingCondition.requiresSurfaces()) {
+            String[] codes = viewModel.getSurfaceCodes();
+            for (int i = 0; i < surfaceToggles.length; i++) {
+                if (surfaceToggles[i].isChecked()) {
+                    selectedSurfaces.add(codes[i]);
+                }
             }
         }
 
-        viewModel.updateToothStatus(toothNumber, pendingCondition, selectedSurfaces);
-        layoutSurfaceSelector.setVisibility(View.GONE);
+        viewModel.updateToothStatus(toothNumber, pendingCondition, selectedSurfaces, isCurrentAppointment);
+        layoutConfirmation.setVisibility(View.GONE);
         pendingCondition = null;
+
+        if (selectedConditionView != null) {
+            selectedConditionView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            selectedConditionView.setTypeface(null, android.graphics.Typeface.NORMAL);
+            selectedConditionView.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary));
+            selectedConditionView = null;
+        }
     }
 
     private void observeToothData() {

@@ -31,4 +31,10 @@ public class ProcedureLogRepository {
             procedureLogDao.insert(log);
         });
     }
+
+    public void update(ProcedureLog log) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            procedureLogDao.update(log);
+        });
+    }
 }

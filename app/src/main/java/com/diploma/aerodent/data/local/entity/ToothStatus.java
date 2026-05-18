@@ -37,15 +37,19 @@ public class ToothStatus extends PatientRecordEntity {
 
     private String surfaces; // O,M,D,B,L
     private Date dateRecorded;
+    
+    private Integer appointmentId;
 
     public ToothStatus() {}
 
-    public ToothStatus(int patientId, int toothNumber, DentalCondition condition, String surfaces, Date dateRecorded) {
+    @androidx.room.Ignore
+    public ToothStatus(int patientId, int toothNumber, DentalCondition condition, String surfaces, Date dateRecorded, Integer appointmentId) {
         setPatientId(patientId);
         this.toothNumber = toothNumber;
         this.condition = condition;
         this.surfaces = surfaces;
         this.dateRecorded = dateRecorded;
+        this.appointmentId = appointmentId;
     }
 
     public int getToothNumber() {
@@ -78,5 +82,13 @@ public class ToothStatus extends PatientRecordEntity {
 
     public void setDateRecorded(Date dateRecorded) {
         this.dateRecorded = dateRecorded;
+    }
+
+    public Integer getAppointmentId() {
+        return appointmentId;
+    }
+
+    public void setAppointmentId(Integer appointmentId) {
+        this.appointmentId = appointmentId;
     }
 }

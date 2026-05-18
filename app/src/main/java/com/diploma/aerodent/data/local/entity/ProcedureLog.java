@@ -38,7 +38,17 @@ public class ProcedureLog extends PatientRecordEntity {
     public static final String TYPE_STATUS = "STATUS";
     public static final String TYPE_PROCEDURE = "PROCEDURE";
 
+    private boolean isAnnulled = false;
+
     public ProcedureLog() {}
+
+    public boolean isAnnulled() {
+        return isAnnulled;
+    }
+
+    public void setAnnulled(boolean annulled) {
+        isAnnulled = annulled;
+    }
 
     public Integer getAppointmentId() {
         return appointmentId;

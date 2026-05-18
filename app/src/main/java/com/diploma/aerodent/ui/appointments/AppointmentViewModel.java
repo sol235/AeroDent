@@ -9,8 +9,10 @@ import androidx.lifecycle.Transformations;
 
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
+import com.diploma.aerodent.data.local.entity.ProcedureLog;
 import com.diploma.aerodent.data.repository.AppointmentRepository;
 import com.diploma.aerodent.data.repository.PatientRepository;
+import com.diploma.aerodent.data.repository.ProcedureLogRepository;
 
 import java.util.Date;
 import java.util.List;
@@ -29,12 +31,14 @@ public class AppointmentViewModel extends AndroidViewModel {
 
     private AppointmentRepository repository;
     private PatientRepository patientRepository;
+    private ProcedureLogRepository procedureLogRepository;
     private LiveData<List<Patient>> allPatients;
 
     public AppointmentViewModel(@NonNull Application application) {
         super(application);
         repository = new AppointmentRepository(application);
         patientRepository = new PatientRepository(application);
+        procedureLogRepository = new ProcedureLogRepository(application);
         allPatients = patientRepository.getAllPatients();
     }
 
@@ -90,5 +94,13 @@ public class AppointmentViewModel extends AndroidViewModel {
 
     public LiveData<Appointment> getAppointmentById(int id) {
         return repository.getAppointmentById(id);
+    }
+
+    public LiveData<List<ProcedureLog>> getProcedureLogsForAppointment(int appointmentId) {
+        return procedureLogRepository.getProcedureLogsForAppointment(appointmentId);
+    }
+
+    public void updateProcedureLog(ProcedureLog log) {
+        procedureLogRepository.update(log);
     }
 }

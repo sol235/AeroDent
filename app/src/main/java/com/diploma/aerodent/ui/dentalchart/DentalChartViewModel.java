@@ -10,8 +10,10 @@ import androidx.lifecycle.Transformations;
 
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.ToothStatus;
+import com.diploma.aerodent.data.local.entity.ProcedureLog;
 import com.diploma.aerodent.data.local.model.DentalCondition;
 import com.diploma.aerodent.data.repository.PatientRepository;
+import com.diploma.aerodent.data.repository.ProcedureLogRepository;
 import com.diploma.aerodent.data.repository.ToothStatusRepository;
 
 import org.json.JSONObject;
@@ -26,20 +28,25 @@ public class DentalChartViewModel extends AndroidViewModel {
 
     private final ToothStatusRepository repository;
     private final PatientRepository patientRepository;
+    private final ProcedureLogRepository procedureLogRepository;
     private final MutableLiveData<Integer> patientId = new MutableLiveData<>();
+    private final MutableLiveData<Integer> appointmentId = new MutableLiveData<>();
     private final LiveData<List<ToothStatus>> toothStatuses;
     private final LiveData<Map<Integer, String>> toothColors;
     private final LiveData<String> toothColorsJson;
     private final LiveData<Patient> patient;
     private final LiveData<String> patientName;
+    private final LiveData<List<ProcedureLog>> procedureLogs;
 
     public DentalChartViewModel(@NonNull Application application) {
         super(application);
         repository = new ToothStatusRepository(application);
         patientRepository = new PatientRepository(application);
+        procedureLogRepository = new ProcedureLogRepository(application);
 
         toothStatuses = Transformations.switchMap(patientId, repository::getToothStatusesForPatient);
         patient = Transformations.switchMap(patientId, patientRepository::getPatientById);
+        procedureLogs = Transformations.switchMap(patientId, procedureLogRepository::getProcedureLogsForPatient);
 
         toothColors = Transformations.map(toothStatuses, statuses -> {
             Map<Integer, String> colors = new HashMap<>();
@@ -86,6 +93,14 @@ public class DentalChartViewModel extends AndroidViewModel {
         patientId.setValue(id);
     }
 
+    public void setAppointmentId(Integer id) {
+        appointmentId.setValue(id);
+    }
+
+    public LiveData<Integer> getAppointmentId() {
+        return appointmentId;
+    }
+
     public LiveData<List<ToothStatus>> getToothStatuses() {
         return toothStatuses;
     }
@@ -106,21 +121,52 @@ public class DentalChartViewModel extends AndroidViewModel {
         return toothColorsJson;
     }
 
-    public void updateToothStatus(int toothNumber, DentalCondition condition, String surfaces) {
+    public LiveData<List<ProcedureLog>> getProcedureLogs() {
+        return procedureLogs;
+    }
+
+    public void updateToothStatus(int toothNumber, DentalCondition condition, String surfaces, boolean isCurrentAppointment) {
         Integer pid = patientId.getValue();
         if (pid == null)
             return;
 
-        ToothStatus newStatus = new ToothStatus(pid, toothNumber, condition, surfaces, new Date());
+        Integer apptId = isCurrentAppointment ? appointmentId.getValue() : null;
+        ToothStatus newStatus = new ToothStatus(pid, toothNumber, condition, surfaces, new Date(), apptId);
         repository.insert(newStatus);
+
+        // Save history in ProcedureLog
+        if (condition != DentalCondition.HEALTHY) {
+            ProcedureLog log = new ProcedureLog();
+            log.setPatientId(pid);
+            log.setToothNumber(toothNumber);
+            
+            Integer activeApptId = appointmentId.getValue();
+            if (isCurrentAppointment && activeApptId != null) {
+                log.setAppointmentId(activeApptId);
+                log.setEntryType(ProcedureLog.TYPE_PROCEDURE);
+            } else {
+                log.setAppointmentId(null);
+                log.setEntryType(ProcedureLog.TYPE_STATUS);
+            }
+            log.setDateLogged(new Date());
+            
+            log.setDiagnosis(condition.getDisplayName(getApplication()));
+            log.setActionTaken(condition.name());
+            log.setSurfaces(surfaces);
+            procedureLogRepository.insert(log);
+        }
     }
 
-    public void updateToothStatus(int toothNumber, DentalCondition condition, List<String> selectedSurfaces) {
+    public void updateProcedureLog(ProcedureLog log) {
+        procedureLogRepository.update(log);
+    }
+
+    public void updateToothStatus(int toothNumber, DentalCondition condition, List<String> selectedSurfaces, boolean isCurrentAppointment) {
         String surfaces = "";
         if (selectedSurfaces != null && !selectedSurfaces.isEmpty()) {
             surfaces = android.text.TextUtils.join(",", selectedSurfaces);
         }
-        updateToothStatus(toothNumber, condition, surfaces);
+        updateToothStatus(toothNumber, condition, surfaces, isCurrentAppointment);
     }
 
     public String[] getSurfaceCodes() {

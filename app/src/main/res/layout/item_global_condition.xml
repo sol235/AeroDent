@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
+    android:background="@drawable/bg_dialog_menu"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="8dp"
-    android:background="@drawable/bg_dialog_menu"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        app:cardCornerRadius="18dp"
+        app:cardBackgroundColor="@color/tertiary"
+        app:strokeWidth="0dp">
+
+        <TextView
+            android:id="@+id/text_tooth_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/primary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="14" />
+    </com.google.android.material.card.MaterialCardView>
 
     <View
         android:id="@+id/view_condition_color"
         android:layout_width="12dp"
         android:layout_height="12dp"
+        android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:background="@drawable/dot_circle" />
 
@@ -31,33 +51,51 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Caries" />
 
         <TextView
             android:id="@+id/text_condition_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:text="Surfaces: MO" />
 
         <TextView
             android:id="@+id/text_entry_context"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             android:textColor="@color/text_secondary"
             android:textSize="11sp"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            tools:text="14.05.2026 - Извършено по време на посещение" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/badge_annulled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/annulled_badge"
+        android:textColor="@color/chip_red_text"
+        android:background="@color/chip_red_bg"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="2dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <ImageButton
-        android:id="@+id/btn_delete_condition"
+        android:id="@+id/btn_annul_condition"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_marginStart="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="4dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_delete"
-        app:tint="@color/chip_red_text" />
+        app:tint="@color/text_hint" />
 
 </LinearLayout>
