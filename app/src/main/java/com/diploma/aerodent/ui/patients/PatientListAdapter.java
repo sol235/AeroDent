@@ -41,7 +41,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
         Patient patient = patients.get(position);
 
         holder.textInitials.setText(NameUtils.getInitials(patient));
-        holder.textPatientName.setText(NameUtils.formatFirstLastName(patient));
+        holder.textPatientName.setText(NameUtils.formatFullName(patient));
 
         String phone = patient.getPhoneNumber();
         if (phone != null && !phone.isEmpty()) {

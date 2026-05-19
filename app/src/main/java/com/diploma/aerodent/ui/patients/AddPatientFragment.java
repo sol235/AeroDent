@@ -34,7 +34,7 @@ public class AddPatientFragment extends Fragment {
 
     private static final String ARG_PATIENT_ID = "patient_id";
 
-    private EditText editFirstName, editLastName, editEgn, editDob, editPhone, editEmail, editNhifNumber, editNotes;
+    private EditText editFirstName, editMiddleName, editLastName, editEgn, editDob, editPhone, editEmail, editNhifNumber, editNotes;
     private Spinner spinnerNhifStatus, spinnerGender;
     private TextView textEgnError, textPhoneError, textEmailError;
     private PatientViewModel patientViewModel;
@@ -65,6 +65,7 @@ public class AddPatientFragment extends Fragment {
         patientViewModel = new ViewModelProvider(this).get(PatientViewModel.class);
 
         editFirstName = root.findViewById(R.id.edit_first_name);
+        editMiddleName = root.findViewById(R.id.edit_middle_name);
         editLastName = root.findViewById(R.id.edit_last_name);
         editEgn = root.findViewById(R.id.edit_egn);
         textEgnError = root.findViewById(R.id.text_egn_error);
@@ -228,6 +229,7 @@ public class AddPatientFragment extends Fragment {
 
     private void populateFields(Patient patient) {
         editFirstName.setText(patient.getFirstName());
+        editMiddleName.setText(patient.getMiddleName());
         editLastName.setText(patient.getLastName());
         editEgn.setText(patient.getEgn());
         editPhone.setText(patient.getPhoneNumber());
@@ -272,6 +274,7 @@ public class AddPatientFragment extends Fragment {
 
     private void savePatient() {
         String firstName = editFirstName.getText().toString().trim();
+        String middleName = editMiddleName.getText().toString().trim();
         String lastName = editLastName.getText().toString().trim();
         String egn = editEgn.getText().toString().trim();
         String phone = editPhone.getText().toString().trim();
@@ -293,7 +296,7 @@ public class AddPatientFragment extends Fragment {
             return;
         }
 
-        patientViewModel.savePatientWithCheck(existingPatient, firstName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, selectedDob, notes, new PatientViewModel.SaveCallback() {
+        patientViewModel.savePatientWithCheck(existingPatient, firstName, middleName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, selectedDob, notes, new PatientViewModel.SaveCallback() {
             @Override
             public void onSuccess() {
                 if (existingPatient == null) {
@@ -316,6 +319,7 @@ public class AddPatientFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         editFirstName = null;
+        editMiddleName = null;
         editLastName = null;
         editEgn = null;
         textEgnError = null;

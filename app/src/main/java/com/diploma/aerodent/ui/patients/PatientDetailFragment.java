@@ -227,7 +227,7 @@ public class PatientDetailFragment extends Fragment {
 
         viewModel.getPatient().observe(getViewLifecycleOwner(), patient -> {
             if (patient != null) {
-                String fullName = NameUtils.formatFirstLastName(patient);
+                String fullName = NameUtils.formatFullName(patient);
                 textNameHeader.setText(R.string.patient_details_title);
                 textNameProfile.setText(fullName);
 

@@ -36,10 +36,6 @@ public interface PatientDao {
     @Query("SELECT * FROM patients WHERE id = :patientId LIMIT 1")
     LiveData<Patient> getPatientById(int patientId);
 
-    // Case-insensitive search by name, egn or phone
-    @Query("SELECT * FROM patients WHERE firstName LIKE '%' || :query || '%' OR lastName LIKE '%' || :query || '%' OR egn LIKE '%' || :query || '%' OR phoneNumber LIKE '%' || :query || '%' ORDER BY lastName ASC")
-    LiveData<List<Patient>> searchPatients(String query);
-
     @Query("SELECT * FROM patients WHERE egn = :egn LIMIT 1")
     LiveData<Patient> getPatientByEgn(String egn);
 

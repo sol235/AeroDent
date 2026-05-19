@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -38,7 +39,8 @@ public class AddAppointmentFragment extends Fragment {
     private static final String ARG_PATIENT_ID = "patient_id";
     private static final String ARG_APPOINTMENT_ID = "appointment_id";
 
-    private Spinner spinnerPatient, spinnerStatus;
+    private AutoCompleteTextView autoCompletePatient;
+    private Spinner spinnerStatus;
     private EditText editDate, editTime, editTreatmentType, editNotes;
     private AppointmentViewModel viewModel;
     private Calendar calendar = Calendar.getInstance();
@@ -55,6 +57,7 @@ public class AddAppointmentFragment extends Fragment {
     private int preselectedPatientId = -1;
     private int appointmentId = -1;
     private Appointment existingAppointment;
+    private Patient selectedPatient;
 
     public static AddAppointmentFragment newInstance(int patientId) {
         AddAppointmentFragment fragment = new AddAppointmentFragment();
@@ -84,7 +87,7 @@ public class AddAppointmentFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
 
-        spinnerPatient = root.findViewById(R.id.spinner_patient);
+        autoCompletePatient = root.findViewById(R.id.spinner_patient);
         spinnerStatus = root.findViewById(R.id.spinner_status);
         editDate = root.findViewById(R.id.edit_date);
         editTime = root.findViewById(R.id.edit_time);
@@ -116,24 +119,31 @@ public class AddAppointmentFragment extends Fragment {
         viewModel.getAllPatients().observe(getViewLifecycleOwner(), patients -> {
             if (patients != null) {
                 patientList = patients;
-                List<String> patientNames = new ArrayList<>();
-                for (Patient p : patients) {
-                    patientNames.add(NameUtils.formatFirstLastName(p));
-                }
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, patientNames);
-                adapter.setDropDownViewResource(R.layout.spinner_item_custom);
-                spinnerPatient.setAdapter(adapter);
+                PatientSearchAdapter adapter = new PatientSearchAdapter(requireContext(), patients);
+                autoCompletePatient.setAdapter(adapter);
                 
+                autoCompletePatient.setOnItemClickListener((parent, view, position, id) -> {
+                    selectedPatient = (Patient) parent.getItemAtPosition(position);
+                });
+
                 if (appointmentId != -1) {
                     loadAppointmentData();
                 } else if (preselectedPatientId != -1) {
                     for (int i = 0; i < patients.size(); i++) {
                         if (patients.get(i).getId() == preselectedPatientId) {
-                            spinnerPatient.setSelection(i);
+                            selectedPatient = patients.get(i);
+                            autoCompletePatient.setText(NameUtils.formatFirstLastName(selectedPatient), false);
                             break;
                         }
                     }
                 }
+            }
+        });
+
+        autoCompletePatient.setOnClickListener(v -> autoCompletePatient.showDropDown());
+        autoCompletePatient.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                autoCompletePatient.showDropDown();
             }
         });
 
@@ -161,7 +171,8 @@ public class AddAppointmentFragment extends Fragment {
                 
                 for (int i = 0; i < patientList.size(); i++) {
                     if (patientList.get(i).getId() == appointment.getPatientId()) {
-                        spinnerPatient.setSelection(i);
+                        selectedPatient = patientList.get(i);
+                        autoCompletePatient.setText(NameUtils.formatFirstLastName(selectedPatient), false);
                         break;
                     }
                 }
@@ -199,11 +210,24 @@ public class AddAppointmentFragment extends Fragment {
             return;
         }
 
-        int patientPos = spinnerPatient.getSelectedItemPosition();
+        if (selectedPatient == null) {
+            String typedText = autoCompletePatient.getText().toString();
+            for (Patient p : patientList) {
+                if (NameUtils.formatFirstLastName(p).equals(typedText)) {
+                    selectedPatient = p;
+                    break;
+                }
+            }
+        }
+
+        if (selectedPatient == null) {
+            Toast.makeText(requireContext(), R.string.appointment_error_no_patients, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         int statusPos = spinnerStatus.getSelectedItemPosition();
-        if (patientPos < 0 || statusPos < 0) return;
+        if (statusPos < 0) return;
         
-        Patient selectedPatient = patientList.get(patientPos);
         String selectedStatus = statusList.get(statusPos);
         String dateStr = editDate.getText().toString();
         String timeStr = editTime.getText().toString();
@@ -230,7 +254,7 @@ public class AddAppointmentFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        spinnerPatient = null;
+        autoCompletePatient = null;
         spinnerStatus = null;
         editDate = null;
         editTime = null;

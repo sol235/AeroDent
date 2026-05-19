@@ -38,6 +38,7 @@
     <string name="add_patient_title">Нов пациент</string>
     <string name="add_patient_section_personal">ЛИЧНА ИНФОРМАЦИЯ</string>
     <string name="add_patient_first_name">Име</string>
+    <string name="add_patient_middle_name">Презиме</string>
     <string name="add_patient_last_name">Фамилия</string>
     <string name="add_patient_egn">ЕГН *</string>
     <string name="add_patient_dob">Дата на раждане</string>

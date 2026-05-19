@@ -30,10 +30,7 @@ public class PatientRepository {
         return patientDao.getPatientById(id);
     }
 
-    public LiveData<List<Patient>> searchPatients(String query) {
-        return patientDao.searchPatients(query);
-    }
-    
+
     public LiveData<Patient> getPatientByEgn(String egn) {
         return patientDao.getPatientByEgn(egn);
     }

@@ -12,13 +12,13 @@ public class Patient extends BaseEntity {
     public static final String GENDER_UNKNOWN = "Unknown";
 
     private String firstName;
+    private String middleName;
     private String lastName;
     private String egn;
     private String gender;
     private String phoneNumber;
     private String email;
     private Date dateOfBirth;
-    private String address;
     private String nhifNumber; // НЗОК номер
     private String nhifStatus; // НЗОК статус
     private String notes;
@@ -34,6 +34,14 @@ public class Patient extends BaseEntity {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
     public String getLastName() {
@@ -82,14 +90,6 @@ public class Patient extends BaseEntity {
 
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getNhifNumber() {

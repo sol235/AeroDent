@@ -11,6 +11,7 @@ import androidx.lifecycle.Transformations;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.repository.PatientRepository;
 import com.diploma.aerodent.util.EgnUtils;
+import com.diploma.aerodent.util.NameUtils;
 import com.diploma.aerodent.util.ValidationUtils;
 
 import java.util.Date;
@@ -33,10 +34,13 @@ public class PatientViewModel extends AndroidViewModel {
         super(application);
         patientRepository = new PatientRepository(application);
         searchResults = Transformations.switchMap(searchQuery, query -> {
+            LiveData<List<Patient>> allPatients = patientRepository.getAllPatients();
             if (query == null || query.trim().isEmpty()) {
-                return patientRepository.getAllPatients();
+                return allPatients;
             } else {
-                return patientRepository.searchPatients(query.trim());
+                return Transformations.map(allPatients, patients -> 
+                    NameUtils.searchPatients(patients, query)
+                );
             }
         });
     }
@@ -123,7 +127,7 @@ public class PatientViewModel extends AndroidViewModel {
         void onDuplicateEgn();
     }
 
-    public void savePatientWithCheck(Patient existingPatient, String firstName, String lastName, String egn, String gender,
+    public void savePatientWithCheck(Patient existingPatient, String firstName, String middleName, String lastName, String egn, String gender,
                             String phone, String email, String nhifNumber, String nhifStatus, Date dob, String notes, SaveCallback callback) {
         
         int excludePatientId = (existingPatient != null) ? existingPatient.getId() : -1;
@@ -132,17 +136,18 @@ public class PatientViewModel extends AndroidViewModel {
                 if (isDuplicate) {
                     callback.onDuplicateEgn();
                 } else {
-                    savePatient(existingPatient, firstName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, dob, notes);
+                    savePatient(existingPatient, firstName, middleName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, dob, notes);
                     callback.onSuccess();
                 }
             });
         });
     }
 
-    public void savePatient(Patient existingPatient, String firstName, String lastName, String egn, String gender,
+    public void savePatient(Patient existingPatient, String firstName, String middleName, String lastName, String egn, String gender,
                             String phone, String email, String nhifNumber, String nhifStatus, Date dob, String notes) {
         Patient patient = (existingPatient != null) ? existingPatient : new Patient();
         patient.setFirstName(firstName);
+        patient.setMiddleName(middleName);
         patient.setLastName(lastName);
         patient.setEgn(egn);
         patient.setGender(gender);

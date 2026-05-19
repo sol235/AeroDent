@@ -30,7 +30,7 @@ import com.diploma.aerodent.data.local.entity.ProcedureLog;
                 Photo.class,
                 ToothStatus.class
         },
-        version = 8,
+        version = 9,
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -58,6 +58,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     context.getApplicationContext(),
                                     AppDatabase.class,
                                     "aerodent_database")
+                            .fallbackToDestructiveMigration()
                             .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
