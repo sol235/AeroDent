@@ -28,4 +28,18 @@
         app:itemActiveIndicatorStyle="@android:color/transparent"
         app:menu="@menu/bottom_nav_menu" />
 
+    <!-- Quick actions button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_quick_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/ic_add"
+        app:tint="@color/white"
+        app:backgroundTint="@color/primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.FAB" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

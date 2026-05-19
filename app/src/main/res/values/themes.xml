@@ -24,6 +24,11 @@
 
     <style name="Theme.AeroDent" parent="Base.Theme.AeroDent" />
 
+    <style name="ShapeAppearanceOverlay.App.FAB" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <style name="SurfaceToggleStyle">
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_height">48dp</item>

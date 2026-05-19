@@ -25,6 +25,7 @@ import java.io.IOException;
 
 public class CameraHelper {
     private final Fragment fragment;
+    private final androidx.appcompat.app.AppCompatActivity activity;
     private final PhotoViewModel photoViewModel;
     private final ActivityResultLauncher<String> permissionLauncher;
     private final ActivityResultLauncher<Uri> cameraLauncher;
@@ -41,39 +42,59 @@ public class CameraHelper {
 
     public CameraHelper(@NonNull Fragment fragment, @NonNull PhotoViewModel photoViewModel) {
         this.fragment = fragment;
+        this.activity = null;
         this.photoViewModel = photoViewModel;
 
         this.permissionLauncher = fragment.registerForActivityResult(new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if (isGranted) {
-                        launchCameraInternal();
-                    } else {
-                        Toast.makeText(fragment.getContext(), R.string.camera_permission_required, Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                });
+                isGranted -> handlePermissionResult(isGranted, fragment.requireContext()));
 
-        this.cameraLauncher = fragment.registerForActivityResult(new ActivityResultContracts.TakePicture(), success -> {
-            if (success && currentPhotoPath != null) {
-                photoViewModel.savePhoto(patientId, appointmentId, currentPhotoPath);
-                if (showSuccessToast) {
-                    Toast.makeText(fragment.getContext(), R.string.photo_saved_success, Toast.LENGTH_SHORT).show();
-                }
-                if (listener != null) {
-                    listener.onPhotoSaved(currentPhotoPath);
-                }
-            } else if (currentPhotoPath != null) {
-                // Clean up the empty temp file
-                File file = new File(currentPhotoPath);
-                if (file.exists()) {
-                    file.delete();
-                }
+        this.cameraLauncher = fragment.registerForActivityResult(new ActivityResultContracts.TakePicture(),
+                success -> handleCameraResult(success, fragment.requireContext()));
+    }
+
+    public CameraHelper(@NonNull androidx.appcompat.app.AppCompatActivity activity, @NonNull PhotoViewModel photoViewModel) {
+        this.fragment = null;
+        this.activity = activity;
+        this.photoViewModel = photoViewModel;
+
+        this.permissionLauncher = activity.registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+                isGranted -> handlePermissionResult(isGranted, activity));
+
+        this.cameraLauncher = activity.registerForActivityResult(new ActivityResultContracts.TakePicture(),
+                success -> handleCameraResult(success, activity));
+    }
+
+    private void handlePermissionResult(boolean isGranted, android.content.Context context) {
+        if (isGranted) {
+            launchCameraInternal(context);
+        } else {
+            Toast.makeText(context, R.string.camera_permission_required, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleCameraResult(boolean success, android.content.Context context) {
+        if (success && currentPhotoPath != null) {
+            photoViewModel.savePhoto(patientId, appointmentId, currentPhotoPath);
+            if (showSuccessToast) {
+                Toast.makeText(context, R.string.photo_saved_success, Toast.LENGTH_SHORT).show();
             }
-        });
+            if (listener != null) {
+                listener.onPhotoSaved(currentPhotoPath);
+            }
+        } else if (currentPhotoPath != null) {
+            File file = new File(currentPhotoPath);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
     }
 
     public void setShowSuccessToast(boolean showSuccessToast) {
         this.showSuccessToast = showSuccessToast;
+    }
+
+    private android.content.Context getContext() {
+        return fragment != null ? fragment.requireContext() : activity;
     }
 
     public void takePhoto(int patientId, @Nullable Integer appointmentId, @Nullable OnPhotoSavedListener listener) {
@@ -81,25 +102,25 @@ public class CameraHelper {
         this.appointmentId = appointmentId;
         this.listener = listener;
 
-        if (ContextCompat.checkSelfPermission(fragment.requireContext(),
+        if (ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            launchCameraInternal();
+            launchCameraInternal(getContext());
         } else {
             permissionLauncher.launch(Manifest.permission.CAMERA);
         }
     }
 
-    private void launchCameraInternal() {
+    private void launchCameraInternal(android.content.Context context) {
         try {
-            File photoFile = photoViewModel.createImageFile(fragment.requireContext(), patientId);
+            File photoFile = photoViewModel.createImageFile(context, patientId);
             if (photoFile != null) {
                 currentPhotoPath = photoFile.getAbsolutePath();
-                Uri photoUri = FileProvider.getUriForFile(fragment.requireContext(),
-                        fragment.requireContext().getPackageName() + ".fileprovider", photoFile);
+                Uri photoUri = FileProvider.getUriForFile(context,
+                        context.getPackageName() + ".fileprovider", photoFile);
                 cameraLauncher.launch(photoUri);
             }
         } catch (IOException ex) {
-            Toast.makeText(fragment.getContext(), R.string.photo_save_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.photo_save_error, Toast.LENGTH_SHORT).show();
         }
     }
 

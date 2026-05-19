@@ -130,22 +130,6 @@ public class HomeFragment extends Fragment {
                     .commit();
         });
 
-        root.findViewById(R.id.btn_quick_new_patient).setOnClickListener(v -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, new AddPatientFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        root.findViewById(R.id.btn_quick_new_appointment).setOnClickListener(v -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, new AddAppointmentFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        root.findViewById(R.id.btn_quick_take_photo).setOnClickListener(v -> showAppointmentSelection());
-
         return root;
     }
 
