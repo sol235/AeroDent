@@ -14,6 +14,13 @@
     <string name="home_export">Експорт</string>
     <string name="home_title">Начало</string>
     <string name="settings_title">Настройки</string>
+    
+    <!-- Settings Screen -->
+    <string name="settings_user_data">Данни за потребителя</string>
+    <string name="settings_payments">Плащания</string>
+    <string name="settings_reports">Справки и Експорт</string>
+    <string name="settings_nzok">НЗОК / НЗИС</string>
+    <string name="settings_logout">Изход</string>
 
     <!-- Patients Screen -->
     <string name="patients_title">Пациенти</string>
@@ -94,6 +101,7 @@
     <string name="patient_update_button">Обнови данните</string>
     <string name="patient_error_egn_required">ЕГН е задължително поле</string>
     <string name="patient_error_egn_invalid">Невалидно ЕГН</string>
+    <string name="patient_error_duplicate_egn">Пациент с това ЕГН вече съществува</string>
     <string name="patient_error_phone_invalid">Невалиден телефонен номер</string>
     <string name="patient_error_email_invalid">Невалиден имейл адрес</string>
     <string name="patient_saved_success">Пациентът е записан</string>

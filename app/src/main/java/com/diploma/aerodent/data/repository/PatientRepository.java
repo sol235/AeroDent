@@ -46,6 +46,17 @@ public class PatientRepository {
         return patientDao.getPatientCount();
     }
 
+    public interface DuplicateCheckCallback {
+        void onResult(boolean isDuplicate);
+    }
+
+    public void checkEgnExists(String egn, int excludePatientId, DuplicateCheckCallback callback) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            int count = patientDao.checkEgnExistsSync(egn, excludePatientId);
+            callback.onResult(count > 0);
+        });
+    }
+
     public void insert(Patient patient) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             patientDao.insert(patient);

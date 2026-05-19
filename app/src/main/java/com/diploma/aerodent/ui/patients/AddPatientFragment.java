@@ -153,8 +153,34 @@ public class AddPatientFragment extends Fragment {
             }
         });
 
+        patientViewModel.getIsEgnDuplicate().observe(getViewLifecycleOwner(), isDuplicate -> {
+            if (isDuplicate) {
+                textEgnError.setText(R.string.patient_error_duplicate_egn);
+                textEgnError.setVisibility(View.VISIBLE);
+            } else {
+                Boolean isValid = patientViewModel.getIsEgnValid().getValue();
+                if (isValid != null && !isValid) {
+                    textEgnError.setText(R.string.patient_error_egn_invalid);
+                    textEgnError.setVisibility(View.VISIBLE);
+                } else {
+                    textEgnError.setVisibility(View.GONE);
+                }
+            }
+        });
+
         patientViewModel.getIsEgnValid().observe(getViewLifecycleOwner(), isValid -> {
-            textEgnError.setVisibility(isValid ? View.GONE : View.VISIBLE);
+            if (!isValid) {
+                textEgnError.setText(R.string.patient_error_egn_invalid);
+                textEgnError.setVisibility(View.VISIBLE);
+            } else {
+                Boolean isDuplicate = patientViewModel.getIsEgnDuplicate().getValue();
+                if (isDuplicate != null && isDuplicate) {
+                    textEgnError.setText(R.string.patient_error_duplicate_egn);
+                    textEgnError.setVisibility(View.VISIBLE);
+                } else {
+                    textEgnError.setVisibility(View.GONE);
+                }
+            }
         });
 
         patientViewModel.getIsPhoneValid().observe(getViewLifecycleOwner(), isValid -> {
@@ -176,7 +202,8 @@ public class AddPatientFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                patientViewModel.processEgn(s.toString());
+                int excludeId = existingPatient != null ? existingPatient.getId() : -1;
+                patientViewModel.processEgn(s.toString(), excludeId);
             }
         });
     }
@@ -266,15 +293,23 @@ public class AddPatientFragment extends Fragment {
             return;
         }
 
-        patientViewModel.savePatient(existingPatient, firstName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, selectedDob, notes);
-        
-        if (existingPatient == null) {
-            Toast.makeText(requireContext(), R.string.patient_saved_success, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(requireContext(), R.string.patient_updated_success, Toast.LENGTH_SHORT).show();
-        }
-        
-        requireActivity().getOnBackPressedDispatcher().onBackPressed();
+        patientViewModel.savePatientWithCheck(existingPatient, firstName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, selectedDob, notes, new PatientViewModel.SaveCallback() {
+            @Override
+            public void onSuccess() {
+                if (existingPatient == null) {
+                    Toast.makeText(requireContext(), R.string.patient_saved_success, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), R.string.patient_updated_success, Toast.LENGTH_SHORT).show();
+                }
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
+            }
+
+            @Override
+            public void onDuplicateEgn() {
+                textEgnError.setText(R.string.patient_error_duplicate_egn);
+                textEgnError.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override

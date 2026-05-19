@@ -25,6 +25,7 @@ public class PatientViewModel extends AndroidViewModel {
     private final MutableLiveData<String> calculatedGender = new MutableLiveData<>();
     private final MutableLiveData<Date> calculatedDob = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isEgnValid = new MutableLiveData<>(true);
+    private final MutableLiveData<Boolean> isEgnDuplicate = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isPhoneValid = new MutableLiveData<>(true);
     private final MutableLiveData<Boolean> isEmailValid = new MutableLiveData<>(true);
 
@@ -67,6 +68,10 @@ public class PatientViewModel extends AndroidViewModel {
         return isEgnValid;
     }
 
+    public LiveData<Boolean> getIsEgnDuplicate() {
+        return isEgnDuplicate;
+    }
+
     public LiveData<Boolean> getIsPhoneValid() {
         return isPhoneValid;
     }
@@ -75,21 +80,29 @@ public class PatientViewModel extends AndroidViewModel {
         return isEmailValid;
     }
 
-    public void processEgn(String egn) {
+    public void processEgn(String egn, int excludePatientId) {
         if (egn != null && egn.length() == 10) {
             boolean valid = EgnUtils.isValidEgn(egn);
             isEgnValid.setValue(valid);
             if (valid) {
                 calculatedGender.setValue(EgnUtils.getGender(egn));
                 calculatedDob.setValue(EgnUtils.getBirthDate(egn));
+                
+                patientRepository.checkEgnExists(egn, excludePatientId, isDuplicate -> {
+                    new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
+                        isEgnDuplicate.setValue(isDuplicate);
+                    });
+                });
             } else {
                 calculatedGender.setValue(null);
                 calculatedDob.setValue(null);
+                isEgnDuplicate.setValue(false);
             }
         } else {
             isEgnValid.setValue(true); // Don't show error for partial EGN
             calculatedGender.setValue(null);
             calculatedDob.setValue(null);
+            isEgnDuplicate.setValue(false);
         }
     }
 
@@ -103,6 +116,27 @@ public class PatientViewModel extends AndroidViewModel {
         isEmailValid.setValue(emailValid);
 
         return egnValid && phoneValid && emailValid;
+    }
+
+    public interface SaveCallback {
+        void onSuccess();
+        void onDuplicateEgn();
+    }
+
+    public void savePatientWithCheck(Patient existingPatient, String firstName, String lastName, String egn, String gender,
+                            String phone, String email, String nhifNumber, String nhifStatus, Date dob, String notes, SaveCallback callback) {
+        
+        int excludePatientId = (existingPatient != null) ? existingPatient.getId() : -1;
+        patientRepository.checkEgnExists(egn, excludePatientId, isDuplicate -> {
+            new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
+                if (isDuplicate) {
+                    callback.onDuplicateEgn();
+                } else {
+                    savePatient(existingPatient, firstName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, dob, notes);
+                    callback.onSuccess();
+                }
+            });
+        });
     }
 
     public void savePatient(Patient existingPatient, String firstName, String lastName, String egn, String gender,

@@ -43,6 +43,9 @@ public interface PatientDao {
     @Query("SELECT * FROM patients WHERE egn = :egn LIMIT 1")
     LiveData<Patient> getPatientByEgn(String egn);
 
+    @Query("SELECT COUNT(*) FROM patients WHERE egn = :egn AND id != :excludePatientId")
+    int checkEgnExistsSync(String egn, int excludePatientId);
+
     // Lookup Health Insurance/НЗОК number for api integration
     @Query("SELECT * FROM patients WHERE nhifNumber = :nhifNumber LIMIT 1")
     LiveData<Patient> getPatientByNhifNumber(String nhifNumber);

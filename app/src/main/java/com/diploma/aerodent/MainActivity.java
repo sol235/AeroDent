@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.diploma.aerodent.ui.calendar.CalendarFragment;
 import com.diploma.aerodent.ui.home.HomeFragment;
 import com.diploma.aerodent.ui.patients.PatientsFragment;
+import com.diploma.aerodent.ui.settings.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new PatientsFragment();
             } else if (itemId == R.id.nav_calendar) {
                 selectedFragment = new CalendarFragment();
+            } else if (itemId == R.id.nav_settings) {
+                selectedFragment = new SettingsFragment();
             }
 
             if (selectedFragment != null) {
