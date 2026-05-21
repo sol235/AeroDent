@@ -26,7 +26,7 @@ import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Photo;
 import com.diploma.aerodent.ui.dentalchart.DentalChartFragment;
 import com.diploma.aerodent.ui.dentalchart.ProcedureLogAdapter;
-import com.diploma.aerodent.ui.photos.FullScreenPhotoDialogFragment;
+import com.diploma.aerodent.ui.photos.FullScreenPhotoActivity;
 import com.diploma.aerodent.ui.photos.PhotoAdapter;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
 import com.diploma.aerodent.util.CameraHelper;
@@ -184,8 +184,9 @@ public class AppointmentDetailFragment extends Fragment {
     }
 
     private void openFullScreen(Photo photo) {
-        FullScreenPhotoDialogFragment dialog = FullScreenPhotoDialogFragment.newInstance(photo.getId());
-        dialog.show(getChildFragmentManager(), "FullScreenPhoto");
+        android.content.Intent intent = new android.content.Intent(requireContext(), FullScreenPhotoActivity.class);
+        intent.putExtra(FullScreenPhotoActivity.EXTRA_PHOTO_ID, photo.getId());
+        startActivity(intent);
     }
 
     private void observeData() {

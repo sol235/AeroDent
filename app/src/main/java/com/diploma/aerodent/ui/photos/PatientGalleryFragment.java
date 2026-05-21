@@ -63,8 +63,9 @@ public class PatientGalleryFragment extends Fragment {
     }
 
     private void openFullScreen(Photo photo) {
-        FullScreenPhotoDialogFragment dialog = FullScreenPhotoDialogFragment.newInstance(photo.getId());
-        dialog.show(getChildFragmentManager(), "FullScreenPhoto");
+        android.content.Intent intent = new android.content.Intent(requireContext(), FullScreenPhotoActivity.class);
+        intent.putExtra(FullScreenPhotoActivity.EXTRA_PHOTO_ID, photo.getId());
+        startActivity(intent);
     }
 
     @Override

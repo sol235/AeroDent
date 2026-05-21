@@ -60,4 +60,7 @@ dependencies {
     // Glide for images
     implementation "com.github.bumptech.glide:glide:$glide_version"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+
+    // PhotoView for pinch to zoom
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 }
