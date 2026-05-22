@@ -13,12 +13,14 @@ import com.diploma.aerodent.data.local.dao.PaymentDao;
 import com.diploma.aerodent.data.local.dao.PhotoDao;
 import com.diploma.aerodent.data.local.dao.ToothStatusDao;
 import com.diploma.aerodent.data.local.dao.ProcedureLogDao;
+import com.diploma.aerodent.data.local.dao.UserDao;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Payment;
 import com.diploma.aerodent.data.local.entity.Photo;
 import com.diploma.aerodent.data.local.entity.ToothStatus;
 import com.diploma.aerodent.data.local.entity.ProcedureLog;
+import com.diploma.aerodent.data.local.entity.User;
 
 
 @Database(
@@ -28,9 +30,10 @@ import com.diploma.aerodent.data.local.entity.ProcedureLog;
                 ProcedureLog.class,
                 Payment.class,
                 Photo.class,
-                ToothStatus.class
+                ToothStatus.class,
+                User.class
         },
-        version = 9,
+        version = 10,
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -43,6 +46,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PaymentDao paymentDao();
     public abstract PhotoDao photoDao();
     public abstract ToothStatusDao toothStatusDao();
+    public abstract UserDao userDao();
 
     private static final int NUMBER_OF_THREADS = 4;
     public static final java.util.concurrent.ExecutorService databaseWriteExecutor =

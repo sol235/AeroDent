@@ -178,6 +178,16 @@
     <string name="annul_record_message">Желаете ли да анулирате този запис?</string>
     <string name="annul_record">Анулирай</string>
     <string name="annulled_badge">АНУЛИРАН</string>
+    <!-- User Roles -->
+    <string name="role_admin">Администратор</string>
+    <string name="role_dentist">Зъболекар</string>
+    <string name="role_assistant">Асистент</string>
+
+    <!-- Dental Specialties -->
+    <string name="specialty_general">Общопрактикуващ лекар по дентална медицина</string>
+    <string name="specialty_pediatric">Детска дентална медицина</string>
+    <string name="specialty_oral_surgery">Орална хирургия</string>
+    <string name="specialty_maxillofacial">Дентална, орална и лицево-челюстна хирургия</string>
 
     <!-- Tooth Surfaces -->
     <string name="surface_mesial">М</string>
