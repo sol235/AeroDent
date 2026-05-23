@@ -77,7 +77,13 @@ public class UserCardAdapter extends RecyclerView.Adapter<UserCardAdapter.UserVi
 
         public void bind(User user) {
             textUserName.setText(user.getFullName());
-            textUserRole.setText(itemView.getContext().getString(user.getRole().getDisplayName()));
+            
+            String roleStr = itemView.getContext().getString(user.getRole().getDisplayName());
+            if (!user.isActive()) {
+                roleStr += " (Неактивен)";
+            }
+            textUserRole.setText(roleStr);
+            
             textInitials.setText(com.diploma.aerodent.util.NameUtils.getInitials(user.getFullName()));
         }
     }

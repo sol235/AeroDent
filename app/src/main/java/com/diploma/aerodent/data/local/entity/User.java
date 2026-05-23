@@ -22,6 +22,9 @@ public class User {
     @NonNull
     private UserRole role;
 
+    @NonNull
+    private boolean isActive = true;
+
     private String pin;
     
     // NZOK
@@ -45,6 +48,9 @@ public class User {
 
     public String getPin() { return pin; }
     public void setPin(String pin) { this.pin = pin; }
+
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean active) { isActive = active; }
 
     public String getUin() { return uin; }
     public void setUin(String uin) { this.uin = uin; }

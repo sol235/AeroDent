@@ -6,6 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.diploma.aerodent.data.local.dao.AppointmentDao;
 import com.diploma.aerodent.data.local.dao.PatientDao;
@@ -33,7 +35,7 @@ import com.diploma.aerodent.data.local.entity.User;
                 ToothStatus.class,
                 User.class
         },
-        version = 10,
+        version = 11,
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -52,6 +54,12 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final java.util.concurrent.ExecutorService databaseWriteExecutor =
             java.util.concurrent.Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    static final Migration MIGRATION_10_11 = new Migration(10, 11) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE users ADD COLUMN isActive INTEGER NOT NULL DEFAULT 1");
+        }
+    };
 
     private static volatile AppDatabase INSTANCE;
     public static AppDatabase getDatabase(final Context context) {
@@ -62,6 +70,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     context.getApplicationContext(),
                                     AppDatabase.class,
                                     "aerodent_database")
+                            .addMigrations(MIGRATION_10_11)
                             .fallbackToDestructiveMigration()
                             .addCallback(sRoomDatabaseCallback)
                             .build();

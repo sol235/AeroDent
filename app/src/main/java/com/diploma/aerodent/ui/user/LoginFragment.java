@@ -45,7 +45,7 @@ public class LoginFragment extends Fragment {
         UserCardAdapter adapter = new UserCardAdapter(this::showPinDialog);
         recyclerUsers.setAdapter(adapter);
 
-        userViewModel.getAllUsers().observe(getViewLifecycleOwner(), adapter::setUsers);
+        userViewModel.getActiveUsers().observe(getViewLifecycleOwner(), adapter::setUsers);
 
         authViewModel.getLoginSuccess().observe(getViewLifecycleOwner(), success -> {
             if (Boolean.TRUE.equals(success)) {

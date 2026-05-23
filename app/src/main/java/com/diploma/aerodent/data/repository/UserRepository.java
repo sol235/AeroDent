@@ -22,6 +22,10 @@ public class UserRepository {
         return userDao.getAllUsers();
     }
 
+    public LiveData<List<User>> getActiveUsers() {
+        return userDao.getActiveUsers();
+    }
+
     public LiveData<User> getUserById(String id) {
         return userDao.getUserById(id);
     }

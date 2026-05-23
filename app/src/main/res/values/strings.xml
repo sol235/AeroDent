@@ -294,4 +294,5 @@
     <string name="error_save_failed">Грешка при запазване</string>
     <string name="error_invalid_pin">Грешен ПИН код</string>
     <string name="error_admin_exists">Вече съществува администратор</string>
+    <string name="user_active_status">Активен профил</string>
 </resources>

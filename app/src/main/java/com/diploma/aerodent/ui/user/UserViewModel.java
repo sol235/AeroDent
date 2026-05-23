@@ -28,6 +28,7 @@ public class UserViewModel extends AndroidViewModel {
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     
     private final LiveData<List<User>> allUsers;
+    private final LiveData<List<User>> activeUsers;
     private final MediatorLiveData<List<User>> visibleUsers = new MediatorLiveData<>();
     private final MutableLiveData<Boolean> actionComplete = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
@@ -37,6 +38,7 @@ public class UserViewModel extends AndroidViewModel {
         userRepository = new UserRepository(application);
         sessionManager = new SessionManager(application);
         allUsers = userRepository.getAllUsers();
+        activeUsers = userRepository.getActiveUsers();
         
         visibleUsers.addSource(allUsers, users -> updateVisibleUsers());
         visibleUsers.addSource(currentUser, user -> updateVisibleUsers());
@@ -49,6 +51,7 @@ public class UserViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<User>> getAllUsers() { return allUsers; }
+    public LiveData<List<User>> getActiveUsers() { return activeUsers; }
     
     public LiveData<List<User>> getVisibleUsers() { return visibleUsers; }
     
@@ -149,7 +152,7 @@ public class UserViewModel extends AndroidViewModel {
         return true;
     }
 
-    public void saveUser(String userId, String fullName, UserRole role, String pin, String pinConfirm, String uin, DentalSpecialty specialty, String rzi) {
+    public void saveUser(String userId, String fullName, UserRole role, String pin, String pinConfirm, String uin, DentalSpecialty specialty, String rzi, boolean isActive) {
         if (!validateUserInput(fullName, role, pin, pinConfirm, uin, specialty, rzi)) {
             return;
         }
@@ -172,6 +175,7 @@ public class UserViewModel extends AndroidViewModel {
                 user.setFullName(fullName);
                 user.setRole(role);
                 user.setPin(pin);
+                user.setActive(isActive);
                 
                 if (role == UserRole.DENTIST || role == UserRole.ADMIN) {
                     user.setUin(uin);

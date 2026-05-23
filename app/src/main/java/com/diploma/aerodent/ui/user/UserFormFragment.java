@@ -48,6 +48,7 @@ public class UserFormFragment extends Fragment {
     private TextInputEditText rziEditText;
     private TextInputLayout rziInputLayout;
     private View rziHelperTextView;
+    private com.google.android.material.materialswitch.MaterialSwitch activeSwitch;
     private Button saveButton;
 
     private UserRole selectedRole = UserRole.DENTIST;
@@ -79,6 +80,7 @@ public class UserFormFragment extends Fragment {
         rziEditText = view.findViewById(R.id.rziEditText);
         rziInputLayout = view.findViewById(R.id.rziInputLayout);
         rziHelperTextView = view.findViewById(R.id.rziHelperTextView);
+        activeSwitch = view.findViewById(R.id.activeSwitch);
         saveButton = view.findViewById(R.id.saveButton);
 
         viewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -127,12 +129,17 @@ public class UserFormFragment extends Fragment {
             pinInputLayout.setVisibility(View.GONE);
             pinConfirmInputLayout.setVisibility(View.GONE);
         }
+
+        if (!isEditMode || !viewModel.canEditRole(isEditMode, editUserId)) {
+            activeSwitch.setVisibility(View.GONE);
+        }
     }
 
     private void populateUserData(User user) {
         nameEditText.setText(user.getFullName());
         pinEditText.setText(user.getPin());
         pinConfirmEditText.setText(user.getPin());
+        activeSwitch.setChecked(user.isActive());
 
         selectedRole = user.getRole();
         
@@ -237,6 +244,7 @@ public class UserFormFragment extends Fragment {
             }
         }
 
-        viewModel.saveUser(editUserId, name, selectedRole, pin, pinConfirm, uin, selectedSpecialty, rzi);
+        boolean isActive = isEditMode ? activeSwitch.isChecked() : true;
+        viewModel.saveUser(editUserId, name, selectedRole, pin, pinConfirm, uin, selectedSpecialty, rzi, isActive);
     }
 }
