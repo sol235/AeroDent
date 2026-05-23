@@ -11,6 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.diploma.aerodent.R;
+import com.diploma.aerodent.ui.user.UserViewModel;
+import com.diploma.aerodent.ui.user.UserManagementFragment;
+import com.diploma.aerodent.ui.user.UserFormFragment;
+import com.diploma.aerodent.ui.user.LoginFragment;
 
 public class SettingsFragment extends Fragment {
 
@@ -26,19 +30,69 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.card_user_data).setOnClickListener(
-                v -> Toast.makeText(getContext(), R.string.settings_user_data, Toast.LENGTH_SHORT).show());
+        View cardUserManagement = view.findViewById(R.id.card_user_management);
+        View cardUserData = view.findViewById(R.id.card_user_data);
+        View cardPayments = view.findViewById(R.id.card_payments);
+        View cardReports = view.findViewById(R.id.card_reports);
+        View cardNzok = view.findViewById(R.id.card_nzok);
 
-        view.findViewById(R.id.card_payments).setOnClickListener(
+        UserViewModel userViewModel = new androidx.lifecycle.ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                android.widget.TextView textUserName = view.findViewById(R.id.text_user_name);
+                android.widget.TextView textUserRole = view.findViewById(R.id.text_user_role);
+                if (textUserName != null) textUserName.setText(user.getFullName());
+                if (textUserRole != null) textUserRole.setText(getString(user.getRole().getDisplayName()));
+
+                // Role Based Access Control with ViewModel
+                boolean canManage = userViewModel.canManageUsers(user);
+                boolean canViewAdvanced = userViewModel.canViewAdvancedSettings(user);
+
+                if (cardUserManagement != null) cardUserManagement.setVisibility(canManage ? View.VISIBLE : View.GONE);
+                cardUserData.setVisibility(View.VISIBLE);
+                cardPayments.setVisibility(View.VISIBLE);
+                cardReports.setVisibility(canViewAdvanced ? View.VISIBLE : View.GONE);
+                cardNzok.setVisibility(canViewAdvanced ? View.VISIBLE : View.GONE);
+
+                cardUserData.setOnClickListener(v -> {
+                    Bundle args = new Bundle();
+                    args.putBoolean("is_edit_mode", true);
+                    args.putString("user_id", user.getId());
+                    
+                    UserFormFragment fragment = new UserFormFragment();
+                    fragment.setArguments(args);
+                    
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.nav_host_fragment, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                });
+            }
+        });
+
+        if (cardUserManagement != null) {
+            cardUserManagement.setOnClickListener(v -> {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new UserManagementFragment())
+                        .addToBackStack(null)
+                        .commit();
+            });
+        }
+
+        cardPayments.setOnClickListener(
                 v -> Toast.makeText(getContext(), R.string.settings_payments, Toast.LENGTH_SHORT).show());
 
-        view.findViewById(R.id.card_reports).setOnClickListener(
+        cardReports.setOnClickListener(
                 v -> Toast.makeText(getContext(), R.string.settings_reports, Toast.LENGTH_SHORT).show());
 
-        view.findViewById(R.id.card_nzok).setOnClickListener(
+        cardNzok.setOnClickListener(
                 v -> Toast.makeText(getContext(), R.string.settings_nzok, Toast.LENGTH_SHORT).show());
 
-        view.findViewById(R.id.btn_logout).setOnClickListener(
-                v -> Toast.makeText(getContext(), R.string.settings_logout, Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.btn_logout).setOnClickListener(v -> {
+            userViewModel.logout();
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new LoginFragment())
+                    .commit();
+        });
     }
 }

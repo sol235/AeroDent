@@ -25,7 +25,13 @@ import com.diploma.aerodent.ui.patients.AddPatientFragment;
 import com.diploma.aerodent.ui.appointments.SelectAppointmentDialogFragment;
 import com.diploma.aerodent.util.CameraHelper;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
+import com.diploma.aerodent.ui.user.SetupAdminFragment;
+import com.diploma.aerodent.ui.user.LoginFragment;
+import com.diploma.aerodent.ui.user.AuthViewModel;
+import com.diploma.aerodent.ui.user.UserViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,6 +54,20 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        setupCameraHelper(savedInstanceState);
+        setupWindowInsets();
+        
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        setupBottomNavigation(bottomNav);
+        setupQuickActionsFab();
+        setupFragmentLifecycleCallbacks(bottomNav);
+
+        if (savedInstanceState == null) {
+            checkAuthStatus(bottomNav);
+        }
+    }
+
+    private void setupCameraHelper(Bundle savedInstanceState) {
         photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
         cameraHelper = new CameraHelper(this, photoViewModel);
         cameraHelper.setShowSuccessToast(true);
@@ -55,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             cameraHelper.onRestoreInstanceState(savedInstanceState);
         }
+    }
 
+    private void setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
@@ -65,8 +87,9 @@ public class MainActivity extends AppCompatActivity {
 
             return insets;
         });
+    }
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+    private void setupBottomNavigation(BottomNavigationView bottomNav) {
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
@@ -87,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+    }
 
+    private void setupQuickActionsFab() {
         FloatingActionButton fab = findViewById(R.id.fab_quick_actions);
         fab.setOnClickListener(v -> {
             View popupView = getLayoutInflater().inflate(R.layout.view_quick_actions, null);
@@ -121,6 +146,11 @@ public class MainActivity extends AppCompatActivity {
 
             popupView.findViewById(R.id.btn_quick_logout).setOnClickListener(btn -> {
                 popupWindow.dismiss();
+                UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+                userViewModel.logout();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new LoginFragment())
+                        .commit();
             });
 
             popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -133,11 +163,48 @@ public class MainActivity extends AppCompatActivity {
 
             popupWindow.showAsDropDown(fab, xOffset, yOffset);
         });
+    }
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
-            bottomNav.setSelectedItemId(R.id.nav_home);
-        }
+    private void setupFragmentLifecycleCallbacks(BottomNavigationView bottomNav) {
+        FloatingActionButton fab = findViewById(R.id.fab_quick_actions);
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(new androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
+            @Override
+            public void onFragmentViewCreated(@NonNull androidx.fragment.app.FragmentManager fm, @NonNull Fragment f, @NonNull View v, @Nullable Bundle savedInstanceState) {
+                if (f instanceof SetupAdminFragment || f instanceof LoginFragment) {
+                    bottomNav.setVisibility(View.GONE);
+                    fab.setVisibility(View.GONE);
+                } else {
+                    bottomNav.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.VISIBLE);
+                }
+            }
+        }, true);
+    }
+
+    private void checkAuthStatus(BottomNavigationView bottomNav) {
+        AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        authViewModel.getAuthState().observe(this, state -> {
+            if (state == null) return;
+            switch (state) {
+                case NEEDS_SETUP:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.nav_host_fragment, new SetupAdminFragment())
+                            .commit();
+                    break;
+                case NEEDS_LOGIN:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.nav_host_fragment, new LoginFragment())
+                            .commit();
+                    break;
+                case LOGGED_IN:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.nav_host_fragment, new HomeFragment())
+                            .commit();
+                    bottomNav.setSelectedItemId(R.id.nav_home);
+                    break;
+            }
+        });
+        authViewModel.checkAuthStatus();
     }
 
     @Override

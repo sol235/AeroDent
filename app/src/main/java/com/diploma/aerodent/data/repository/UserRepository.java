@@ -42,6 +42,10 @@ public class UserRepository {
         AppDatabase.databaseWriteExecutor.execute(() -> userDao.insert(user));
     }
 
+    public void insertSync(User user) {
+        userDao.insert(user);
+    }
+
     public void update(User user) {
         AppDatabase.databaseWriteExecutor.execute(() -> userDao.update(user));
     }

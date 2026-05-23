@@ -74,11 +74,13 @@ public abstract class AppDatabase extends RoomDatabase {
     // Load sample data
     private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
-        public void onOpen(@androidx.annotation.NonNull androidx.sqlite.db.SupportSQLiteDatabase db) {
-            super.onOpen(db);
+        public void onCreate(@androidx.annotation.NonNull androidx.sqlite.db.SupportSQLiteDatabase db) {
+            super.onCreate(db);
 
             databaseWriteExecutor.execute(() -> {
-                SampleDataGenerator.seedDatabase(INSTANCE);
+                if (INSTANCE != null) {
+                    SampleDataGenerator.seedDatabase(INSTANCE);
+                }
             });
         }
     };

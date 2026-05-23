@@ -228,6 +228,22 @@
     <string name="condition_impacted">Ретиниран зъб</string>
     <string name="condition_healthy">Интактен зъб</string>
 
+    <!-- Setup Admin Screen -->
+    <string name="setup_admin_title">Добре дошли в AeroDent!</string>
+    <string name="setup_admin_subtitle"> Създайте администраторски профил за зъболекарската клиника.</string>
+    <string name="setup_admin_name">Име и Фамилия</string>
+    <string name="setup_admin_pin">ПИН код (6 цифри)</string>
+    <string name="setup_admin_pin_confirm">Потвърди ПИН код</string>
+    <string name="setup_admin_uin">УИН на лекаря</string>
+    <string name="setup_admin_uin_helper">(Уникален идентификационен номер)</string>
+    <string name="setup_admin_specialty">Специалност</string>
+    <string name="setup_admin_rzi">РЗИ код (10 цифри)</string>
+    <string name="setup_admin_rzi_helper">(Код на Регионална здравна инспекция на клиниката)</string>
+    <string name="setup_admin_save">Създай профил</string>
+    <string name="setup_admin_error_empty">Попълнете всички задължителни полета</string>
+    <string name="setup_admin_error_pin_match">ПИН кодовете не съвпадат</string>
+    <string name="setup_admin_error_pin_length">ПИН кодът трябва да е между 4 и 6 цифри</string>
+
     <!-- Custom Calendar Overrides -->
     <string-array name="material_calendar_months_array">
         <item>Януари</item>
@@ -251,4 +267,31 @@
     <string name="material_calendar_friday">Пт</string>
     <string name="material_calendar_saturday">Сб</string>
     <string name="material_calendar_sunday">Нд</string>
+
+    <!-- User Management -->
+    <string name="settings_user_management">Управление на потребителите</string>
+    <string name="user_role">Роля</string>
+    <string name="user_saved_success">Данните са запазени успешно</string>
+    <string name="user_edit_title">Редактиране</string>
+    <string name="user_add_title">Добавяне на служител</string>
+    <string name="user_save_changes">Запази промените</string>
+    <string name="user_save_employee">Запази служител</string>
+    <string name="user_edit_admin_title">Редактиране на администратор</string>
+    <string name="user_edit_employee_title">Редактиране на служител</string>
+
+    <!-- Login -->
+    <string name="login_select_user">Изберете потребител</string>
+    <string name="login_pin_hint">ПИН код</string>
+    <string name="login_for_user">Вход за %1$s</string>
+    <string name="login_button">Вход</string>
+
+    <!-- Auth Errors -->
+    <string name="error_required_fields">Моля попълнете всички задължителни полета.</string>
+    <string name="error_pin_min_length">ПИН кодът трябва да бъде поне 4 цифри.</string>
+    <string name="error_dentist_uin_specialty">За зъболекар е задължително УИН и специалност.</string>
+    <string name="error_rzi_required">Въведете РЗИ код.</string>
+    <string name="error_user_not_found">Потребителят не е намерен</string>
+    <string name="error_save_failed">Грешка при запазване</string>
+    <string name="error_invalid_pin">Грешен ПИН код</string>
+    <string name="error_admin_exists">Вече съществува администратор</string>
 </resources>

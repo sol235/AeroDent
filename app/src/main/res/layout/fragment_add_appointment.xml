@@ -27,8 +27,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_right"
-                android:rotation="180"
+                android:src="@drawable/ic_back"
                 app:tint="@color/white" />
 
             <TextView

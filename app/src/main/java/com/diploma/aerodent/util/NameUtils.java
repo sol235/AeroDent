@@ -39,15 +39,20 @@ public class NameUtils {
     }
 
     public static String getInitials(Patient patient) {
-        if (patient == null) return "?";
-        
-        String first = patient.getFirstName() != null && !patient.getFirstName().trim().isEmpty() 
-                ? patient.getFirstName().trim().substring(0, 1).toUpperCase() : "";
-        String last = patient.getLastName() != null && !patient.getLastName().trim().isEmpty() 
-                ? patient.getLastName().trim().substring(0, 1).toUpperCase() : "";
-        
-        String initials = first + last;
-        return initials.isEmpty() ? "?" : initials;
+        return getInitials(formatFullName(patient));
+    }
+
+    public static String getInitials(String fullName) {
+        if (fullName == null || fullName.trim().isEmpty()) return "?";
+        String[] parts = fullName.trim().split("\\s+");
+        if (parts.length == 0) return "?";
+        if (parts.length == 1) {
+            return parts[0].substring(0, 1).toUpperCase();
+        } else {
+            String first = parts[0];
+            String last = parts[parts.length - 1];
+            return first.substring(0, 1).toUpperCase() + last.substring(0, 1).toUpperCase();
+        }
     }
 
     public static int getGenderResourceId(String gender) {

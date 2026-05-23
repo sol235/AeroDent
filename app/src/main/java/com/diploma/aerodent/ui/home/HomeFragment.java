@@ -13,13 +13,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
-import com.diploma.aerodent.ui.appointments.AddAppointmentFragment;
 import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
 import com.diploma.aerodent.ui.appointments.SelectAppointmentDialogFragment;
-import com.diploma.aerodent.ui.patients.AddPatientFragment;
 import com.diploma.aerodent.ui.patients.PatientsFragment;
 import com.diploma.aerodent.ui.calendar.CalendarFragment;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
+import com.diploma.aerodent.ui.user.UserViewModel;
 import com.diploma.aerodent.util.CameraHelper;
 
 public class HomeFragment extends Fragment {
@@ -64,6 +63,17 @@ public class HomeFragment extends Fragment {
         textActiveTreatments = root.findViewById(R.id.text_active_treatments);
         textAppointmentsLeft = root.findViewById(R.id.text_appointments_left);
         recyclerSchedule = root.findViewById(R.id.recycler_home_schedule);
+
+        UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        userViewModel.loadCurrentUser();
+        userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                TextView textUserName = root.findViewById(R.id.text_user_name);
+                TextView textUserRole = root.findViewById(R.id.text_user_role);
+                if (textUserName != null) textUserName.setText(user.getFullName());
+                if (textUserRole != null) textUserRole.setText(getString(user.getRole().getDisplayName()));
+            }
+        });
 
         // Observe Data
         homeViewModel.getTotalPatientsCount().observe(getViewLifecycleOwner(), count -> {
