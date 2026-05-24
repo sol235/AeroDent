@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.ProcedureLog;
 import com.diploma.aerodent.data.local.model.DentalCondition;
+import com.diploma.aerodent.util.FormatUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -57,7 +58,8 @@ public class ProcedureLogAdapter extends RecyclerView.Adapter<ProcedureLogAdapte
         holder.textConditionName.setText(log.getDiagnosis());
 
         if (log.getSurfaces() != null && !log.getSurfaces().isEmpty()) {
-            holder.textConditionDetails.setText(holder.itemView.getContext().getString(R.string.surfaces_label, log.getSurfaces()));
+            String localizedSurfaces = FormatUtils.formatSurfaces(holder.itemView.getContext(), log.getSurfaces());
+            holder.textConditionDetails.setText(holder.itemView.getContext().getString(R.string.surfaces_label, localizedSurfaces));
             holder.textConditionDetails.setVisibility(View.VISIBLE);
         } else if (log.getNotes() != null && !log.getNotes().isEmpty()) {
             holder.textConditionDetails.setText(log.getNotes());
@@ -83,7 +85,7 @@ public class ProcedureLogAdapter extends RecyclerView.Adapter<ProcedureLogAdapte
         }
 
         if (holder.textEntryContext != null) {
-            String formattedContext = com.diploma.aerodent.util.FormatUtils.formatEntryContext(
+            String formattedContext = FormatUtils.formatEntryContext(
                 holder.itemView.getContext(), log.getDateLogged(), log.getAppointmentId()
             );
             holder.textEntryContext.setText(formattedContext);

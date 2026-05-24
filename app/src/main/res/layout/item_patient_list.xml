@@ -68,27 +68,6 @@
                 android:maxLines="1"
                 android:ellipsize="end"/>
 
-            <!-- Status chip -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:strokeWidth="0dp">
-
-                <TextView
-                    android:id="@+id/text_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="4dp"
-                    android:text="@string/nzok_short"
-                    android:textColor="@color/primary"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <!-- Arrow Icon -->

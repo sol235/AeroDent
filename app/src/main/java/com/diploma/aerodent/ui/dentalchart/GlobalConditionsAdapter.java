@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.ToothStatus;
+import com.diploma.aerodent.data.local.model.DentalCondition;
+import com.diploma.aerodent.util.FormatUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,7 +35,7 @@ public class GlobalConditionsAdapter extends RecyclerView.Adapter<GlobalConditio
         List<ToothStatus> filtered = new ArrayList<>();
         if (conditions != null) {
             for (ToothStatus status : conditions) {
-                if (status.getCondition() != com.diploma.aerodent.data.local.model.DentalCondition.HEALTHY) {
+                if (status.getCondition() != DentalCondition.HEALTHY) {
                     filtered.add(status);
                 }
             }
@@ -72,7 +74,8 @@ public class GlobalConditionsAdapter extends RecyclerView.Adapter<GlobalConditio
         }
 
         if (status.getSurfaces() != null && !status.getSurfaces().isEmpty()) {
-            holder.textConditionDetails.setText(holder.itemView.getContext().getString(R.string.surfaces_label, status.getSurfaces()));
+            String localizedSurfaces = FormatUtils.formatSurfaces(holder.itemView.getContext(), status.getSurfaces());
+            holder.textConditionDetails.setText(holder.itemView.getContext().getString(R.string.surfaces_label, localizedSurfaces));
             holder.textConditionDetails.setVisibility(View.VISIBLE);
         } else {
             holder.textConditionDetails.setVisibility(View.GONE);
@@ -92,7 +95,7 @@ public class GlobalConditionsAdapter extends RecyclerView.Adapter<GlobalConditio
         }
         
         if (holder.textEntryContext != null) {
-            String formattedContext = com.diploma.aerodent.util.FormatUtils.formatEntryContext(
+            String formattedContext = FormatUtils.formatEntryContext(
                 holder.itemView.getContext(), status.getDateRecorded(), status.getAppointmentId()
             );
             holder.textEntryContext.setText(formattedContext);

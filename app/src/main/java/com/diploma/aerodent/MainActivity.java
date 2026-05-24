@@ -149,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
                 userViewModel.logout();
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, new LoginFragment())
+                        .replace(R.id.nav_host_fragment, LoginFragment.newInstance(true))
+                        .addToBackStack(null)
                         .commit();
             });
 

@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ArrayAdapter;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -32,6 +34,7 @@ import com.diploma.aerodent.ui.photos.PhotoViewModel;
 import com.diploma.aerodent.util.CameraHelper;
 import com.diploma.aerodent.util.DialogUtils;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -50,17 +53,21 @@ public class AppointmentDetailFragment extends Fragment {
     private TextView textDate;
     private TextView textTime;
     private TextView textTreatment;
-    private TextView textStatus;
-    private MaterialCardView cardStatus;
+    private TextInputLayout layoutStatus;
+    private AutoCompleteTextView dropdownStatus;
     private TextView textNotes;
 
-    private View textPhotosLabel;
     private RecyclerView recyclerPhotos;
     private PhotoAdapter photoAdapter;
     
-    private TextView textProcedureLogsLabel;
     private RecyclerView recyclerProcedureLogs;
     private ProcedureLogAdapter procedureLogAdapter;
+
+    private MaterialCardView tabProcedures, tabPhotos, tabPayments;
+    private View containerPayment;
+    private View fabTakePhoto;
+    private View btnUploadPhoto;
+    private View fabDentalChart;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
@@ -125,11 +132,12 @@ public class AppointmentDetailFragment extends Fragment {
         textDate = view.findViewById(R.id.text_date);
         textTime = view.findViewById(R.id.text_time);
         textTreatment = view.findViewById(R.id.text_treatment);
-        textStatus = view.findViewById(R.id.text_status);
-        cardStatus = view.findViewById(R.id.card_status);
+        layoutStatus = view.findViewById(R.id.layout_status);
+        dropdownStatus = view.findViewById(R.id.dropdown_status);
         textNotes = view.findViewById(R.id.text_notes);
+        
+        setupStatusDropdown();
 
-        textPhotosLabel = view.findViewById(R.id.text_photos_label);
         recyclerPhotos = view.findViewById(R.id.recycler_appointment_photos);
         
         recyclerPhotos.setLayoutManager(new GridLayoutManager(getContext(), 3));
@@ -137,7 +145,6 @@ public class AppointmentDetailFragment extends Fragment {
         photoAdapter.setOnPhotoClickListener(this::openFullScreen);
         recyclerPhotos.setAdapter(photoAdapter);
 
-        textProcedureLogsLabel = view.findViewById(R.id.text_procedure_logs_label);
         recyclerProcedureLogs = view.findViewById(R.id.recycler_procedure_logs);
         recyclerProcedureLogs.setLayoutManager(new LinearLayoutManager(getContext()));
         procedureLogAdapter = new ProcedureLogAdapter(new ProcedureLogAdapter.OnProcedureLogInteractionListener() {
@@ -181,12 +188,80 @@ public class AppointmentDetailFragment extends Fragment {
                         .commit();
             }
         });
+
+        tabProcedures = view.findViewById(R.id.tab_procedures);
+        tabPhotos = view.findViewById(R.id.tab_photos);
+        tabPayments = view.findViewById(R.id.tab_payments);
+        containerPayment = view.findViewById(R.id.container_payment);
+        
+        fabTakePhoto = view.findViewById(R.id.fab_take_photo);
+        btnUploadPhoto = view.findViewById(R.id.btn_upload_photo);
+        fabDentalChart = view.findViewById(R.id.fab_dental_chart);
+
+        setupTabs(view);
+    }
+
+    private void setupTabs(View view) {
+        tabProcedures.setOnClickListener(v -> selectTab(tabProcedures, view));
+        tabPhotos.setOnClickListener(v -> selectTab(tabPhotos, view));
+        tabPayments.setOnClickListener(v -> selectTab(tabPayments, view));
+
+        selectTab(tabProcedures, view);
+    }
+
+    private void selectTab(MaterialCardView selectedTab, View view) {
+        resetTabStyle(tabProcedures, view.findViewById(R.id.text_tab_procedures));
+        resetTabStyle(tabPhotos, view.findViewById(R.id.text_tab_photos));
+        resetTabStyle(tabPayments, view.findViewById(R.id.text_tab_payments));
+
+        selectedTab.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white));
+        selectedTab.setStrokeWidth(0);
+
+        TextView label = null;
+        if (selectedTab == tabProcedures) label = view.findViewById(R.id.text_tab_procedures);
+        else if (selectedTab == tabPhotos) label = view.findViewById(R.id.text_tab_photos);
+        else if (selectedTab == tabPayments) label = view.findViewById(R.id.text_tab_payments);
+
+        if (label != null) {
+            label.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary));
+        }
+
+        // Toggle visibilities
+        recyclerProcedureLogs.setVisibility(selectedTab == tabProcedures ? View.VISIBLE : View.GONE);
+        fabDentalChart.setVisibility(selectedTab == tabProcedures ? View.VISIBLE : View.GONE);
+
+        recyclerPhotos.setVisibility(selectedTab == tabPhotos ? View.VISIBLE : View.GONE);
+        fabTakePhoto.setVisibility(selectedTab == tabPhotos ? View.VISIBLE : View.GONE);
+        btnUploadPhoto.setVisibility(selectedTab == tabPhotos ? View.VISIBLE : View.GONE);
+
+        containerPayment.setVisibility(selectedTab == tabPayments ? View.VISIBLE : View.GONE);
+    }
+
+    private void resetTabStyle(MaterialCardView tab, TextView label) {
+        if (tab == null || label == null) return;
+        tab.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white));
+        tab.setStrokeWidth(1);
+        tab.setStrokeColor(ContextCompat.getColor(requireContext(), R.color.border_grey));
+        label.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
     }
 
     private void openFullScreen(Photo photo) {
         android.content.Intent intent = new android.content.Intent(requireContext(), FullScreenPhotoActivity.class);
         intent.putExtra(FullScreenPhotoActivity.EXTRA_PHOTO_ID, photo.getId());
         startActivity(intent);
+    }
+    
+    private void setupStatusDropdown() {
+        String[] statuses = {
+            getString(R.string.status_scheduled),
+            getString(R.string.status_completed),
+            getString(R.string.status_cancelled)
+        };
+        
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            requireContext(), android.R.layout.simple_dropdown_item_1line, statuses
+        );
+        dropdownStatus.setAdapter(adapter);
     }
 
     private void observeData() {
@@ -201,27 +276,14 @@ public class AppointmentDetailFragment extends Fragment {
         });
 
         viewModel.getProcedureLogsForAppointment(appointmentId).observe(getViewLifecycleOwner(), logs -> {
-            View dividerNotes = getView() != null ? getView().findViewById(R.id.divider_notes) : null;
-            if (logs != null && !logs.isEmpty()) {
+            if (logs != null) {
                 procedureLogAdapter.setProcedureLogs(logs);
-                textProcedureLogsLabel.setVisibility(View.VISIBLE);
-                recyclerProcedureLogs.setVisibility(View.VISIBLE);
-                if (dividerNotes != null) dividerNotes.setVisibility(View.VISIBLE);
-            } else {
-                textProcedureLogsLabel.setVisibility(View.GONE);
-                recyclerProcedureLogs.setVisibility(View.GONE);
-                if (dividerNotes != null) dividerNotes.setVisibility(View.GONE);
             }
         });
 
         photoViewModel.getPhotosForAppointment(appointmentId).observe(getViewLifecycleOwner(), photos -> {
-            if (photos != null && !photos.isEmpty()) {
+            if (photos != null) {
                 photoAdapter.setPhotos(photos);
-                textPhotosLabel.setVisibility(View.VISIBLE);
-                recyclerPhotos.setVisibility(View.VISIBLE);
-            } else {
-                textPhotosLabel.setVisibility(View.GONE);
-                recyclerPhotos.setVisibility(View.GONE);
             }
         });
     }
@@ -238,21 +300,43 @@ public class AppointmentDetailFragment extends Fragment {
         String status = appointment.getStatus() != null ? appointment.getStatus() : Appointment.STATUS_SCHEDULED;
         
         int statusResId;
+        int bgColor;
+        int textColor;
         if (Appointment.STATUS_COMPLETED.equals(status)) {
             statusResId = R.string.status_completed;
-            cardStatus.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.chip_green_bg));
-            textStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.chip_green_text));
+            bgColor = R.color.chip_green_bg;
+            textColor = R.color.chip_green_text;
         } else if (Appointment.STATUS_CANCELLED.equals(status)) {
             statusResId = R.string.status_cancelled;
-            cardStatus.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.chip_red_bg));
-            textStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.chip_red_text));
+            bgColor = R.color.chip_red_bg;
+            textColor = R.color.chip_red_text;
         } else { // SCHEDULED
             statusResId = R.string.status_scheduled;
-            cardStatus.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.chip_orange_bg));
-            textStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.chip_orange_text));
+            bgColor = R.color.chip_orange_bg;
+            textColor = R.color.chip_orange_text;
         }
         
-        textStatus.setText(getString(statusResId));
+        layoutStatus.setBoxBackgroundColor(ContextCompat.getColor(requireContext(), bgColor));
+        dropdownStatus.setTextColor(ContextCompat.getColor(requireContext(), textColor));
+        
+        dropdownStatus.setOnItemClickListener(null);
+        dropdownStatus.setText(getString(statusResId), false);
+        
+        dropdownStatus.setOnItemClickListener((parent, view, position, id) -> {
+            String selected = (String) parent.getItemAtPosition(position);
+            String newStatus = Appointment.STATUS_SCHEDULED;
+            if (selected.equals(getString(R.string.status_completed))) {
+                newStatus = Appointment.STATUS_COMPLETED;
+            } else if (selected.equals(getString(R.string.status_cancelled))) {
+                newStatus = Appointment.STATUS_CANCELLED;
+            }
+            
+            if (!newStatus.equals(appointment.getStatus())) {
+                appointment.setStatus(newStatus);
+                viewModel.update(appointment);
+                Toast.makeText(requireContext(), R.string.appointment_updated_success, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void bindPatientData(Patient patient) {
@@ -292,12 +376,17 @@ public class AppointmentDetailFragment extends Fragment {
         textDate = null;
         textTime = null;
         textTreatment = null;
-        textStatus = null;
-        cardStatus = null;
+        layoutStatus = null;
+        dropdownStatus = null;
         textNotes = null;
-        textPhotosLabel = null;
         recyclerPhotos = null;
-        textProcedureLogsLabel = null;
         recyclerProcedureLogs = null;
+        tabProcedures = null;
+        tabPhotos = null;
+        tabPayments = null;
+        containerPayment = null;
+        fabTakePhoto = null;
+        btnUploadPhoto = null;
+        fabDentalChart = null;
     }
 }

@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import com.diploma.aerodent.R;
+import com.diploma.aerodent.ui.home.HomeFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class UserManagementFragment extends Fragment {
 
@@ -32,13 +34,27 @@ public class UserManagementFragment extends Fragment {
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
         RecyclerView recyclerUsers = view.findViewById(R.id.recycler_users);
         UserCardAdapter adapter = new UserCardAdapter(user -> openUserForm(user.getId()));
         recyclerUsers.setAdapter(adapter);
 
         userViewModel.getVisibleUsers().observe(getViewLifecycleOwner(), adapter::setUsers);
+
+        userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null && !userViewModel.canManageUsers(user)) {
+                requireActivity().getSupportFragmentManager().popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavigationView);
+                if (bottomNav != null) {
+                    bottomNav.setSelectedItemId(R.id.nav_home);
+                } else {
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.nav_host_fragment, new HomeFragment())
+                            .commit();
+                }
+            }
+        });
 
         view.findViewById(R.id.fab_add_user).setOnClickListener(v -> openUserForm(null));
     }

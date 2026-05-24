@@ -90,8 +90,9 @@ public class SettingsFragment extends Fragment {
 
         view.findViewById(R.id.btn_logout).setOnClickListener(v -> {
             userViewModel.logout();
+            requireActivity().getSupportFragmentManager().popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
             requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, new LoginFragment())
+                    .replace(R.id.nav_host_fragment, LoginFragment.newInstance(false))
                     .commit();
         });
     }

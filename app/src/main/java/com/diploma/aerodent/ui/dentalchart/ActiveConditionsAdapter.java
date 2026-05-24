@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.ToothStatus;
 import com.diploma.aerodent.data.local.model.DentalCondition;
+import com.diploma.aerodent.util.FormatUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ActiveConditionsAdapter extends RecyclerView.Adapter<ActiveConditio
         holder.textName.setText(condition.getDisplayName(holder.itemView.getContext()));
         String details = status.getSurfaces();
         if (details != null && !details.isEmpty()) {
-            details = "(" + details + ")";
+            details = "(" + FormatUtils.formatSurfaces(holder.itemView.getContext(), details) + ")";
         } else {
             details = "";
         }
@@ -65,7 +66,7 @@ public class ActiveConditionsAdapter extends RecyclerView.Adapter<ActiveConditio
         }
 
         if (holder.textEntryContext != null) {
-            String formattedContext = com.diploma.aerodent.util.FormatUtils.formatEntryContext(
+            String formattedContext = FormatUtils.formatEntryContext(
                 holder.itemView.getContext(), status.getDateRecorded(), status.getAppointmentId()
             );
             holder.textEntryContext.setText(formattedContext);

@@ -51,8 +51,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
             holder.textPatientPhone.setVisibility(View.GONE);
         }
 
-        holder.textStatus.setText(R.string.nzok_short);
-
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onPatientClick(patient);
@@ -74,14 +72,12 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
         TextView textInitials;
         TextView textPatientName;
         TextView textPatientPhone;
-        TextView textStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textInitials = itemView.findViewById(R.id.text_avatar_initials);
             textPatientName = itemView.findViewById(R.id.text_patient_name);
             textPatientPhone = itemView.findViewById(R.id.text_patient_phone);
-            textStatus = itemView.findViewById(R.id.text_status);
         }
     }
 }

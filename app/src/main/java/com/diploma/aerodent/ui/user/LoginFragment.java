@@ -25,6 +25,14 @@ import com.diploma.aerodent.data.local.entity.User;
 
 public class LoginFragment extends Fragment {
 
+    public static LoginFragment newInstance(boolean isQuickLock) {
+        LoginFragment fragment = new LoginFragment();
+        Bundle args = new Bundle();
+        args.putBoolean("is_quick_lock", isQuickLock);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     private AuthViewModel authViewModel;
 
     @Nullable
@@ -47,9 +55,16 @@ public class LoginFragment extends Fragment {
 
         userViewModel.getActiveUsers().observe(getViewLifecycleOwner(), adapter::setUsers);
 
+        boolean isQuickLock = getArguments() != null && getArguments().getBoolean("is_quick_lock", false);
+
         authViewModel.getLoginSuccess().observe(getViewLifecycleOwner(), success -> {
             if (Boolean.TRUE.equals(success)) {
-                navigateToHome();
+                userViewModel.loadCurrentUser();
+                if (isQuickLock) {
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                } else {
+                    navigateToHome();
+                }
             }
         });
 

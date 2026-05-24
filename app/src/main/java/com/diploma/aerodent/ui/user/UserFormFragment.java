@@ -18,7 +18,9 @@ import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.User;
 import com.diploma.aerodent.data.local.model.DentalSpecialty;
 import com.diploma.aerodent.data.local.model.UserRole;
+import com.diploma.aerodent.ui.home.HomeFragment;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -83,7 +85,7 @@ public class UserFormFragment extends Fragment {
         activeSwitch = view.findViewById(R.id.activeSwitch);
         saveButton = view.findViewById(R.id.saveButton);
 
-        viewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         setupSpecialtyDropdown();
         setupRoleDropdown();
         setupInitialMode();
@@ -108,6 +110,23 @@ public class UserFormFragment extends Fragment {
             if (error != null && !error.isEmpty()) {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
                 viewModel.resetErrorMessage();
+            }
+        });
+
+        viewModel.getCurrentUser().observe(getViewLifecycleOwner(), loggedInUser -> {
+            if (loggedInUser != null) {
+                boolean isSelf = loggedInUser.getId().equals(editUserId);
+                if (!isSelf && !viewModel.canManageUsers(loggedInUser)) {
+                    requireActivity().getSupportFragmentManager().popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavigationView);
+                    if (bottomNav != null) {
+                        bottomNav.setSelectedItemId(R.id.nav_home);
+                    } else {
+                        requireActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.nav_host_fragment, new HomeFragment())
+                                .commit();
+                    }
+                }
             }
         });
 
