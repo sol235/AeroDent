@@ -22,52 +22,19 @@ public interface PaymentDao {
     @Update
     void update(Payment payment);
 
-    @Query("UPDATE payments SET status = 'PAID' WHERE id = :paymentId")
-    void markAsPaid(int paymentId);
-
     @Delete
     void delete(Payment payment);
-
-    @Query("DELETE FROM payments WHERE id = :paymentId")
-    void deleteById(int paymentId);
-
-    @Query("SELECT * FROM payments ORDER BY date DESC")
-    LiveData<List<Payment>> getAllPayments();
 
     @Query("SELECT * FROM payments WHERE id = :paymentId LIMIT 1")
     LiveData<Payment> getPaymentById(int paymentId);
 
     @Query("SELECT * FROM payments WHERE patientId = :patientId ORDER BY date DESC")
-    LiveData<List<Payment>> getPaymentsForPatient(int patientId);
+    LiveData<List<Payment>> getPaymentsByPatientId(int patientId);
 
-    @Query("SELECT * FROM payments WHERE patientId = :patientId ORDER BY date DESC")
-    List<Payment> getPaymentsForPatientSync(int patientId);
+    @Query("SELECT * FROM payments WHERE appointmentId = :appointmentId ORDER BY date DESC")
+    LiveData<List<Payment>> getPaymentsByAppointmentId(int appointmentId);
 
-    @Query("SELECT * FROM payments ORDER BY date DESC")
-    List<Payment> getAllPaymentsSync();
+    @Query("SELECT * FROM payments WHERE status != 'PAID' ORDER BY date DESC")
+    LiveData<List<Payment>> getPendingPayments();
 
-    @Query("SELECT * FROM payments WHERE appointmentId = :appointmentId LIMIT 1")
-    LiveData<Payment> getPaymentForAppointment(int appointmentId);
-
-    @Query("SELECT * FROM payments WHERE status = :status ORDER BY date DESC")
-    LiveData<List<Payment>> getPaymentsByStatus(String status);
-
-    @Query("SELECT * FROM payments WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
-    LiveData<List<Payment>> getPaymentsBetweenDates(Date startDate, Date endDate);
-
-    @Query("SELECT * FROM payments WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
-    List<Payment> getPaymentsBetweenDatesSync(Date startDate, Date endDate);
-
-    // Aggregations
-    @Query("SELECT COALESCE(SUM(amount), 0) FROM payments WHERE patientId = :patientId")
-    LiveData<Double> getTotalAmountForPatient(int patientId);
-
-    @Query("SELECT COALESCE(SUM(nhifCovered), 0) FROM payments WHERE patientId = :patientId")
-    LiveData<Double> getTotalNhifCoveredForPatient(int patientId);
-
-    @Query("SELECT COALESCE(SUM(amount), 0) FROM payments WHERE status = 'PENDING'")
-    LiveData<Double> getTotalPendingAmount();
-
-    @Query("SELECT COALESCE(SUM(amount), 0) FROM payments WHERE date BETWEEN :startDate AND :endDate")
-    LiveData<Double> getTotalRevenueBetween(Date startDate, Date endDate);
 }

@@ -2,21 +2,22 @@ package com.diploma.aerodent.ui.patients;
 
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Payment;
+import java.util.List;
 
 public class PatientHistoryItem {
     private Appointment appointment;
-    private Payment payment;
+    private List<Payment> payments;
 
-    public PatientHistoryItem(Appointment appointment, Payment payment) {
+    public PatientHistoryItem(Appointment appointment, List<Payment> payments) {
         this.appointment = appointment;
-        this.payment = payment;
+        this.payments = payments;
     }
 
     public Appointment getAppointment() {
         return appointment;
     }
 
-    public Payment getPayment() {
-        return payment;
+    public List<Payment> getPayments() {
+        return payments;
     }
 }

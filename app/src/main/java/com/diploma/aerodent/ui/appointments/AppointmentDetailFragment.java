@@ -31,6 +31,7 @@ import com.diploma.aerodent.ui.dentalchart.ProcedureLogAdapter;
 import com.diploma.aerodent.ui.photos.FullScreenPhotoActivity;
 import com.diploma.aerodent.ui.photos.PhotoAdapter;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
+import com.diploma.aerodent.ui.payment.PaymentFragment;
 import com.diploma.aerodent.util.CameraHelper;
 import com.diploma.aerodent.util.DialogUtils;
 import com.google.android.material.card.MaterialCardView;
@@ -42,10 +43,12 @@ import java.util.Locale;
 public class AppointmentDetailFragment extends Fragment {
 
     private static final String ARG_APPOINTMENT_ID = "appointment_id";
+    private static final String ARG_OPEN_PAYMENTS_TAB = "open_payments_tab";
 
     private AppointmentViewModel viewModel;
     private PhotoViewModel photoViewModel;
     private int appointmentId;
+    private boolean openPaymentsTab = false;
     private Appointment currentAppointment;
     private CameraHelper cameraHelper;
 
@@ -90,11 +93,21 @@ public class AppointmentDetailFragment extends Fragment {
         return fragment;
     }
 
+    public static AppointmentDetailFragment newInstanceWithPaymentsTab(int appointmentId) {
+        AppointmentDetailFragment fragment = new AppointmentDetailFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_APPOINTMENT_ID, appointmentId);
+        args.putBoolean(ARG_OPEN_PAYMENTS_TAB, true);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             appointmentId = getArguments().getInt(ARG_APPOINTMENT_ID);
+            openPaymentsTab = getArguments().getBoolean(ARG_OPEN_PAYMENTS_TAB, false);
         }
         
         photoViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
@@ -206,7 +219,11 @@ public class AppointmentDetailFragment extends Fragment {
         tabPhotos.setOnClickListener(v -> selectTab(tabPhotos, view));
         tabPayments.setOnClickListener(v -> selectTab(tabPayments, view));
 
-        selectTab(tabProcedures, view);
+        if (openPaymentsTab) {
+            selectTab(tabPayments, view);
+        } else {
+            selectTab(tabProcedures, view);
+        }
     }
 
     private void selectTab(MaterialCardView selectedTab, View view) {
@@ -271,6 +288,12 @@ public class AppointmentDetailFragment extends Fragment {
                 bindAppointmentData(result.appointment);
                 if (result.patient != null) {
                     bindPatientData(result.patient);
+                }
+                
+                if (getChildFragmentManager().findFragmentById(R.id.container_payment) == null) {
+                    getChildFragmentManager().beginTransaction()
+                            .replace(R.id.container_payment, PaymentFragment.newInstance(appointmentId, currentAppointment.getPatientId()))
+                            .commit();
                 }
             }
         });

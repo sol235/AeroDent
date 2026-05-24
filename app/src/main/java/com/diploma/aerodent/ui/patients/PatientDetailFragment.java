@@ -23,6 +23,7 @@ import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
 import com.diploma.aerodent.ui.dentalchart.DentalChartFragment;
 import com.diploma.aerodent.ui.photos.PatientGalleryFragment;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
+import com.diploma.aerodent.ui.payment.PaymentTransactionAdapter;
 import com.diploma.aerodent.util.CameraHelper;
 import com.diploma.aerodent.util.NameUtils;
 import com.google.android.material.card.MaterialCardView;
@@ -39,10 +40,11 @@ public class PatientDetailFragment extends Fragment {
     private PhotoViewModel photoViewModel;
     private CameraHelper cameraHelper;
     private HistoryTimelineAdapter historyAdapter;
+    private PaymentTransactionAdapter paymentAdapter;
     private SimpleDateFormat dobFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
     private MaterialCardView tabHistory, tabDentalChart, tabPhotos, tabPayments;
-    private View recyclerHistory, photosContainer;
+    private View recyclerHistory, photosContainer, recyclerPayments;
     private FloatingActionButton fabTakePhoto;
     private ImageView btnUploadPhoto;
     private View root;
@@ -101,6 +103,7 @@ public class PatientDetailFragment extends Fragment {
 
         recyclerHistory = root.findViewById(R.id.recycler_history);
         photosContainer = root.findViewById(R.id.photos_container);
+        recyclerPayments = root.findViewById(R.id.recycler_payments);
         fabTakePhoto = root.findViewById(R.id.fab_take_photo);
         btnUploadPhoto = root.findViewById(R.id.btn_upload_photo);
 
@@ -138,6 +141,17 @@ public class PatientDetailFragment extends Fragment {
                     .commit();
         });
         recyclerHistoryView.setAdapter(historyAdapter);
+
+        RecyclerView recyclerPaymentsView = root.findViewById(R.id.recycler_payments);
+        recyclerPaymentsView.setLayoutManager(new LinearLayoutManager(getContext()));
+        paymentAdapter = new PaymentTransactionAdapter();
+        paymentAdapter.setOnTransactionClickListener(payment -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, AppointmentDetailFragment.newInstanceWithPaymentsTab(payment.getAppointmentId()))
+                    .addToBackStack(null)
+                    .commit();
+        });
+        recyclerPaymentsView.setAdapter(paymentAdapter);
     }
 
     private void setupTabs() {
@@ -178,11 +192,13 @@ public class PatientDetailFragment extends Fragment {
         if (selectedTab == tabHistory) {
             recyclerHistory.setVisibility(View.VISIBLE);
             photosContainer.setVisibility(View.GONE);
+            recyclerPayments.setVisibility(View.GONE);
             fabTakePhoto.setVisibility(View.GONE);
             btnUploadPhoto.setVisibility(View.GONE);
         } else if (selectedTab == tabPhotos) {
             recyclerHistory.setVisibility(View.GONE);
             photosContainer.setVisibility(View.VISIBLE);
+            recyclerPayments.setVisibility(View.GONE);
             fabTakePhoto.setVisibility(View.VISIBLE);
             btnUploadPhoto.setVisibility(View.VISIBLE);
             
@@ -196,9 +212,16 @@ public class PatientDetailFragment extends Fragment {
                     .replace(R.id.nav_host_fragment, DentalChartFragment.newInstance(patientId))
                     .addToBackStack(null)
                     .commit();
+        } else if (selectedTab == tabPayments) {
+            recyclerHistory.setVisibility(View.GONE);
+            photosContainer.setVisibility(View.GONE);
+            recyclerPayments.setVisibility(View.VISIBLE);
+            fabTakePhoto.setVisibility(View.GONE);
+            btnUploadPhoto.setVisibility(View.GONE);
         } else {
             recyclerHistory.setVisibility(View.GONE);
             photosContainer.setVisibility(View.GONE);
+            recyclerPayments.setVisibility(View.GONE);
             fabTakePhoto.setVisibility(View.GONE);
             btnUploadPhoto.setVisibility(View.GONE);
         }
@@ -274,6 +297,12 @@ public class PatientDetailFragment extends Fragment {
                 historyAdapter.setItems(items);
             }
         });
+
+        viewModel.getPayments().observe(getViewLifecycleOwner(), payments -> {
+            if (payments != null) {
+                paymentAdapter.setPayments(payments);
+            }
+        });
     }
 
     @Override
@@ -285,6 +314,7 @@ public class PatientDetailFragment extends Fragment {
         tabPayments = null;
         recyclerHistory = null;
         photosContainer = null;
+        recyclerPayments = null;
         fabTakePhoto = null;
         btnUploadPhoto = null;
         root = null;

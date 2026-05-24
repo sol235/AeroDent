@@ -35,7 +35,7 @@ import com.diploma.aerodent.data.local.entity.User;
                 ToothStatus.class,
                 User.class
         },
-        version = 11,
+        version = 12,
         exportSchema = true
 )
 @TypeConverters({Converters.class})

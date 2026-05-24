@@ -32,6 +32,7 @@
     <string name="status_cancelled">ОТМЕНЕН</string>
     <string name="status_paid">ПЛАТЕНО</string>
     <string name="status_pending">НЕПЛАТЕНО</string>
+    <string name="status_partial">ЧАСТИЧНО</string>
 
     <!-- Add Patient Screen -->
     <string name="add_patient_title">Нов пациент</string>
@@ -82,6 +83,7 @@
     <string name="patient_details_phone_label">Телефон</string>
     <string name="patient_details_email_label">Имейл</string>
     <string name="patient_details_dob">Роден: %1$s</string>
+    <string name="payment_status_due">Дължимо %1$.2f EUR</string>
 
     <!-- General -->
     <string name="unknown">Неизвестно</string>
@@ -123,9 +125,7 @@
     <string name="appointment_scheduled_success">Часът е записан успешно</string>
     <string name="appointment_updated_success">Часът е обновен</string>
 
-    <!-- Payment -->
-    <string name="payment_status_paid">Платено %1$.2f eur</string>
-    <string name="payment_status_due">Дължимо %1$.2f eur</string>
+   
 
     <!-- Hints -->
     <string name="hint_date_format">ДД.ММ.ГГГГ</string>
@@ -137,7 +137,7 @@
     
     <!-- Appointment Detail -->
     <string name="appointment_detail_title">Детайли за посещението</string>
-    <string name="procedures_dental_chart">Процедури - Зъбен Статус</string>
+    <string name="procedures_dental_chart">Процедури</string>
     <string name="appointment_detail_section_info">ИНФОРМАЦИЯ ЗА ЧАСА</string>
     <string name="appointment_detail_patient">Пациент</string>
     <string name="appointment_detail_date">Дата</string>
@@ -295,4 +295,25 @@
     <string name="error_invalid_pin">Грешен ПИН код</string>
     <string name="error_admin_exists">Вече съществува администратор</string>
     <string name="user_active_status">Активен профил</string>
+
+    <!-- Payment -->
+    <string name="delete_payment_title">Изтриване на плащане</string>
+    <string name="delete_payment_confirmation">Желаете ли да изтриете това плащане?</string>
+    <string name="payment_error_overcharge">Сумата надвишава остатъка!</string>
+    <string name="payment_title">Плащане</string>
+    <string name="payment_total_amount_hint">Обща сума (EUR)</string>
+    <string name="payment_amount_paid_hint">Сума (EUR)</string>
+    <string name="payment_amount_paid_edit_hint">Платена сума (EUR)</string>
+    <string name="payment_method_hint">Метод на плащане</string>
+    <string name="payment_nhif_covered_hint">Покритие от Здравна каса (EUR)</string>
+    <string name="payment_method_cash">В брой</string>
+    <string name="payment_method_card">С карта</string>
+    <string name="payment_empty_state">Няма създадено плащане</string>
+    <string name="payment_create_btn">Добави плащане</string>
+    <string name="payment_details_title">Детайли за плащане</string>
+    <string name="payment_balance_label">Оставащо задължение</string>
+    <string name="payment_total_amount_label">Обща сума</string>
+    <string name="payment_amount_paid_label">Платено</string>
+    <string name="payment_description_hint">Описание / Процедури</string>
+    <string name="payment_history_title">История на плащанията</string>
 </resources>

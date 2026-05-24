@@ -422,6 +422,16 @@
                 android:layout_marginTop="16dp"
                 android:visibility="gone" />
 
+            <!-- Payments List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_payments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone"
+                tools:listitem="@layout/item_payment_transaction" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

@@ -18,6 +18,11 @@
 
         <item name="android:colorBackground">@color/background</item>
         <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceContainer">@color/white</item>
+        <item name="colorSurfaceContainerLow">@color/white</item>
+        <item name="colorSurfaceContainerLowest">@color/white</item>
+        <item name="colorSurfaceContainerHigh">@color/white</item>
+        <item name="colorSurfaceContainerHighest">@color/white</item>
         <item name="colorOnSurface">@color/black</item>
         <item name="colorOutline">@color/border_grey</item>
     </style>

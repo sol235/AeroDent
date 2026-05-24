@@ -42,27 +42,27 @@ public class PatientDetailViewModel extends AndroidViewModel {
 
         patient = Transformations.switchMap(patientId, id -> patientRepository.getPatientById(id));
         appointments = Transformations.switchMap(patientId, id -> appointmentRepository.getAppointmentsForPatient(id));
-        payments = Transformations.switchMap(patientId, id -> paymentRepository.getPaymentsForPatient(id));
+        payments = Transformations.switchMap(patientId, id -> paymentRepository.getPaymentsByPatientId(id));
 
         historyItems.addSource(appointments, appts -> combineHistory(appts, payments.getValue()));
         historyItems.addSource(payments, pmnts -> combineHistory(appointments.getValue(), pmnts));
     }
 
     private void combineHistory(List<Appointment> appts, List<Payment> pmnts) {
-        if (appts == null) return;
-        
+        if (appts == null)
+            return;
+
         java.util.List<PatientHistoryItem> items = new java.util.ArrayList<>();
         for (Appointment appt : appts) {
-            Payment foundPayment = null;
+            java.util.List<Payment> apptPayments = new java.util.ArrayList<>();
             if (pmnts != null) {
                 for (Payment p : pmnts) {
                     if (p.getAppointmentId() == appt.getId()) {
-                        foundPayment = p;
-                        break;
+                        apptPayments.add(p);
                     }
                 }
             }
-            items.add(new PatientHistoryItem(appt, foundPayment));
+            items.add(new PatientHistoryItem(appt, apptPayments));
         }
         historyItems.setValue(items);
     }
@@ -83,7 +83,11 @@ public class PatientDetailViewModel extends AndroidViewModel {
         return procedureLogRepository.getProcedureLogsForAppointment(appointmentId);
     }
 
-    public LiveData<Payment> getPaymentForAppointment(int appointmentId) {
-        return paymentRepository.getPaymentForAppointment(appointmentId);
+    public LiveData<List<Payment>> getPayments() {
+        return payments;
+    }
+
+    public LiveData<List<Payment>> getPaymentsForAppointment(int appointmentId) {
+        return paymentRepository.getPaymentsByAppointmentId(appointmentId);
     }
 }

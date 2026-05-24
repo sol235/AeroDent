@@ -26,7 +26,7 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
 
     private List<PatientHistoryItem> items = new ArrayList<>();
     private final Locale bulgarianLocale = new Locale("bg", "BG");
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", bulgarianLocale);
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, HH:mm", bulgarianLocale);
     private OnHistoryItemClickListener listener;
 
     public void setOnHistoryItemClickListener(OnHistoryItemClickListener listener) {
@@ -36,8 +36,7 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_history_timeline, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history_timeline, parent, false);
         return new ViewHolder(view);
     }
 
@@ -45,31 +44,48 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PatientHistoryItem item = items.get(position);
         Appointment appointment = item.getAppointment();
-        Payment payment = item.getPayment();
+        List<Payment> payments = item.getPayments();
 
         if (appointment.getDateTime() != null) {
             holder.textDate.setText(dateFormat.format(appointment.getDateTime()));
         }
 
-        holder.textDescription.setText(appointment.getTreatmentType() != null ? appointment.getTreatmentType() : holder.itemView.getContext().getString(R.string.checkup));
+        holder.textDescription.setText(appointment.getTreatmentType() != null ? appointment.getTreatmentType()
+                : holder.itemView.getContext().getString(R.string.checkup));
 
-        if (payment != null) {
+        if (payments != null && !payments.isEmpty()) {
+            Payment firstPayment = payments.get(0);
+            double totalAmount = firstPayment.getTotalAmount();
+            double nhifCovered = 0;
+            double amountPaid = 0;
+            
+            for (Payment p : payments) {
+                amountPaid += p.getAmountPaid();
+                nhifCovered += p.getNhifCovered();
+            }
+            
+            double totalPaid = amountPaid + nhifCovered;
+            double balance = totalAmount - totalPaid;
+
             String statusText;
             int bgColor;
             int textColor;
 
-            if ("PAID".equals(payment.getStatus())) {
-                statusText = holder.itemView.getContext().getString(R.string.payment_status_paid, payment.getAmount());
+            if (balance <= 0 && totalAmount > 0) {
+                statusText = holder.itemView.getContext().getString(R.string.status_paid) + " - " + 
+                        String.format(java.util.Locale.getDefault(), "%.2f EUR", totalAmount);
                 bgColor = holder.itemView.getContext().getColor(R.color.chip_green_bg);
                 textColor = holder.itemView.getContext().getColor(R.color.chip_green_text);
-            } else if (payment.getNhifCovered() > 0) {
-                statusText = holder.itemView.getContext().getString(R.string.nzok_short);
-                bgColor = holder.itemView.getContext().getColor(R.color.chip_green_bg);
-                textColor = holder.itemView.getContext().getColor(R.color.chip_green_text);
-            } else {
-                statusText = holder.itemView.getContext().getString(R.string.payment_status_due, payment.getAmount());
+            } else if (totalPaid > 0) {
+                statusText = holder.itemView.getContext().getString(R.string.status_partial) + " - "
+                        + holder.itemView.getContext().getString(R.string.payment_status_due, Math.max(0.0, balance));
                 bgColor = holder.itemView.getContext().getColor(R.color.chip_orange_bg);
                 textColor = holder.itemView.getContext().getColor(R.color.chip_orange_text);
+            } else {
+                statusText = holder.itemView.getContext().getString(R.string.status_pending) + " - " + 
+                        holder.itemView.getContext().getString(R.string.payment_status_due, Math.max(0.0, balance));
+                bgColor = holder.itemView.getContext().getColor(R.color.chip_red_bg);
+                textColor = holder.itemView.getContext().getColor(R.color.chip_red_text);
             }
 
             holder.textPaymentStatus.setText(statusText);

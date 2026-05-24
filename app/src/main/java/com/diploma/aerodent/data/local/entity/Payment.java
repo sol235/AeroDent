@@ -28,58 +28,78 @@ import java.util.Date;
 public class Payment extends PatientRecordEntity {
 
     private int appointmentId;
-    private double amount;
+    private double totalAmount;
+    private double amountPaid;
     private double nhifCovered;
-    private double patientPays;
+    private String paymentMethod;
     private String status;
+    private String description;
     private Date date;
 
     public Payment() {}
 
-
     public int getAppointmentId() {
         return appointmentId;
     }
+
     public void setAppointmentId(int appointmentId) {
         this.appointmentId = appointmentId;
     }
 
-    public double getAmount() {
-        return amount;
+    public double getTotalAmount() {
+        return totalAmount;
     }
-    public void setAmount(double amount) {
-        this.amount = amount;
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public double getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(double amountPaid) {
+        this.amountPaid = amountPaid;
     }
 
     public double getNhifCovered() {
         return nhifCovered;
     }
+
     public void setNhifCovered(double nhifCovered) {
         this.nhifCovered = nhifCovered;
     }
 
-    public double getPatientPays() {
-        return patientPays;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
-    public void setPatientPays(double patientPays) {
-        this.patientPays = patientPays;
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public String getStatus() {
         return status;
     }
+
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getDate() {
         return date;
     }
+
     public void setDate(Date date) {
         this.date = date;
     }
 
-    public boolean isPaid() {
-        return "PAID".equals(status);
-    }
 }
