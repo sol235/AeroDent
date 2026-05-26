@@ -12,6 +12,7 @@ import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.ToothStatus;
 import com.diploma.aerodent.data.local.entity.ProcedureLog;
 import com.diploma.aerodent.data.local.model.DentalCondition;
+import com.diploma.aerodent.data.local.AppDatabase;
 import com.diploma.aerodent.data.repository.PatientRepository;
 import com.diploma.aerodent.data.repository.ProcedureLogRepository;
 import com.diploma.aerodent.data.repository.ToothStatusRepository;
@@ -22,8 +23,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class DentalChartViewModel extends AndroidViewModel {
 
@@ -33,12 +36,39 @@ public class DentalChartViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> patientId = new MutableLiveData<>();
     private final MutableLiveData<Integer> appointmentId = new MutableLiveData<>();
     private final LiveData<List<ToothStatus>> toothStatuses;
-    private final LiveData<Map<Integer, String>> toothColors;
     private final LiveData<String> toothColorsJson;
     private final LiveData<Patient> patient;
     private final LiveData<String> patientName;
     private final LiveData<List<ProcedureLog>> procedureLogs;
     private final SessionManager sessionManager;
+
+    public static final List<DentalCondition> IMPLANT_CONFLICTS = java.util.Collections.unmodifiableList(
+        java.util.Arrays.asList(
+            DentalCondition.CARIES,
+            DentalCondition.PULPITIS,
+            DentalCondition.ROOT_CANAL,
+            DentalCondition.RADICULAR_POST,
+            DentalCondition.OBTURATION,
+            DentalCondition.CALCULUS,
+            DentalCondition.PERIODONTITIS,
+            DentalCondition.PERIODONTITIS_PA
+        )
+    );
+
+    public static final List<DentalCondition> MISSING_CONFLICTS;
+    static {
+        List<DentalCondition> list = new ArrayList<>();
+        for (DentalCondition c : DentalCondition.values()) {
+            if (c != DentalCondition.MISSING &&
+                c != DentalCondition.IMPLANT &&
+                c != DentalCondition.PONTIC_FIXED &&
+                c != DentalCondition.PONTIC_REMOVABLE &&
+                c != DentalCondition.SUPERNUMERARY) {
+                list.add(c);
+            }
+        }
+        MISSING_CONFLICTS = java.util.Collections.unmodifiableList(list);
+    }
 
     public DentalChartViewModel(@NonNull Application application) {
         super(application);
@@ -51,11 +81,13 @@ public class DentalChartViewModel extends AndroidViewModel {
         patient = Transformations.switchMap(patientId, patientRepository::getPatientById);
         procedureLogs = Transformations.switchMap(patientId, procedureLogRepository::getProcedureLogsForPatient);
 
-        toothColors = Transformations.map(toothStatuses, statuses -> {
+        toothColorsJson = Transformations.map(toothStatuses, statuses -> {
+            JSONObject jsonObject = new JSONObject();
+            if (statuses == null)
+                return jsonObject.toString();
+
             Map<Integer, String> colors = new HashMap<>();
             Map<Integer, Integer> priorities = new HashMap<>();
-            if (statuses == null)
-                return colors;
 
             for (ToothStatus status : statuses) {
                 int toothNum = status.getToothNumber();
@@ -68,11 +100,7 @@ public class DentalChartViewModel extends AndroidViewModel {
                     colors.put(toothNum, color);
                 }
             }
-            return colors;
-        });
 
-        toothColorsJson = Transformations.map(toothColors, colors -> {
-            JSONObject jsonObject = new JSONObject();
             for (Map.Entry<Integer, String> entry : colors.entrySet()) {
                 if (entry.getValue() != null) {
                     try {
@@ -108,9 +136,7 @@ public class DentalChartViewModel extends AndroidViewModel {
         return toothStatuses;
     }
 
-    public LiveData<Map<Integer, String>> getToothColors() {
-        return toothColors;
-    }
+
 
     public LiveData<Patient> getPatient() {
         return patient;
@@ -155,7 +181,63 @@ public class DentalChartViewModel extends AndroidViewModel {
         ToothStatus newStatus = new ToothStatus(pid, toothNumber, condition, surfaces, new Date(), apptId);
         newStatus.setUserId(currentUserId);
         newStatus.setCreatorName(formattedCreatorName);
-        repository.insert(newStatus);
+
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            AppDatabase.getDatabase(getApplication()).runInTransaction(() -> {
+                List<ToothStatus> currentStatuses = repository.getToothStatusesForToothSync(pid, toothNumber);
+
+                // Clear conflicting conditions based on new condition
+                if (condition == DentalCondition.HEALTHY) {
+                    repository.deleteAllStatusesForTooth(pid, toothNumber);
+                } else if (condition == DentalCondition.MISSING) {
+                    repository.deleteSpecificStatusesForTooth(pid, toothNumber, MISSING_CONFLICTS);
+                } else if (condition == DentalCondition.IMPLANT ||
+                           condition == DentalCondition.PONTIC_FIXED ||
+                           condition == DentalCondition.PONTIC_REMOVABLE) {
+                    repository.deleteSpecificStatusesForTooth(pid, toothNumber, IMPLANT_CONFLICTS);
+                } else if (condition == DentalCondition.ROOT_CANAL) {
+                    repository.deleteStatus(pid, toothNumber, DentalCondition.PULPITIS);
+                } else if (condition == DentalCondition.CROWN) {
+                    repository.deleteStatus(pid, toothNumber, DentalCondition.CARIES);
+                    repository.deleteStatus(pid, toothNumber, DentalCondition.FRACTURE);
+                    repository.deleteStatus(pid, toothNumber, DentalCondition.OBTURATION);
+                } else if (condition == DentalCondition.OBTURATION) {
+                    if (surfaces != null && !surfaces.isEmpty()) {
+                        String[] fillSurfaces = surfaces.split(",");
+                        Set<String> filledSet = new HashSet<>();
+                        for (String fs : fillSurfaces) {
+                            filledSet.add(fs.trim());
+                        }
+
+                        for (ToothStatus status : currentStatuses) {
+                            DentalCondition currentCond = status.getCondition();
+                            if (currentCond == DentalCondition.CARIES || currentCond == DentalCondition.FRACTURE) {
+                                String currentSurfacesStr = status.getSurfaces();
+                                if (currentSurfacesStr != null && !currentSurfacesStr.isEmpty()) {
+                                    String[] currentSurfaces = currentSurfacesStr.split(",");
+                                    List<String> remaining = new ArrayList<>();
+                                    for (String s : currentSurfaces) {
+                                        if (!filledSet.contains(s.trim())) {
+                                            remaining.add(s.trim());
+                                        }
+                                    }
+
+                                    if (remaining.isEmpty()) {
+                                        repository.deleteStatus(pid, toothNumber, currentCond);
+                                    } else {
+                                        String remainingStr = android.text.TextUtils.join(",", remaining);
+                                        status.setSurfaces(remainingStr);
+                                        repository.update(status);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                repository.insert(newStatus);
+            });
+        });
 
         // Save history in ProcedureLog
         if (condition != DentalCondition.HEALTHY) {
@@ -231,5 +313,60 @@ public class DentalChartViewModel extends AndroidViewModel {
             }
         }
         return visible;
+    }
+
+    public String checkConditionConflict(List<ToothStatus> currentStatuses, DentalCondition newCondition, android.content.Context context) {
+        if (currentStatuses == null || currentStatuses.isEmpty()) {
+            return null;
+        }
+
+        boolean hasMissing = false;
+        boolean hasImplantOrPontic = false;
+        boolean hasRootCanal = false;
+
+        for (ToothStatus status : currentStatuses) {
+            DentalCondition c = status.getCondition();
+            if (c == DentalCondition.MISSING) {
+                hasMissing = true;
+            } else if (c == DentalCondition.IMPLANT || c == DentalCondition.PONTIC_FIXED || c == DentalCondition.PONTIC_REMOVABLE) {
+                hasImplantOrPontic = true;
+            } else if (c == DentalCondition.ROOT_CANAL) {
+                hasRootCanal = true;
+            }
+        }
+
+        if (hasMissing) {
+            if (newCondition != DentalCondition.HEALTHY && MISSING_CONFLICTS.contains(newCondition)) {
+                return context.getString(com.diploma.aerodent.R.string.conflict_missing_tooth);
+            }
+        }
+
+        if (hasImplantOrPontic) {
+            if (IMPLANT_CONFLICTS.contains(newCondition)) {
+                return context.getString(com.diploma.aerodent.R.string.conflict_implant_tooth);
+            }
+        }
+
+        if (newCondition == DentalCondition.PULPITIS && hasRootCanal) {
+            return context.getString(com.diploma.aerodent.R.string.conflict_root_canal_pulpitis);
+        }
+
+        return null;
+    }
+
+    public List<String> getExistingSurfaces(List<ToothStatus> currentStatuses, DentalCondition condition) {
+        List<String> existingSurfaces = new ArrayList<>();
+        if (currentStatuses != null) {
+            for (ToothStatus status : currentStatuses) {
+                if (status.getCondition() == condition) {
+                    String surfacesStr = status.getSurfaces();
+                    if (surfacesStr != null && !surfacesStr.isEmpty()) {
+                        java.util.Collections.addAll(existingSurfaces, surfacesStr.split(","));
+                    }
+                    break;
+                }
+            }
+        }
+        return existingSurfaces;
     }
 }

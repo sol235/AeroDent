@@ -319,4 +319,9 @@
     <string name="payment_pending_list_title">Списък с чакащи плащания</string>
     <string name="payment_no_pending_payments">Няма чакащи плащания</string>
     <string name="payment_loading">Зареждане</string>
+
+    <!-- Dental Chart Conflicts -->
+    <string name="conflict_missing_tooth">Зъбът е отбелязан като липсващ. Не може да се добавят други състояния, освен имплант или мостокрепител.</string>
+    <string name="conflict_implant_tooth">Зъбът има имплант/мостокрепител. Не може да се добавят кариеси, пулпити или лечебни процедури за зъбът.</string>
+    <string name="conflict_root_canal_pulpitis">Зъбът е с депулпиран/коренов канал. Пулпитът е невъзможен.</string>
 </resources>

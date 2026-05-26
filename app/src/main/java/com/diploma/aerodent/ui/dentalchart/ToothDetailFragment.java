@@ -43,6 +43,7 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
     private DentalCondition pendingCondition;
     private TextView selectedConditionView;
     private List<com.diploma.aerodent.data.local.entity.ToothStatus> currentStatuses;
+    private java.util.Map<DentalCondition, TextView> conditionViews = new java.util.HashMap<>();
 
     public static ToothDetailFragment newInstance(int toothNumber) {
         ToothDetailFragment fragment = new ToothDetailFragment();
@@ -119,8 +120,39 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
         if (conditions == null || conditions.isEmpty())
             return;
 
+        int categoryColorResId = 0;
+        switch (category) {
+            case PATHOLOGY:
+                categoryColorResId = R.color.dental_red;
+                break;
+            case RESTORATION:
+                categoryColorResId = R.color.dental_blue;
+                break;
+            case PERIODONTOLOGY:
+                categoryColorResId = R.color.dental_green;
+                break;
+            case PROSTHETICS:
+                categoryColorResId = R.color.dental_orange;
+                break;
+            default:
+                break;
+        }
+
+        android.graphics.drawable.Drawable headerDot = null;
+        if (categoryColorResId != 0) {
+            headerDot = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.dot_circle).mutate();
+            headerDot.setTint(androidx.core.content.ContextCompat.getColor(requireContext(), categoryColorResId));
+        }
+
         TextView header = new TextView(getContext(), null, 0, R.style.CategoryHeaderStyle);
         header.setText(category.getTitle(getContext()));
+        header.setCompoundDrawablesWithIntrinsicBounds(
+            headerDot,
+            null,
+            androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_right),
+            null
+        );
+        header.setCompoundDrawablePadding((int) (12 * getResources().getDisplayMetrics().density));
 
         LinearLayout itemsContainer = new LinearLayout(getContext());
         itemsContainer.setOrientation(LinearLayout.VERTICAL);
@@ -134,13 +166,28 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
                 if (child instanceof LinearLayout) {
                     child.setVisibility(View.GONE);
                 } else if (child instanceof TextView) {
-                    ((TextView) child).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_right, 0);
+                    TextView childTv = (TextView) child;
+                    android.graphics.drawable.Drawable[] drawables = childTv.getCompoundDrawables();
+                    android.graphics.drawable.Drawable childDot = drawables[0];
+                    childTv.setCompoundDrawablesWithIntrinsicBounds(
+                        childDot,
+                        null,
+                        androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_right),
+                        null
+                    );
                 }
             }
 
             if (!isVisible) {
                 itemsContainer.setVisibility(View.VISIBLE);
-                header.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_back, 0);
+                android.graphics.drawable.Drawable[] drawables = header.getCompoundDrawables();
+                android.graphics.drawable.Drawable currentDot = drawables[0];
+                header.setCompoundDrawablesWithIntrinsicBounds(
+                    currentDot,
+                    null,
+                    androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_back),
+                    null
+                );
             }
         });
 
@@ -148,7 +195,17 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
             TextView item = new TextView(getContext(), null, 0, R.style.ConditionButtonStyle);
             item.setText(condition.getDisplayName(getContext()));
             item.setOnClickListener(v -> onConditionClicked(condition, item));
+
+            int itemColorResId = condition.getColorResId();
+            if (itemColorResId != 0) {
+                android.graphics.drawable.Drawable itemDot = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.dot_circle).mutate();
+                itemDot.setTint(androidx.core.content.ContextCompat.getColor(requireContext(), itemColorResId));
+                item.setCompoundDrawablesWithIntrinsicBounds(itemDot, null, null, null);
+                item.setCompoundDrawablePadding((int) (12 * getResources().getDisplayMetrics().density));
+            }
+
             itemsContainer.addView(item);
+            conditionViews.put(condition, item);
         }
 
         containerCategories.addView(header);
@@ -171,16 +228,30 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
     }
 
     private void onConditionClicked(DentalCondition condition, TextView clickedView) {
+        String conflictWarning = checkConditionConflict(condition);
+        if (conflictWarning != null) {
+            com.google.android.material.snackbar.Snackbar snackbar = com.google.android.material.snackbar.Snackbar.make(
+                    requireView(), conflictWarning, com.google.android.material.snackbar.Snackbar.LENGTH_LONG);
+            android.widget.TextView tv = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+            if (tv != null) {
+                tv.setMaxLines(5);
+                tv.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 15);
+            }
+            snackbar.show();
+            return;
+        }
+
         if (selectedConditionView != null) {
             selectedConditionView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-            selectedConditionView.setTypeface(null, android.graphics.Typeface.NORMAL);
-            selectedConditionView.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary));
         }
 
         selectedConditionView = clickedView;
         selectedConditionView.setBackgroundColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.tertiary));
         selectedConditionView.setTypeface(null, android.graphics.Typeface.BOLD);
         selectedConditionView.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.primary));
+        selectedConditionView.setAlpha(1.0f);
+        
+        updateConditionViewsState();
 
         pendingCondition = condition;
         layoutConfirmation.setVisibility(View.VISIBLE);
@@ -199,18 +270,7 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
             containerSurfaceToggles.setVisibility(View.VISIBLE);
             textSurfaceLegend.setVisibility(View.VISIBLE);
 
-            java.util.List<String> existingSurfaces = new java.util.ArrayList<>();
-            if (currentStatuses != null) {
-                for (com.diploma.aerodent.data.local.entity.ToothStatus status : currentStatuses) {
-                    if (status.getCondition() == condition) {
-                        String surfacesStr = status.getSurfaces();
-                        if (surfacesStr != null && !surfacesStr.isEmpty()) {
-                            java.util.Collections.addAll(existingSurfaces, surfacesStr.split(","));
-                        }
-                        break;
-                    }
-                }
-            }
+            java.util.List<String> existingSurfaces = viewModel.getExistingSurfaces(currentStatuses, condition);
 
             String[] codes = viewModel.getSurfaceCodes();
             for (int i = 0; i < surfaceToggles.length; i++) {
@@ -245,9 +305,8 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
 
         if (selectedConditionView != null) {
             selectedConditionView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-            selectedConditionView.setTypeface(null, android.graphics.Typeface.NORMAL);
-            selectedConditionView.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary));
             selectedConditionView = null;
+            updateConditionViewsState();
         }
     }
 
@@ -255,6 +314,39 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
         viewModel.getToothStatusesForTooth(toothNumber).observe(getViewLifecycleOwner(), statuses -> {
             currentStatuses = statuses;
             activeAdapter.setStatuses(statuses);
+            updateConditionViewsState();
         });
+    }
+
+    private void updateConditionViewsState() {
+        if (conditionViews == null || currentStatuses == null) return;
+        android.content.Context context = getContext();
+        if (context == null) return;
+
+        int textSecondaryColor = androidx.core.content.ContextCompat.getColor(context, R.color.text_secondary);
+        int blackColor = androidx.core.content.ContextCompat.getColor(context, R.color.black);
+
+        for (java.util.Map.Entry<DentalCondition, TextView> entry : conditionViews.entrySet()) {
+            DentalCondition condition = entry.getKey();
+            TextView view = entry.getValue();
+
+            if (view == selectedConditionView) continue;
+
+            boolean hasConflict = checkConditionConflict(condition) != null;
+            if (hasConflict) {
+                view.setTextColor(textSecondaryColor);
+                view.setTypeface(null, android.graphics.Typeface.NORMAL);
+                view.setAlpha(0.5f);
+            } else {
+                view.setTextColor(blackColor);
+                view.setTypeface(null, android.graphics.Typeface.BOLD);
+                view.setAlpha(1.0f);
+            }
+        }
+    }
+
+    private String checkConditionConflict(DentalCondition newCondition) {
+        if (getContext() == null) return null;
+        return viewModel.checkConditionConflict(currentStatuses, newCondition, requireContext());
     }
 }

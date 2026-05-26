@@ -21,9 +21,21 @@ public interface ToothStatusDao {
     @Query("SELECT * FROM tooth_statuses WHERE patientId = :patientId AND toothNumber = :toothNumber")
     LiveData<List<ToothStatus>> getToothStatusesForTooth(int patientId, int toothNumber);
 
+    @Query("SELECT * FROM tooth_statuses WHERE patientId = :patientId AND toothNumber = :toothNumber")
+    List<ToothStatus> getToothStatusesForToothSync(int patientId, int toothNumber);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ToothStatus toothStatus);
 
+    @Update
+    void update(ToothStatus toothStatus);
+
     @Query("DELETE FROM tooth_statuses WHERE patientId = :patientId AND toothNumber = :toothNumber AND conditionCode = :condition")
     void deleteStatus(int patientId, int toothNumber, DentalCondition condition);
+
+    @Query("DELETE FROM tooth_statuses WHERE patientId = :patientId AND toothNumber = :toothNumber")
+    void deleteAllStatusesForTooth(int patientId, int toothNumber);
+
+    @Query("DELETE FROM tooth_statuses WHERE patientId = :patientId AND toothNumber = :toothNumber AND conditionCode IN (:conditions)")
+    void deleteSpecificStatusesForTooth(int patientId, int toothNumber, List<DentalCondition> conditions);
 }

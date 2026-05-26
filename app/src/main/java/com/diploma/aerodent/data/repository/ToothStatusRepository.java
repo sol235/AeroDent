@@ -28,11 +28,27 @@ public class ToothStatusRepository {
         return toothStatusDao.getToothStatusesForTooth(patientId, toothNumber);
     }
 
+    public List<ToothStatus> getToothStatusesForToothSync(int patientId, int toothNumber) {
+        return toothStatusDao.getToothStatusesForToothSync(patientId, toothNumber);
+    }
+
     public void insert(ToothStatus toothStatus) {
-        AppDatabase.databaseWriteExecutor.execute(() -> toothStatusDao.insert(toothStatus));
+        toothStatusDao.insert(toothStatus);
+    }
+
+    public void update(ToothStatus toothStatus) {
+        toothStatusDao.update(toothStatus);
     }
 
     public void deleteStatus(int patientId, int toothNumber, DentalCondition condition) {
-        AppDatabase.databaseWriteExecutor.execute(() -> toothStatusDao.deleteStatus(patientId, toothNumber, condition));
+        toothStatusDao.deleteStatus(patientId, toothNumber, condition);
+    }
+
+    public void deleteAllStatusesForTooth(int patientId, int toothNumber) {
+        toothStatusDao.deleteAllStatusesForTooth(patientId, toothNumber);
+    }
+
+    public void deleteSpecificStatusesForTooth(int patientId, int toothNumber, List<DentalCondition> conditions) {
+        toothStatusDao.deleteSpecificStatusesForTooth(patientId, toothNumber, conditions);
     }
 }
