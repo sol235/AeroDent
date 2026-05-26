@@ -56,15 +56,15 @@ public class HistoryTimelineAdapter extends RecyclerView.Adapter<HistoryTimeline
         if (payments != null && !payments.isEmpty()) {
             Payment firstPayment = payments.get(0);
             double totalAmount = firstPayment.getTotalAmount();
-            double nhifCovered = 0;
+            double zokCovered = 0;
             double amountPaid = 0;
             
             for (Payment p : payments) {
                 amountPaid += p.getAmountPaid();
-                nhifCovered += p.getNhifCovered();
+                zokCovered += p.getZokCovered();
             }
             
-            double totalPaid = amountPaid + nhifCovered;
+            double totalPaid = amountPaid + zokCovered;
             double balance = totalAmount - totalPaid;
 
             String statusText;

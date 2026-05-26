@@ -35,8 +35,8 @@ public class PatientRepository {
         return patientDao.getPatientByEgn(egn);
     }
     
-    public LiveData<Patient> getPatientByNhifNumber(String nhifNumber) {
-        return patientDao.getPatientByNhifNumber(nhifNumber);
+    public LiveData<Patient> getPatientByZokNumber(String zokNumber) {
+        return patientDao.getPatientByZokNumber(zokNumber);
     }
 
     public LiveData<Integer> getPatientCount() {

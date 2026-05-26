@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public class FormatUtils {
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    private static final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
 
 
     public static String formatSurfaces(Context context, String surfaces) {
@@ -49,14 +49,19 @@ public class FormatUtils {
 
     // Formats date and context like 01.06.2026 - appointment
 
-    public static String formatEntryContext(Context context, Date date, Integer appointmentId) {
+    public static String formatEntryContext(Context context, Date date, Integer appointmentId, String creatorName) {
         String contextStr = (appointmentId == null) ? context.getString(R.string.context_previous)
                 : context.getString(R.string.context_appointment);
 
         String dateStr = "";
         if (date != null) {
-            dateStr = DATE_FORMAT.format(date) + " - ";
+            dateStr = DATETIME_FORMAT.format(date) + " - ";
         }
-        return dateStr + contextStr;
+        
+        String result = dateStr + contextStr;
+        if (creatorName != null && !creatorName.isEmpty()) {
+            result += " - " + creatorName;
+        }
+        return result;
     }
 }

@@ -125,24 +125,24 @@
             android:popupBackground="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- NHIF -->
+    <!-- ZOK Number -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_nhif_covered"
+        android:id="@+id/layout_zok_covered"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:hint="@string/payment_nhif_covered_hint">
+        android:hint="@string/payment_zok_covered_hint">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_nhif_covered"
+            android:id="@+id/input_zok_covered"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/text_nhif_error"
+        android:id="@+id/text_zok_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"

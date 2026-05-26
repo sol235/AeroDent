@@ -86,7 +86,7 @@ public class ProcedureLogAdapter extends RecyclerView.Adapter<ProcedureLogAdapte
 
         if (holder.textEntryContext != null) {
             String formattedContext = FormatUtils.formatEntryContext(
-                holder.itemView.getContext(), log.getDateLogged(), log.getAppointmentId()
+                holder.itemView.getContext(), log.getDateLogged(), log.getAppointmentId(), log.getCreatorName()
             );
             holder.textEntryContext.setText(formattedContext);
             holder.textEntryContext.setVisibility(View.VISIBLE);

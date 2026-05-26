@@ -51,9 +51,8 @@
     <string name="add_patient_email">Имейл</string>
     
     <string name="add_patient_section_insurance">ЗДРАВНО ОСИГУРЯВАНЕ</string>
-    <string name="add_patient_nhif_number">НЗОК номер</string>
-    <string name="add_patient_nhif_status">НЗОК статус</string>
-    <string name="nzok_short">НЗОК</string>
+    <string name="add_patient_zok_number">Номер на ЗОК</string>
+    <string name="nzok_short">ЗОК</string>
     <string name="add_patient_notes">Бележки</string>
     
     <string name="add_patient_save">Запази пациента</string>
@@ -78,7 +77,7 @@
     <string name="patient_details_tab_payments">Плащания</string>
     <string name="patient_details_egn">ЕГН: %1$s</string>
     <string name="patient_details_gender">Пол: %1$s</string>
-    <string name="patient_details_nhif">НЗОК: %1$s</string>
+    <string name="patient_details_zok">Номер на ЗОК: %1$s</string>
     <string name="patient_details_phone_label">Телефон</string>
     <string name="patient_details_email_label">Имейл</string>
     <string name="patient_details_dob">Роден: %1$s</string>
@@ -105,16 +104,15 @@
     <string name="patient_error_duplicate_egn">Пациент с това ЕГН вече съществува</string>
     <string name="patient_error_phone_invalid">Невалиден телефонен номер</string>
     <string name="patient_error_email_invalid">Невалиден имейл адрес</string>
+    <string name="patient_error_zok_invalid">Невалиден номер на ЗОК (точно 8 цифри)</string>
     <string name="patient_saved_success">Пациентът е записан</string>
     <string name="patient_updated_success">Данните са обновени</string>
     <string name="patient_deleted_success">Пациентът е изтрит</string>
-    <string name="patient_nhif_status_active">Осигурен</string>
 
     <string name="delete">Изтрий</string>
     <string name="delete_patient_title">Изтриване на пациент</string>
     <string name="delete_patient_confirmation">Желаете ли да изтриете този пациент?</string>
     <string name="cancel">Отказ</string>
-    <string name="patient_nhif_status_inactive">Неосигурен</string>
 
     <!-- Appointment -->
     <string name="appointment_edit_title">Редактирай час</string>
@@ -304,7 +302,7 @@
     <string name="payment_amount_paid_hint">Сума (EUR)</string>
     <string name="payment_amount_paid_edit_hint">Платена сума (EUR)</string>
     <string name="payment_method_hint">Метод на плащане</string>
-    <string name="payment_nhif_covered_hint">Покритие от Здравна каса (EUR)</string>
+    <string name="payment_zok_covered_hint">Покритие от Здравна каса (EUR)</string>
     <string name="payment_method_cash">В брой</string>
     <string name="payment_method_card">С карта</string>
     <string name="payment_empty_state">Няма създадено плащане</string>

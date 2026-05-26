@@ -47,15 +47,15 @@ public class PaymentTransactionAdapter extends RecyclerView.Adapter<PaymentTrans
             holder.textDate.setText(dateFormat.format(payment.getDate()));
         }
 
-        double transactionTotal = payment.getAmountPaid() + payment.getNhifCovered();
+        double transactionTotal = payment.getAmountPaid() + payment.getZokCovered();
         holder.textAmount.setText(String.format(Locale.getDefault(), "+ %.2f EUR", transactionTotal));
 
         String methodText;
-        if (payment.getAmountPaid() == 0 && payment.getNhifCovered() > 0) {
+        if (payment.getAmountPaid() == 0 && payment.getZokCovered() > 0) {
             methodText = "НЗОК";
         } else {
             methodText = payment.getPaymentMethod() != null ? payment.getPaymentMethod() : "";
-            if (payment.getNhifCovered() > 0) {
+            if (payment.getZokCovered() > 0) {
                 methodText += " + НЗОК";
             }
         }

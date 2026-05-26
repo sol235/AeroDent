@@ -34,6 +34,8 @@ public class ProcedureLog extends PatientRecordEntity {
     private String actionTaken;
     private String surfaces;
     private String notes;
+    private String userId;
+    private String creatorName;
 
     public static final String TYPE_STATUS = "STATUS";
     public static final String TYPE_PROCEDURE = "PROCEDURE";
@@ -104,5 +106,19 @@ public class ProcedureLog extends PatientRecordEntity {
     }
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 }

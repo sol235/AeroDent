@@ -19,8 +19,7 @@ public class Patient extends BaseEntity {
     private String phoneNumber;
     private String email;
     private Date dateOfBirth;
-    private String nhifNumber; // НЗОК номер
-    private String nhifStatus; // НЗОК статус
+    private String zokNumber; // НЗОК номер
     private String notes;
     private Date createdAt;
 
@@ -92,20 +91,12 @@ public class Patient extends BaseEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getNhifNumber() {
-        return nhifNumber;
+    public String getZokNumber() {
+        return zokNumber;
     }
 
-    public void setNhifNumber(String nhifNumber) {
-        this.nhifNumber = nhifNumber;
-    }
-
-    public String getNhifStatus() {
-        return nhifStatus;
-    }
-
-    public void setNhifStatus(String nhifStatus) {
-        this.nhifStatus = nhifStatus;
+    public void setZokNumber(String zokNumber) {
+        this.zokNumber = zokNumber;
     }
 
     public String getNotes() {

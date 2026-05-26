@@ -257,8 +257,8 @@ public class PatientDetailFragment extends Fragment {
                 textInitials.setText(NameUtils.getInitials(patient));
 
                 String egn = patient.getEgn() != null ? patient.getEgn() : "---";
-                String nhif = patient.getNhifNumber() != null ? patient.getNhifNumber() : "---";
-                String ids = getString(R.string.patient_details_egn, egn) + " - " + getString(R.string.patient_details_nhif, nhif);
+                String zok = patient.getZokNumber() != null ? patient.getZokNumber() : "---";
+                String ids = getString(R.string.patient_details_egn, egn) + " - " + getString(R.string.patient_details_zok, zok);
                 textIds.setText(ids);
 
                 if (patient.getDateOfBirth() != null) {

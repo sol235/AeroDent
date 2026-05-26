@@ -30,7 +30,7 @@ public class Payment extends PatientRecordEntity {
     private int appointmentId;
     private double totalAmount;
     private double amountPaid;
-    private double nhifCovered;
+    private double zokCovered;
     private String paymentMethod;
     private String status;
     private String description;
@@ -62,12 +62,12 @@ public class Payment extends PatientRecordEntity {
         this.amountPaid = amountPaid;
     }
 
-    public double getNhifCovered() {
-        return nhifCovered;
+    public double getZokCovered() {
+        return zokCovered;
     }
 
-    public void setNhifCovered(double nhifCovered) {
-        this.nhifCovered = nhifCovered;
+    public void setZokCovered(double zokCovered) {
+        this.zokCovered = zokCovered;
     }
 
     public String getPaymentMethod() {

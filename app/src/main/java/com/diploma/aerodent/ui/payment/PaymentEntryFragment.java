@@ -31,7 +31,7 @@ public class PaymentEntryFragment extends BottomSheetDialogFragment {
 
     private TextInputEditText inputTotalAmount;
     private TextInputEditText inputAmountPaid;
-    private TextInputEditText inputNhifCovered;
+    private TextInputEditText inputZokCovered;
     private AutoCompleteTextView dropdownPaymentMethod;
     private android.widget.TextView textAlreadyPaid;
     private List<Payment> loadedPayments;
@@ -77,7 +77,7 @@ public class PaymentEntryFragment extends BottomSheetDialogFragment {
 
         inputTotalAmount = view.findViewById(R.id.input_total_amount);
         inputAmountPaid = view.findViewById(R.id.input_amount_paid);
-        inputNhifCovered = view.findViewById(R.id.input_nhif_covered);
+        inputZokCovered = view.findViewById(R.id.input_zok_covered);
         dropdownPaymentMethod = view.findViewById(R.id.dropdown_payment_method);
         textAlreadyPaid = view.findViewById(R.id.text_already_paid);
         btnSavePayment = view.findViewById(R.id.btn_save_payment);
@@ -117,7 +117,7 @@ public class PaymentEntryFragment extends BottomSheetDialogFragment {
 
         inputTotalAmount.addTextChangedListener(watcher);
         inputAmountPaid.addTextChangedListener(watcher);
-        inputNhifCovered.addTextChangedListener(watcher);
+        inputZokCovered.addTextChangedListener(watcher);
 
         btnSavePayment.setOnClickListener(v -> savePayment());
     }
@@ -138,7 +138,7 @@ public class PaymentEntryFragment extends BottomSheetDialogFragment {
             Payment existingPayment = getExistingPayment();
             if (existingPayment != null && isInputEmpty(inputAmountPaid)) {
                 inputAmountPaid.setText(String.valueOf(existingPayment.getAmountPaid()));
-                inputNhifCovered.setText(String.valueOf(existingPayment.getNhifCovered()));
+                inputZokCovered.setText(String.valueOf(existingPayment.getZokCovered()));
                 dropdownPaymentMethod.setText(existingPayment.getPaymentMethod(), false);
                 TextInputEditText inputDesc = getView().findViewById(R.id.input_description);
                 if (inputDesc != null && existingPayment.getDescription() != null) {
@@ -170,7 +170,7 @@ public class PaymentEntryFragment extends BottomSheetDialogFragment {
     private void savePayment() {
         double totalAmount = parseInput(inputTotalAmount);
         double amountPaid = parseInput(inputAmountPaid);
-        double nhifCovered = parseInput(inputNhifCovered);
+        double zokCovered = parseInput(inputZokCovered);
 
         String paymentMethod = dropdownPaymentMethod.getText().toString();
         if (paymentMethod.isEmpty()) {
@@ -180,7 +180,7 @@ public class PaymentEntryFragment extends BottomSheetDialogFragment {
         TextInputEditText inputDescription = getView().findViewById(R.id.input_description);
         String description = inputDescription.getText() != null ? inputDescription.getText().toString() : "";
 
-        paymentViewModel.saveOrUpdatePayment(appointmentId, patientId, totalAmount, amountPaid, nhifCovered,
+        paymentViewModel.saveOrUpdatePayment(appointmentId, patientId, totalAmount, amountPaid, zokCovered,
                 paymentMethod, description, getExistingPayment());
         dismiss();
     }
@@ -188,9 +188,9 @@ public class PaymentEntryFragment extends BottomSheetDialogFragment {
     private void validateAmount() {
         double total = parseInput(inputTotalAmount);
         double paid = parseInput(inputAmountPaid);
-        double nhif = parseInput(inputNhifCovered);
+        double zok = parseInput(inputZokCovered);
 
-        boolean isValid = paymentViewModel.isPaymentValid(loadedPayments, paymentId, total, paid, nhif);
+        boolean isValid = paymentViewModel.isPaymentValid(loadedPayments, paymentId, total, paid, zok);
         boolean showWarning = !isValid && total > 0;
 
         if (btnSavePayment != null)
@@ -200,16 +200,16 @@ public class PaymentEntryFragment extends BottomSheetDialogFragment {
         if (view != null) {
             android.widget.TextView textTotalError = view.findViewById(R.id.text_total_error);
             android.widget.TextView textPaidError = view.findViewById(R.id.text_paid_error);
-            android.widget.TextView textNhifError = view.findViewById(R.id.text_nhif_error);
+            android.widget.TextView textZokError = view.findViewById(R.id.text_zok_error);
 
             if (textTotalError != null) {
                 textTotalError.setVisibility(showWarning && inputTotalAmount.hasFocus() ? View.VISIBLE : View.GONE);
             }
-            if (textNhifError != null) {
-                textNhifError.setVisibility(showWarning && inputNhifCovered.hasFocus() ? View.VISIBLE : View.GONE);
+            if (textZokError != null) {
+                textZokError.setVisibility(showWarning && inputZokCovered.hasFocus() ? View.VISIBLE : View.GONE);
             }
             if (textPaidError != null) {
-                boolean paidError = showWarning && !inputTotalAmount.hasFocus() && !inputNhifCovered.hasFocus();
+                boolean paidError = showWarning && !inputTotalAmount.hasFocus() && !inputZokCovered.hasFocus();
                 textPaidError.setVisibility(paidError ? View.VISIBLE : View.GONE);
             }
         }

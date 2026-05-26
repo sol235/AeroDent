@@ -34,9 +34,9 @@ public class AddPatientFragment extends Fragment {
 
     private static final String ARG_PATIENT_ID = "patient_id";
 
-    private EditText editFirstName, editMiddleName, editLastName, editEgn, editDob, editPhone, editEmail, editNhifNumber, editNotes;
-    private Spinner spinnerNhifStatus, spinnerGender;
-    private TextView textEgnError, textPhoneError, textEmailError;
+    private EditText editFirstName, editMiddleName, editLastName, editEgn, editDob, editPhone, editEmail, editZokNumber, editNotes;
+    private Spinner spinnerGender;
+    private TextView textEgnError, textPhoneError, textEmailError, textZokError;
     private PatientViewModel patientViewModel;
     private Calendar calendar = Calendar.getInstance();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
@@ -74,9 +74,9 @@ public class AddPatientFragment extends Fragment {
         textPhoneError = root.findViewById(R.id.text_phone_error);
         editEmail = root.findViewById(R.id.edit_email);
         textEmailError = root.findViewById(R.id.text_email_error);
-        editNhifNumber = root.findViewById(R.id.edit_nhif_number);
+        editZokNumber = root.findViewById(R.id.edit_zok_number);
+        textZokError = root.findViewById(R.id.text_zok_error);
         editNotes = root.findViewById(R.id.edit_notes);
-        spinnerNhifStatus = root.findViewById(R.id.spinner_nhif_status);
         spinnerGender = root.findViewById(R.id.spinner_gender);
         TextView textTitle = root.findViewById(R.id.text_title);
 
@@ -113,16 +113,6 @@ public class AddPatientFragment extends Fragment {
     }
 
     private void setupSpinners() {
-        // NHIF dropdown
-        String[] nhifStatuses = {
-                getString(R.string.patient_nhif_status_active),
-                getString(R.string.patient_nhif_status_inactive),
-                getString(R.string.unknown)
-        };
-        ArrayAdapter<String> nhifAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_custom, nhifStatuses);
-        nhifAdapter.setDropDownViewResource(R.layout.spinner_item_custom);
-        spinnerNhifStatus.setAdapter(nhifAdapter);
-
         // Gender dropdown
         String[] genders = {
                 getString(R.string.gender_male),
@@ -191,6 +181,10 @@ public class AddPatientFragment extends Fragment {
         patientViewModel.getIsEmailValid().observe(getViewLifecycleOwner(), isValid -> {
             textEmailError.setVisibility(isValid ? View.GONE : View.VISIBLE);
         });
+
+        patientViewModel.getIsZokNumberValid().observe(getViewLifecycleOwner(), isValid -> {
+            textZokError.setVisibility(isValid ? View.GONE : View.VISIBLE);
+        });
     }
 
     private void setupEgnWatcher() {
@@ -234,7 +228,7 @@ public class AddPatientFragment extends Fragment {
         editEgn.setText(patient.getEgn());
         editPhone.setText(patient.getPhoneNumber());
         editEmail.setText(patient.getEmail());
-        editNhifNumber.setText(patient.getNhifNumber());
+        editZokNumber.setText(patient.getZokNumber());
         editNotes.setText(patient.getNotes());
         
         if (patient.getGender() != null) {
@@ -251,14 +245,6 @@ public class AddPatientFragment extends Fragment {
             selectedDob = patient.getDateOfBirth();
             calendar.setTime(selectedDob);
             editDob.setText(dateFormat.format(selectedDob));
-        }
-
-        if (patient.getNhifStatus() != null) {
-            ArrayAdapter adapter = (ArrayAdapter) spinnerNhifStatus.getAdapter();
-            int position = adapter.getPosition(patient.getNhifStatus());
-            if (position >= 0) {
-                spinnerNhifStatus.setSelection(position);
-            }
         }
     }
 
@@ -279,8 +265,7 @@ public class AddPatientFragment extends Fragment {
         String egn = editEgn.getText().toString().trim();
         String phone = editPhone.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
-        String nhifNumber = editNhifNumber.getText().toString().trim();
-        String nhifStatus = spinnerNhifStatus.getSelectedItem().toString();
+        String zokNumber = editZokNumber.getText().toString().trim();
         String notes = editNotes.getText().toString().trim();
         
         String gender = Patient.GENDER_UNKNOWN;
@@ -292,11 +277,11 @@ public class AddPatientFragment extends Fragment {
             return;
         }
         
-        if (!patientViewModel.validatePatientData(egn, phone, email)) {
+        if (!patientViewModel.validatePatientData(egn, phone, email, zokNumber)) {
             return;
         }
 
-        patientViewModel.savePatientWithCheck(existingPatient, firstName, middleName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, selectedDob, notes, new PatientViewModel.SaveCallback() {
+        patientViewModel.savePatientWithCheck(existingPatient, firstName, middleName, lastName, egn, gender, phone, email, zokNumber, selectedDob, notes, new PatientViewModel.SaveCallback() {
             @Override
             public void onSuccess() {
                 if (existingPatient == null) {
@@ -328,9 +313,9 @@ public class AddPatientFragment extends Fragment {
         textPhoneError = null;
         editEmail = null;
         textEmailError = null;
-        editNhifNumber = null;
+        editZokNumber = null;
+        textZokError = null;
         editNotes = null;
-        spinnerNhifStatus = null;
         spinnerGender = null;
     }
 }

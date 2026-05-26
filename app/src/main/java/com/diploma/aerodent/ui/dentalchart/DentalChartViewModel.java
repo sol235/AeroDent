@@ -15,6 +15,7 @@ import com.diploma.aerodent.data.local.model.DentalCondition;
 import com.diploma.aerodent.data.repository.PatientRepository;
 import com.diploma.aerodent.data.repository.ProcedureLogRepository;
 import com.diploma.aerodent.data.repository.ToothStatusRepository;
+import com.diploma.aerodent.util.SessionManager;
 
 import org.json.JSONObject;
 
@@ -37,12 +38,14 @@ public class DentalChartViewModel extends AndroidViewModel {
     private final LiveData<Patient> patient;
     private final LiveData<String> patientName;
     private final LiveData<List<ProcedureLog>> procedureLogs;
+    private final SessionManager sessionManager;
 
     public DentalChartViewModel(@NonNull Application application) {
         super(application);
         repository = new ToothStatusRepository(application);
         patientRepository = new PatientRepository(application);
         procedureLogRepository = new ProcedureLogRepository(application);
+        sessionManager = new SessionManager(application);
 
         toothStatuses = Transformations.switchMap(patientId, repository::getToothStatusesForPatient);
         patient = Transformations.switchMap(patientId, patientRepository::getPatientById);
@@ -130,8 +133,28 @@ public class DentalChartViewModel extends AndroidViewModel {
         if (pid == null)
             return;
 
+        String currentUserId = sessionManager.getLoggedInUserId();
+        String currentUserName = sessionManager.getLoggedInUserName();
+        String currentUserRole = sessionManager.getLoggedInUserRole();
+
+        String formattedCreatorName = currentUserName;
+        if (currentUserName != null && currentUserRole != null) {
+            String lowerName = currentUserName.toLowerCase();
+            if (currentUserRole.equals("DENTIST") || currentUserRole.equals("ADMIN")) {
+                if (!lowerName.startsWith("д-р")) {
+                    formattedCreatorName = "д-р " + currentUserName;
+                }
+            } else if (currentUserRole.equals("ASSISTANT")) {
+                if (!lowerName.startsWith("ас.")) {
+                    formattedCreatorName = "ас. " + currentUserName;
+                }
+            }
+        }
+
         Integer apptId = isCurrentAppointment ? appointmentId.getValue() : null;
         ToothStatus newStatus = new ToothStatus(pid, toothNumber, condition, surfaces, new Date(), apptId);
+        newStatus.setUserId(currentUserId);
+        newStatus.setCreatorName(formattedCreatorName);
         repository.insert(newStatus);
 
         // Save history in ProcedureLog
@@ -139,6 +162,8 @@ public class DentalChartViewModel extends AndroidViewModel {
             ProcedureLog log = new ProcedureLog();
             log.setPatientId(pid);
             log.setToothNumber(toothNumber);
+            log.setUserId(currentUserId);
+            log.setCreatorName(formattedCreatorName);
             
             Integer activeApptId = appointmentId.getValue();
             if (isCurrentAppointment && activeApptId != null) {

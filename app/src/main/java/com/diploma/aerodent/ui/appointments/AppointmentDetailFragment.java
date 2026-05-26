@@ -59,6 +59,8 @@ public class AppointmentDetailFragment extends Fragment {
     private TextInputLayout layoutStatus;
     private AutoCompleteTextView dropdownStatus;
     private TextView textNotes;
+    private View layoutNotesContainer;
+    private View dividerBeforeNotes;
 
     private RecyclerView recyclerPhotos;
     private PhotoAdapter photoAdapter;
@@ -148,6 +150,8 @@ public class AppointmentDetailFragment extends Fragment {
         layoutStatus = view.findViewById(R.id.layout_status);
         dropdownStatus = view.findViewById(R.id.dropdown_status);
         textNotes = view.findViewById(R.id.text_notes);
+        layoutNotesContainer = view.findViewById(R.id.layout_notes_container);
+        dividerBeforeNotes = view.findViewById(R.id.divider_before_notes);
         
         setupStatusDropdown();
 
@@ -318,7 +322,16 @@ public class AppointmentDetailFragment extends Fragment {
         }
 
         textTreatment.setText(appointment.getTreatmentType() != null ? appointment.getTreatmentType() : getString(R.string.unknown));
-        textNotes.setText(appointment.getNotes() != null && !appointment.getNotes().isEmpty() ? appointment.getNotes() : "-");
+        
+        String notes = appointment.getNotes();
+        if (notes != null && !notes.trim().isEmpty()) {
+            layoutNotesContainer.setVisibility(View.VISIBLE);
+            dividerBeforeNotes.setVisibility(View.VISIBLE);
+            textNotes.setText(notes.trim());
+        } else {
+            layoutNotesContainer.setVisibility(View.GONE);
+            dividerBeforeNotes.setVisibility(View.GONE);
+        }
 
         String status = appointment.getStatus() != null ? appointment.getStatus() : Appointment.STATUS_SCHEDULED;
         
@@ -402,6 +415,8 @@ public class AppointmentDetailFragment extends Fragment {
         layoutStatus = null;
         dropdownStatus = null;
         textNotes = null;
+        layoutNotesContainer = null;
+        dividerBeforeNotes = null;
         recyclerPhotos = null;
         recyclerProcedureLogs = null;
         tabProcedures = null;

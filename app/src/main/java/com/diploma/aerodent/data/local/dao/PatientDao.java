@@ -43,8 +43,8 @@ public interface PatientDao {
     int checkEgnExistsSync(String egn, int excludePatientId);
 
     // Lookup Health Insurance/НЗОК number for api integration
-    @Query("SELECT * FROM patients WHERE nhifNumber = :nhifNumber LIMIT 1")
-    LiveData<Patient> getPatientByNhifNumber(String nhifNumber);
+    @Query("SELECT * FROM patients WHERE zokNumber = :zokNumber LIMIT 1")
+    LiveData<Patient> getPatientByZokNumber(String zokNumber);
 
     @Query("SELECT COUNT(*) FROM patients")
     LiveData<Integer> getPatientCount();

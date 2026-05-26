@@ -31,7 +31,7 @@ public class PaymentViewModel extends AndroidViewModel {
 
 
 
-    public void saveOrUpdatePayment(int appointmentId, int patientId, double totalAmount, double amountPaid, double nhifCovered, String paymentMethod, String description, Payment existingPayment) {
+    public void saveOrUpdatePayment(int appointmentId, int patientId, double totalAmount, double amountPaid, double zokCovered, String paymentMethod, String description, Payment existingPayment) {
         Payment payment;
         if (existingPayment != null) {
             payment = existingPayment;
@@ -44,14 +44,14 @@ public class PaymentViewModel extends AndroidViewModel {
 
         payment.setTotalAmount(totalAmount);
         payment.setAmountPaid(amountPaid);
-        payment.setNhifCovered(nhifCovered);
+        payment.setZokCovered(zokCovered);
         payment.setPaymentMethod(paymentMethod);
         payment.setDescription(description);
 
         double balance = calculatePaymentBalance(payment);
         if (balance <= 0) {
             payment.setStatus("PAID");
-        } else if (amountPaid > 0 || nhifCovered > 0) {
+        } else if (amountPaid > 0 || zokCovered > 0) {
             payment.setStatus("PARTIAL");
         } else {
             payment.setStatus("PENDING");
@@ -78,7 +78,7 @@ public class PaymentViewModel extends AndroidViewModel {
         if (existingPayments != null) {
             for (Payment p : existingPayments) {
                 if (currentPaymentId == -1 || p.getId() != currentPaymentId) {
-                    total += p.getAmountPaid() + p.getNhifCovered();
+                    total += p.getAmountPaid() + p.getZokCovered();
                 }
             }
         }
@@ -144,14 +144,14 @@ public class PaymentViewModel extends AndroidViewModel {
                 appointmentBalances.put(payment.getAppointmentId(), summary);
             }
             summary.setAmountPaid(summary.getAmountPaid() + payment.getAmountPaid());
-            summary.setNhifCovered(summary.getNhifCovered() + payment.getNhifCovered());
+            summary.setZokCovered(summary.getZokCovered() + payment.getZokCovered());
         }
 
         List<Payment> pendingList = new java.util.ArrayList<>();
         for (Payment summary : appointmentBalances.values()) {
             double balance = calculatePaymentBalance(summary);
             if (balance > 0) {
-                summary.setStatus(summary.getAmountPaid() + summary.getNhifCovered() > 0 ? "PARTIAL" : "PENDING");
+                summary.setStatus(summary.getAmountPaid() + summary.getZokCovered() > 0 ? "PARTIAL" : "PENDING");
                 pendingList.add(summary);
             }
         }
@@ -187,6 +187,6 @@ public class PaymentViewModel extends AndroidViewModel {
 
     public static double calculatePaymentBalance(Payment payment) {
         if (payment == null) return 0.0;
-        return payment.getTotalAmount() - payment.getAmountPaid() - payment.getNhifCovered();
+        return payment.getTotalAmount() - payment.getAmountPaid() - payment.getZokCovered();
     }
 }

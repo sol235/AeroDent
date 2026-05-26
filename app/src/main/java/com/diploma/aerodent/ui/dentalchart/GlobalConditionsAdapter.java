@@ -96,7 +96,7 @@ public class GlobalConditionsAdapter extends RecyclerView.Adapter<GlobalConditio
         
         if (holder.textEntryContext != null) {
             String formattedContext = FormatUtils.formatEntryContext(
-                holder.itemView.getContext(), status.getDateRecorded(), status.getAppointmentId()
+                holder.itemView.getContext(), status.getDateRecorded(), status.getAppointmentId(), status.getCreatorName()
             );
             holder.textEntryContext.setText(formattedContext);
             holder.textEntryContext.setVisibility(View.VISIBLE);

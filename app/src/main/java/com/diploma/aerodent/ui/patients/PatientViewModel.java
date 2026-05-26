@@ -29,6 +29,7 @@ public class PatientViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> isEgnDuplicate = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isPhoneValid = new MutableLiveData<>(true);
     private final MutableLiveData<Boolean> isEmailValid = new MutableLiveData<>(true);
+    private final MutableLiveData<Boolean> isZokNumberValid = new MutableLiveData<>(true);
 
     public PatientViewModel(@NonNull Application application) {
         super(application);
@@ -84,6 +85,10 @@ public class PatientViewModel extends AndroidViewModel {
         return isEmailValid;
     }
 
+    public LiveData<Boolean> getIsZokNumberValid() {
+        return isZokNumberValid;
+    }
+
     public void processEgn(String egn, int excludePatientId) {
         if (egn != null && egn.length() == 10) {
             boolean valid = EgnUtils.isValidEgn(egn);
@@ -110,16 +115,18 @@ public class PatientViewModel extends AndroidViewModel {
         }
     }
 
-    public boolean validatePatientData(String egn, String phone, String email) {
+    public boolean validatePatientData(String egn, String phone, String email, String zokNumber) {
         boolean egnValid = EgnUtils.isValidEgn(egn);
         boolean phoneValid = ValidationUtils.isValidPhoneNumber(phone);
         boolean emailValid = ValidationUtils.isValidEmail(email);
+        boolean zokNumberValid = ValidationUtils.isValidZokNumber(zokNumber);
 
         isEgnValid.setValue(egnValid);
         isPhoneValid.setValue(phoneValid);
         isEmailValid.setValue(emailValid);
+        isZokNumberValid.setValue(zokNumberValid);
 
-        return egnValid && phoneValid && emailValid;
+        return egnValid && phoneValid && emailValid && zokNumberValid;
     }
 
     public interface SaveCallback {
@@ -128,7 +135,7 @@ public class PatientViewModel extends AndroidViewModel {
     }
 
     public void savePatientWithCheck(Patient existingPatient, String firstName, String middleName, String lastName, String egn, String gender,
-                            String phone, String email, String nhifNumber, String nhifStatus, Date dob, String notes, SaveCallback callback) {
+                            String phone, String email, String zokNumber, Date dob, String notes, SaveCallback callback) {
         
         int excludePatientId = (existingPatient != null) ? existingPatient.getId() : -1;
         patientRepository.checkEgnExists(egn, excludePatientId, isDuplicate -> {
@@ -136,7 +143,7 @@ public class PatientViewModel extends AndroidViewModel {
                 if (isDuplicate) {
                     callback.onDuplicateEgn();
                 } else {
-                    savePatient(existingPatient, firstName, middleName, lastName, egn, gender, phone, email, nhifNumber, nhifStatus, dob, notes);
+                    savePatient(existingPatient, firstName, middleName, lastName, egn, gender, phone, email, zokNumber, dob, notes);
                     callback.onSuccess();
                 }
             });
@@ -144,7 +151,7 @@ public class PatientViewModel extends AndroidViewModel {
     }
 
     public void savePatient(Patient existingPatient, String firstName, String middleName, String lastName, String egn, String gender,
-                            String phone, String email, String nhifNumber, String nhifStatus, Date dob, String notes) {
+                            String phone, String email, String zokNumber, Date dob, String notes) {
         Patient patient = (existingPatient != null) ? existingPatient : new Patient();
         patient.setFirstName(firstName);
         patient.setMiddleName(middleName);
@@ -153,8 +160,7 @@ public class PatientViewModel extends AndroidViewModel {
         patient.setGender(gender);
         patient.setPhoneNumber(phone);
         patient.setEmail(email);
-        patient.setNhifNumber(nhifNumber);
-        patient.setNhifStatus(nhifStatus);
+        patient.setZokNumber(zokNumber);
         patient.setDateOfBirth(dob);
         patient.setNotes(notes);
         

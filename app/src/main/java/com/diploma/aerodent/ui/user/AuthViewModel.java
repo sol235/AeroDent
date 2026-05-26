@@ -68,7 +68,7 @@ public class AuthViewModel extends AndroidViewModel {
 
     public void verifyPin(User user, String enteredPin) {
         if (user.getPin() != null && user.getPin().equals(enteredPin)) {
-            sessionManager.loginUser(user.getId(), user.getRole().name());
+            sessionManager.loginUser(user.getId(), user.getRole().name(), user.getFullName());
             loginSuccess.setValue(true);
         } else {
             errorMessage.setValue(getApplication().getString(R.string.error_invalid_pin));
@@ -116,7 +116,7 @@ public class AuthViewModel extends AndroidViewModel {
                 userRepository.insertSync(user);
                 
                 sessionManager.saveRziCode(rzi);
-                sessionManager.loginUser(newUserId, UserRole.ADMIN.name());
+                sessionManager.loginUser(newUserId, UserRole.ADMIN.name(), fullName);
 
                 actionComplete.postValue(true);
             } catch (Exception e) {

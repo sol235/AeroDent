@@ -20,7 +20,14 @@ public class ValidationUtils {
             return true;
         }
         String cleanedPhone = phone.replaceAll("[\\s\\-\\(\\)]", "");
-        
+
         return PHONE_PATTERN.matcher(cleanedPhone).matches();
+    }
+
+    public static boolean isValidZokNumber(String zok) {
+        if (zok == null || zok.trim().isEmpty()) {
+            return true;
+        }
+        return zok.trim().matches("^[0-9]{8}$");
     }
 }

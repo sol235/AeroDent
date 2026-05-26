@@ -47,13 +47,6 @@
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_notifications"
-                app:tint="@color/white" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 

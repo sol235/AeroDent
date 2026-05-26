@@ -39,6 +39,8 @@ public class ToothStatus extends PatientRecordEntity {
     private Date dateRecorded;
     
     private Integer appointmentId;
+    private String userId;
+    private String creatorName;
 
     public ToothStatus() {}
 
@@ -90,5 +92,19 @@ public class ToothStatus extends PatientRecordEntity {
 
     public void setAppointmentId(Integer appointmentId) {
         this.appointmentId = appointmentId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 }

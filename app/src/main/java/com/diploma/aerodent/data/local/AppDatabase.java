@@ -35,7 +35,7 @@ import com.diploma.aerodent.data.local.entity.User;
                 ToothStatus.class,
                 User.class
         },
-        version = 12,
+        version = 13,
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -61,6 +61,16 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_12_13 = new Migration(12, 13) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE procedure_logs ADD COLUMN userId TEXT");
+            database.execSQL("ALTER TABLE procedure_logs ADD COLUMN creatorName TEXT");
+            database.execSQL("ALTER TABLE tooth_statuses ADD COLUMN userId TEXT");
+            database.execSQL("ALTER TABLE tooth_statuses ADD COLUMN creatorName TEXT");
+        }
+    };
+
     private static volatile AppDatabase INSTANCE;
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -70,7 +80,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     context.getApplicationContext(),
                                     AppDatabase.class,
                                     "aerodent_database")
-                            .addMigrations(MIGRATION_10_11)
+                            .addMigrations(MIGRATION_10_11, MIGRATION_12_13)
                             .fallbackToDestructiveMigration()
                             .addCallback(sRoomDatabaseCallback)
                             .build();
