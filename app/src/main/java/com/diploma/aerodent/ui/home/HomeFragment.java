@@ -19,15 +19,18 @@ import com.diploma.aerodent.ui.patients.PatientsFragment;
 import com.diploma.aerodent.ui.calendar.CalendarFragment;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
 import com.diploma.aerodent.ui.user.UserViewModel;
+import com.diploma.aerodent.ui.payment.PaymentViewModel;
+import com.diploma.aerodent.ui.payment.PaymentDetailsFragment;
 import com.diploma.aerodent.util.CameraHelper;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private PaymentViewModel paymentViewModel;
     private PhotoViewModel photoViewModel;
     private CameraHelper cameraHelper;
     
-    private TextView textTotalPatients, textTodaysAppts, textActiveTreatments, textAppointmentsLeft;
+    private TextView textTotalPatients, textTodaysAppts, textUnpaidAccounts, textAppointmentsLeft;
     private RecyclerView recyclerSchedule;
 
     @Override
@@ -56,11 +59,12 @@ public class HomeFragment extends Fragment {
 
         // Initialize ViewModel
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        paymentViewModel = new ViewModelProvider(this).get(PaymentViewModel.class);
 
         // Bind UI Elements
         textTotalPatients = root.findViewById(R.id.text_total_patients);
         textTodaysAppts = root.findViewById(R.id.text_todays_appointments);
-        textActiveTreatments = root.findViewById(R.id.text_active_treatments);
+        textUnpaidAccounts = root.findViewById(R.id.text_unpaid_accounts_count);
         textAppointmentsLeft = root.findViewById(R.id.text_appointments_left);
         recyclerSchedule = root.findViewById(R.id.recycler_home_schedule);
 
@@ -84,9 +88,10 @@ public class HomeFragment extends Fragment {
             if (count != null) textTodaysAppts.setText(String.valueOf(count));
         });
 
-        homeViewModel.getActiveTreatmentsCount().observe(getViewLifecycleOwner(), count -> {
-            if (count != null) {
-                textActiveTreatments.setText(String.valueOf(count));
+        paymentViewModel.getPendingAppointmentsLiveData().observe(getViewLifecycleOwner(), pendingPayments -> {
+            if (pendingPayments != null) {
+                int unpaidAccountsCount = paymentViewModel.getUnpaidAccountsCount(pendingPayments);
+                textUnpaidAccounts.setText(String.valueOf(unpaidAccountsCount));
             }
         });
 
@@ -133,6 +138,13 @@ public class HomeFragment extends Fragment {
                     .commit();
         });
 
+        root.findViewById(R.id.card_unpaid_accounts).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new PaymentDetailsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         root.findViewById(R.id.card_appointments_left).setOnClickListener(v -> {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment, new CalendarFragment())
@@ -156,7 +168,7 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         textTotalPatients = null;
         textTodaysAppts = null;
-        textActiveTreatments = null;
+        textUnpaidAccounts = null;
         textAppointmentsLeft = null;
         recyclerSchedule = null;
     }

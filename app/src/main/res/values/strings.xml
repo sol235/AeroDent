@@ -17,8 +17,7 @@
     <!-- Settings Screen -->
     <string name="settings_user_data">Данни за потребителя</string>
     <string name="settings_payments">Плащания</string>
-    <string name="settings_reports">Справки и Експорт</string>
-    <string name="settings_nzok">НЗОК / НЗИС</string>
+    <string name="settings_reports">Експорт</string>
     <string name="settings_logout">Изход</string>
 
     <!-- Patients Screen -->
@@ -316,4 +315,10 @@
     <string name="payment_amount_paid_label">Платено</string>
     <string name="payment_description_hint">Описание / Процедури</string>
     <string name="payment_history_title">История на плащанията</string>
+    <string name="payment_total_outstanding">Общо неплатени</string>
+    <string name="payment_unpaid_accounts_count">Пациенти с неплатени сметки</string>
+    <string name="home_unpaid_accounts_count">Неплатени сметки</string>
+    <string name="payment_pending_list_title">Списък с чакащи плащания</string>
+    <string name="payment_no_pending_payments">Няма чакащи плащания</string>
+    <string name="payment_loading">Зареждане</string>
 </resources>

@@ -15,6 +15,7 @@ import com.diploma.aerodent.ui.user.UserViewModel;
 import com.diploma.aerodent.ui.user.UserManagementFragment;
 import com.diploma.aerodent.ui.user.UserFormFragment;
 import com.diploma.aerodent.ui.user.LoginFragment;
+import com.diploma.aerodent.ui.payment.PaymentDetailsFragment;
 
 public class SettingsFragment extends Fragment {
 
@@ -34,7 +35,7 @@ public class SettingsFragment extends Fragment {
         View cardUserData = view.findViewById(R.id.card_user_data);
         View cardPayments = view.findViewById(R.id.card_payments);
         View cardReports = view.findViewById(R.id.card_reports);
-        View cardNzok = view.findViewById(R.id.card_nzok);
+
 
         UserViewModel userViewModel = new androidx.lifecycle.ViewModelProvider(requireActivity()).get(UserViewModel.class);
         userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
@@ -52,7 +53,7 @@ public class SettingsFragment extends Fragment {
                 cardUserData.setVisibility(View.VISIBLE);
                 cardPayments.setVisibility(View.VISIBLE);
                 cardReports.setVisibility(canViewAdvanced ? View.VISIBLE : View.GONE);
-                cardNzok.setVisibility(canViewAdvanced ? View.VISIBLE : View.GONE);
+
 
                 cardUserData.setOnClickListener(v -> {
                     Bundle args = new Bundle();
@@ -79,14 +80,17 @@ public class SettingsFragment extends Fragment {
             });
         }
 
-        cardPayments.setOnClickListener(
-                v -> Toast.makeText(getContext(), R.string.settings_payments, Toast.LENGTH_SHORT).show());
+        cardPayments.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new PaymentDetailsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         cardReports.setOnClickListener(
                 v -> Toast.makeText(getContext(), R.string.settings_reports, Toast.LENGTH_SHORT).show());
 
-        cardNzok.setOnClickListener(
-                v -> Toast.makeText(getContext(), R.string.settings_nzok, Toast.LENGTH_SHORT).show());
+
 
         view.findViewById(R.id.btn_logout).setOnClickListener(v -> {
             userViewModel.logout();

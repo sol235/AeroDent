@@ -25,16 +25,13 @@ public interface PaymentDao {
     @Delete
     void delete(Payment payment);
 
-    @Query("SELECT * FROM payments WHERE id = :paymentId LIMIT 1")
-    LiveData<Payment> getPaymentById(int paymentId);
-
     @Query("SELECT * FROM payments WHERE patientId = :patientId ORDER BY date DESC")
     LiveData<List<Payment>> getPaymentsByPatientId(int patientId);
 
     @Query("SELECT * FROM payments WHERE appointmentId = :appointmentId ORDER BY date DESC")
     LiveData<List<Payment>> getPaymentsByAppointmentId(int appointmentId);
 
-    @Query("SELECT * FROM payments WHERE status != 'PAID' ORDER BY date DESC")
-    LiveData<List<Payment>> getPendingPayments();
+    @Query("SELECT * FROM payments ORDER BY date DESC")
+    LiveData<List<Payment>> getAllPayments();
 
 }

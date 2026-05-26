@@ -16,10 +16,6 @@ public class PaymentRepository {
         paymentDao = db.paymentDao();
     }
 
-    public LiveData<Payment> getPaymentById(int paymentId) {
-        return paymentDao.getPaymentById(paymentId);
-    }
-
     public LiveData<List<Payment>> getPaymentsByPatientId(int patientId) {
         return paymentDao.getPaymentsByPatientId(patientId);
     }
@@ -28,8 +24,8 @@ public class PaymentRepository {
         return paymentDao.getPaymentsByAppointmentId(appointmentId);
     }
 
-    public LiveData<List<Payment>> getPendingPayments() {
-        return paymentDao.getPendingPayments();
+    public LiveData<List<Payment>> getAllPayments() {
+        return paymentDao.getAllPayments();
     }
 
     public void insert(Payment payment) {

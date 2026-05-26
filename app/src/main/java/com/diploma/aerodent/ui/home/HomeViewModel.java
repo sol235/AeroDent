@@ -22,7 +22,6 @@ public class HomeViewModel extends AndroidViewModel {
     private final PaymentRepository paymentRepository;
 
     private LiveData<Integer> totalPatientsCount;
-    private LiveData<Integer> activeTreatmentsCount;
     private LiveData<Integer> appointmentsLeftCount;
     private LiveData<Integer> todaysAppointmentsCount;
     private LiveData<List<Appointment>> todaysAppointments;
@@ -51,11 +50,6 @@ public class HomeViewModel extends AndroidViewModel {
 
         todaysAppointmentsCount = appointmentRepository.getAppointmentCountBetween(startOfDay, endOfDay);
 
-        // Dummy data
-        androidx.lifecycle.MutableLiveData<Integer> activeDummy = new androidx.lifecycle.MutableLiveData<>();
-        activeDummy.setValue(3);
-        activeTreatmentsCount = activeDummy;
-
         appointmentsLeftCount = appointmentRepository.getAppointmentCountBetweenByStatus(startOfDay, endOfDay, Appointment.STATUS_SCHEDULED);
         todaysAppointments = appointmentRepository.getAppointmentsBetweenDates(startOfDay, endOfDay);
         allPatients = patientRepository.getAllPatients();
@@ -63,10 +57,6 @@ public class HomeViewModel extends AndroidViewModel {
 
     public LiveData<Integer> getTotalPatientsCount() {
         return totalPatientsCount;
-    }
-
-    public LiveData<Integer> getActiveTreatmentsCount() {
-        return activeTreatmentsCount;
     }
 
     public LiveData<Integer> getAppointmentsLeftCount() {
