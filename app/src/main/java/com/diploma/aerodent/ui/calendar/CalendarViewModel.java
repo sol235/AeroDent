@@ -27,10 +27,13 @@ public class CalendarViewModel extends AndroidViewModel {
     private final MutableLiveData<Calendar> currentMonth = new MutableLiveData<>();
     private final MutableLiveData<Calendar> selectedDate = new MutableLiveData<>();
 
-    public CalendarViewModel(@NonNull Application application) {
+    public CalendarViewModel(
+            @NonNull Application application,
+            AppointmentRepository appointmentRepository,
+            PatientRepository patientRepository) {
         super(application);
-        appointmentRepository = new AppointmentRepository(application);
-        patientRepository = new PatientRepository(application);
+        this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
 
         Calendar now = Calendar.getInstance();
         currentMonth.setValue((Calendar) now.clone());

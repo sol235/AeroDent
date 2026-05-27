@@ -1,10 +1,6 @@
 package com.diploma.aerodent.data.repository;
 
-import android.app.Application;
-
 import androidx.lifecycle.LiveData;
-
-import com.diploma.aerodent.data.local.AppDatabase;
 import com.diploma.aerodent.data.local.dao.ToothStatusDao;
 import com.diploma.aerodent.data.local.entity.ToothStatus;
 import com.diploma.aerodent.data.local.model.DentalCondition;
@@ -15,9 +11,8 @@ public class ToothStatusRepository {
 
     private final ToothStatusDao toothStatusDao;
 
-    public ToothStatusRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
-        toothStatusDao = db.toothStatusDao();
+    public ToothStatusRepository(ToothStatusDao toothStatusDao) {
+        this.toothStatusDao = toothStatusDao;
     }
 
     public LiveData<List<ToothStatus>> getToothStatusesForPatient(int patientId) {

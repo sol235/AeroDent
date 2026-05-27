@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.photos;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +40,8 @@ public class PatientGalleryFragment extends Fragment {
             patientId = getArguments().getInt(ARG_PATIENT_ID);
         }
         
-        photoViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        photoViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(PhotoViewModel.class);
     }
 
     @Nullable

@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.user;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +36,8 @@ public class UserManagementFragment extends Fragment {
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
-        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        userViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(UserViewModel.class);
 
         RecyclerView recyclerUsers = view.findViewById(R.id.recycler_users);
         UserCardAdapter adapter = new UserCardAdapter(user -> openUserForm(user.getId()));

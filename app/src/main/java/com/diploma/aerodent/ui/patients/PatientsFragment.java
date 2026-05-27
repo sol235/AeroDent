@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.patients;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,7 +41,8 @@ public class PatientsFragment extends Fragment {
                     .commit();
         });
 
-        patientViewModel = new ViewModelProvider(this).get(PatientViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        patientViewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(PatientViewModel.class);
         patientViewModel.getSearchResults().observe(getViewLifecycleOwner(), patients -> {
             if (patients != null) {
                 adapter.setPatients(patients);

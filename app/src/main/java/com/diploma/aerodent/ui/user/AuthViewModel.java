@@ -35,9 +35,9 @@ public class AuthViewModel extends AndroidViewModel {
     private final MutableLiveData<AuthState> authState = new MutableLiveData<>();
     private final ExecutorService executorService;
 
-    public AuthViewModel(@NonNull Application application) {
+    public AuthViewModel(@NonNull Application application, UserRepository userRepository) {
         super(application);
-        userRepository = new UserRepository(application);
+        this.userRepository = userRepository;
         sessionManager = new SessionManager(application);
         executorService = Executors.newSingleThreadExecutor();
     }

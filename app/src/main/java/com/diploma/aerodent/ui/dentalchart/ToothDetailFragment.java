@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.dentalchart;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +61,8 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
         if (getArguments() != null) {
             toothNumber = getArguments().getInt(ARG_TOOTH_NUMBER);
         }
-        viewModel = new ViewModelProvider(requireParentFragment()).get(DentalChartViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        viewModel = new ViewModelProvider(requireParentFragment(), app.getViewModelFactory()).get(DentalChartViewModel.class);
     }
 
     @Nullable

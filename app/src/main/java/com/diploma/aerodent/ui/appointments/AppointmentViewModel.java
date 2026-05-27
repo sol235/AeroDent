@@ -34,11 +34,15 @@ public class AppointmentViewModel extends AndroidViewModel {
     private ProcedureLogRepository procedureLogRepository;
     private LiveData<List<Patient>> allPatients;
 
-    public AppointmentViewModel(@NonNull Application application) {
+    public AppointmentViewModel(
+            @NonNull Application application,
+            AppointmentRepository repository,
+            PatientRepository patientRepository,
+            ProcedureLogRepository procedureLogRepository) {
         super(application);
-        repository = new AppointmentRepository(application);
-        patientRepository = new PatientRepository(application);
-        procedureLogRepository = new ProcedureLogRepository(application);
+        this.repository = repository;
+        this.patientRepository = patientRepository;
+        this.procedureLogRepository = procedureLogRepository;
         allPatients = patientRepository.getAllPatients();
     }
 

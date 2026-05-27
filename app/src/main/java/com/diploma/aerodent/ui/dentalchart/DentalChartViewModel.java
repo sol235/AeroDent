@@ -70,11 +70,15 @@ public class DentalChartViewModel extends AndroidViewModel {
         MISSING_CONFLICTS = java.util.Collections.unmodifiableList(list);
     }
 
-    public DentalChartViewModel(@NonNull Application application) {
+    public DentalChartViewModel(
+            @NonNull Application application,
+            ToothStatusRepository repository,
+            PatientRepository patientRepository,
+            ProcedureLogRepository procedureLogRepository) {
         super(application);
-        repository = new ToothStatusRepository(application);
-        patientRepository = new PatientRepository(application);
-        procedureLogRepository = new ProcedureLogRepository(application);
+        this.repository = repository;
+        this.patientRepository = patientRepository;
+        this.procedureLogRepository = procedureLogRepository;
         sessionManager = new SessionManager(application);
 
         toothStatuses = Transformations.switchMap(patientId, repository::getToothStatusesForPatient);

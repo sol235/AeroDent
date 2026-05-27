@@ -33,9 +33,9 @@ public class UserViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> actionComplete = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
-    public UserViewModel(@NonNull Application application) {
+    public UserViewModel(@NonNull Application application, UserRepository userRepository) {
         super(application);
-        userRepository = new UserRepository(application);
+        this.userRepository = userRepository;
         sessionManager = new SessionManager(application);
         allUsers = userRepository.getAllUsers();
         activeUsers = userRepository.getActiveUsers();

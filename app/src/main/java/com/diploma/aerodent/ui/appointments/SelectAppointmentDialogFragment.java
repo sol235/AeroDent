@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.appointments;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -41,7 +43,8 @@ public class SelectAppointmentDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        homeViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(HomeViewModel.class);
 
         recyclerView = view.findViewById(R.id.recycler_select_appointment);
         HomeAppointmentAdapter adapter = new HomeAppointmentAdapter();

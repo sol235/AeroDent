@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.appointments;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -30,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -85,7 +86,8 @@ public class AddAppointmentFragment extends Fragment {
             appointmentId = getArguments().getInt(ARG_APPOINTMENT_ID, -1);
         }
 
-        viewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        viewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(AppointmentViewModel.class);
 
         autoCompletePatient = root.findViewById(R.id.spinner_patient);
         spinnerStatus = root.findViewById(R.id.spinner_status);

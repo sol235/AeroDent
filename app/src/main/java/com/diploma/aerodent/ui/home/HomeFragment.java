@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.home;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +39,8 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        photoViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        photoViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(PhotoViewModel.class);
         cameraHelper = new CameraHelper(this, photoViewModel);
         cameraHelper.setShowSuccessToast(true);
 
@@ -58,8 +61,9 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Initialize ViewModel
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        paymentViewModel = new ViewModelProvider(this).get(PaymentViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        homeViewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(HomeViewModel.class);
+        paymentViewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(PaymentViewModel.class);
 
         // Bind UI Elements
         textTotalPatients = root.findViewById(R.id.text_total_patients);
@@ -68,7 +72,7 @@ public class HomeFragment extends Fragment {
         textAppointmentsLeft = root.findViewById(R.id.text_appointments_left);
         recyclerSchedule = root.findViewById(R.id.recycler_home_schedule);
 
-        UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        UserViewModel userViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(UserViewModel.class);
         userViewModel.loadCurrentUser();
         userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {

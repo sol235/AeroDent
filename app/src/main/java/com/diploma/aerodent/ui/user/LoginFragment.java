@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.user;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,8 +48,9 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        authViewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(AuthViewModel.class);
+        UserViewModel userViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(UserViewModel.class);
 
         RecyclerView recyclerUsers = view.findViewById(R.id.recycler_users);
         UserCardAdapter adapter = new UserCardAdapter(this::showPinDialog);

@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.user;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +58,8 @@ public class SetupAdminFragment extends Fragment {
         setupSpecialtyDropdown();
         setupMode();
         
-        viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        viewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(AuthViewModel.class);
         
         viewModel.getActionComplete().observe(getViewLifecycleOwner(), complete -> {
             if (complete != null && complete) {

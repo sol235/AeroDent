@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.calendar;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +42,8 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        viewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        viewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(CalendarViewModel.class);
 
         setupViews(root);
         setupObservers();

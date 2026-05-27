@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.payment;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,7 +75,8 @@ public class PaymentEntryFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        paymentViewModel = new ViewModelProvider(requireActivity()).get(PaymentViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        paymentViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(PaymentViewModel.class);
 
         inputTotalAmount = view.findViewById(R.id.input_total_amount);
         inputAmountPaid = view.findViewById(R.id.input_amount_paid);

@@ -22,9 +22,9 @@ public class PhotoViewModel extends AndroidViewModel {
 
     private final PhotoRepository repository;
 
-    public PhotoViewModel(@NonNull Application application) {
+    public PhotoViewModel(@NonNull Application application, PhotoRepository repository) {
         super(application);
-        repository = new PhotoRepository(application);
+        this.repository = repository;
     }
 
     public LiveData<List<Photo>> getPhotosForPatient(int patientId) {

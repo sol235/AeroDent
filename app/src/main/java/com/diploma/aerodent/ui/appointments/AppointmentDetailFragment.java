@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.appointments;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,7 +114,8 @@ public class AppointmentDetailFragment extends Fragment {
             openPaymentsTab = getArguments().getBoolean(ARG_OPEN_PAYMENTS_TAB, false);
         }
         
-        photoViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        photoViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(PhotoViewModel.class);
         cameraHelper = new CameraHelper(this, photoViewModel);
         
         if (savedInstanceState != null) {
@@ -136,7 +139,8 @@ public class AppointmentDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        viewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(AppointmentViewModel.class);
 
         initViews(view);
         observeData();

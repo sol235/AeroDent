@@ -1,6 +1,5 @@
 package com.diploma.aerodent.data.repository;
 
-import android.app.Application;
 import androidx.lifecycle.LiveData;
 import java.util.List;
 
@@ -10,12 +9,10 @@ import com.diploma.aerodent.data.local.entity.ProcedureLog;
 
 
 public class ProcedureLogRepository {
+    private final ProcedureLogDao procedureLogDao;
 
-    private ProcedureLogDao procedureLogDao;
-
-    public ProcedureLogRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
-        procedureLogDao = db.procedureLogDao();
+    public ProcedureLogRepository(ProcedureLogDao procedureLogDao) {
+        this.procedureLogDao = procedureLogDao;
     }
 
     public LiveData<List<ProcedureLog>> getProcedureLogsForAppointment(int appointmentId) {

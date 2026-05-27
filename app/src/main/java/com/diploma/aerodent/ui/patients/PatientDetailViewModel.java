@@ -33,12 +33,17 @@ public class PatientDetailViewModel extends AndroidViewModel {
     private LiveData<List<Payment>> payments;
     private MediatorLiveData<List<PatientHistoryItem>> historyItems = new MediatorLiveData<>();
 
-    public PatientDetailViewModel(@NonNull Application application) {
+    public PatientDetailViewModel(
+            @NonNull Application application,
+            PatientRepository patientRepository,
+            AppointmentRepository appointmentRepository,
+            ProcedureLogRepository procedureLogRepository,
+            PaymentRepository paymentRepository) {
         super(application);
-        patientRepository = new PatientRepository(application);
-        appointmentRepository = new AppointmentRepository(application);
-        procedureLogRepository = new ProcedureLogRepository(application);
-        paymentRepository = new PaymentRepository(application);
+        this.patientRepository = patientRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.procedureLogRepository = procedureLogRepository;
+        this.paymentRepository = paymentRepository;
 
         patient = Transformations.switchMap(patientId, id -> patientRepository.getPatientById(id));
         appointments = Transformations.switchMap(patientId, id -> appointmentRepository.getAppointmentsForPatient(id));

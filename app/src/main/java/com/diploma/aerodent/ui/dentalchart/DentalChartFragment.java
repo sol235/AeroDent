@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.dentalchart;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,7 +69,8 @@ public class DentalChartFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dental_chart, container, false);
 
-        viewModel = new ViewModelProvider(this).get(DentalChartViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        viewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(DentalChartViewModel.class);
         viewModel.setPatientId(patientId);
         if (appointmentId != null) {
             viewModel.setAppointmentId(appointmentId);

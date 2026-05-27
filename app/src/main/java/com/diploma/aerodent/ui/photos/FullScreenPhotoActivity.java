@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.photos;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -47,7 +49,7 @@ public class FullScreenPhotoActivity extends AppCompatActivity {
             return;
         }
 
-        photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
+        photoViewModel = new ViewModelProvider(this, ((AeroDentApplication) getApplication()).getViewModelFactory()).get(PhotoViewModel.class);
         photoView = findViewById(R.id.image_full_screen);
         uiContainer = findViewById(R.id.ui_container);
 

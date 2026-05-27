@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.user;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,7 +87,8 @@ public class UserFormFragment extends Fragment {
         activeSwitch = view.findViewById(R.id.activeSwitch);
         saveButton = view.findViewById(R.id.saveButton);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        viewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(UserViewModel.class);
         setupSpecialtyDropdown();
         setupRoleDropdown();
         setupInitialMode();

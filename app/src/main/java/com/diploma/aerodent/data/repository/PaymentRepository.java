@@ -1,6 +1,5 @@
 package com.diploma.aerodent.data.repository;
 
-import android.app.Application;
 import androidx.lifecycle.LiveData;
 import java.util.List;
 
@@ -9,11 +8,10 @@ import com.diploma.aerodent.data.local.dao.PaymentDao;
 import com.diploma.aerodent.data.local.entity.Payment;
 
 public class PaymentRepository {
+    private final PaymentDao paymentDao;
 
-    private PaymentDao paymentDao;
-    public PaymentRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
-        paymentDao = db.paymentDao();
+    public PaymentRepository(PaymentDao paymentDao) {
+        this.paymentDao = paymentDao;
     }
 
     public LiveData<List<Payment>> getPaymentsByPatientId(int patientId) {

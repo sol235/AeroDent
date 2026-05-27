@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.payment;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,8 +68,9 @@ public class PaymentDetailsFragment extends Fragment {
             toolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         }
 
-        paymentViewModel = new ViewModelProvider(this).get(PaymentViewModel.class);
-        patientViewModel = new ViewModelProvider(this).get(PatientViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        paymentViewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(PaymentViewModel.class);
+        patientViewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(PatientViewModel.class);
 
         patientViewModel.setSearchQuery("");
 

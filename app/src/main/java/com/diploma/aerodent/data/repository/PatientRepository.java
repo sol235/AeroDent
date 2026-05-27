@@ -1,6 +1,5 @@
 package com.diploma.aerodent.data.repository;
 
-import android.app.Application;
 import androidx.lifecycle.LiveData;
 import java.util.List;
 
@@ -10,16 +9,14 @@ import com.diploma.aerodent.data.local.entity.Patient;
 
 
 public class PatientRepository {
+    private final PatientDao patientDao;
+    private final PhotoRepository photoRepository;
+    private final LiveData<List<Patient>> allPatients;
 
-    private PatientDao patientDao;
-    private PhotoRepository photoRepository;
-    private LiveData<List<Patient>> allPatients;
-
-    public PatientRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
-        patientDao = db.patientDao();
-        photoRepository = new PhotoRepository(application);
-        allPatients = patientDao.getAllPatients();
+    public PatientRepository(PatientDao patientDao, PhotoRepository photoRepository) {
+        this.patientDao = patientDao;
+        this.photoRepository = photoRepository;
+        this.allPatients = patientDao.getAllPatients();
     }
 
     public LiveData<List<Patient>> getAllPatients() {
@@ -34,7 +31,7 @@ public class PatientRepository {
     public LiveData<Patient> getPatientByEgn(String egn) {
         return patientDao.getPatientByEgn(egn);
     }
-    
+
     public LiveData<Patient> getPatientByZokNumber(String zokNumber) {
         return patientDao.getPatientByZokNumber(zokNumber);
     }

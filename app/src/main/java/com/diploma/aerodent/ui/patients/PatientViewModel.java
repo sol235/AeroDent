@@ -31,9 +31,9 @@ public class PatientViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> isEmailValid = new MutableLiveData<>(true);
     private final MutableLiveData<Boolean> isZokNumberValid = new MutableLiveData<>(true);
 
-    public PatientViewModel(@NonNull Application application) {
+    public PatientViewModel(@NonNull Application application, PatientRepository patientRepository) {
         super(application);
-        patientRepository = new PatientRepository(application);
+        this.patientRepository = patientRepository;
         searchResults = Transformations.switchMap(searchQuery, query -> {
             LiveData<List<Patient>> allPatients = patientRepository.getAllPatients();
             if (query == null || query.trim().isEmpty()) {

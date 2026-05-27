@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.patients;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +76,8 @@ public class PatientDetailFragment extends Fragment {
             patientId = getArguments().getInt(ARG_PATIENT_ID);
         }
 
-        photoViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        photoViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(PhotoViewModel.class);
         cameraHelper = new CameraHelper(this, photoViewModel);
 
         if (savedInstanceState != null) {
@@ -93,7 +96,8 @@ public class PatientDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_patient_detail, container, false);
 
-        viewModel = new ViewModelProvider(this).get(PatientDetailViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        viewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(PatientDetailViewModel.class);
         viewModel.setPatientId(patientId);
 
         tabHistory = root.findViewById(R.id.tab_history);

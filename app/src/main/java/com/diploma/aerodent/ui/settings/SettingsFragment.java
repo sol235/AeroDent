@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.settings;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +39,8 @@ public class SettingsFragment extends Fragment {
         View cardReports = view.findViewById(R.id.card_reports);
 
 
-        UserViewModel userViewModel = new androidx.lifecycle.ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        UserViewModel userViewModel = new androidx.lifecycle.ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(UserViewModel.class);
         userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 android.widget.TextView textUserName = view.findViewById(R.id.text_user_name);

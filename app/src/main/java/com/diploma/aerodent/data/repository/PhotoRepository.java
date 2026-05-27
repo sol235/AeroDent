@@ -10,16 +10,14 @@ import com.diploma.aerodent.data.local.entity.Photo;
 
 
 public class PhotoRepository {
+    private final PhotoDao photoDao;
+    private final LiveData<List<Photo>> allPhotos;
+    private final Application application;
 
-    private PhotoDao photoDao;
-    private LiveData<List<Photo>> allPhotos;
-    private Application application;
-
-    public PhotoRepository(Application application) {
+    public PhotoRepository(PhotoDao photoDao, Application application) {
+        this.photoDao = photoDao;
         this.application = application;
-        AppDatabase db = AppDatabase.getDatabase(application);
-        photoDao = db.photoDao();
-        allPhotos = photoDao.getAllPhotos();
+        this.allPhotos = photoDao.getAllPhotos();
     }
 
     public LiveData<List<Photo>> getAllPhotos() {
@@ -67,7 +65,6 @@ public class PhotoRepository {
     }
 
     public void deleteAllPhysicalFilesForPatient(int patientId) {
-        // Called from PatientRepository or elsewhere
         List<String> filePaths = photoDao.getFilePathsForPatient(patientId);
         if (filePaths != null) {
             for (String path : filePaths) {
@@ -79,7 +76,7 @@ public class PhotoRepository {
                 }
             }
         }
-        
+
         // Delete the directory
         java.io.File storageDir = new java.io.File(application.getFilesDir(), "AeroDent/Photos/patient_" + patientId);
         if (storageDir.exists() && storageDir.isDirectory()) {

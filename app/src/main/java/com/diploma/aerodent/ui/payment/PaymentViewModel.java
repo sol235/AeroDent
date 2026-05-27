@@ -16,9 +16,9 @@ public class PaymentViewModel extends AndroidViewModel {
 
     private final PaymentRepository repository;
 
-    public PaymentViewModel(@NonNull Application application) {
+    public PaymentViewModel(@NonNull Application application, PaymentRepository repository) {
         super(application);
-        repository = new PaymentRepository(application);
+        this.repository = repository;
     }
 
     public LiveData<List<Payment>> getPaymentsByAppointmentId(int appointmentId) {

@@ -1,6 +1,5 @@
 package com.diploma.aerodent.data.repository;
 
-import android.app.Application;
 import androidx.lifecycle.LiveData;
 import java.util.Date;
 import java.util.List;
@@ -12,14 +11,12 @@ import com.diploma.aerodent.data.local.entity.Appointment;
 
 
 public class AppointmentRepository {
+    private final AppointmentDao appointmentDao;
+    private final LiveData<List<Appointment>> allAppointments;
 
-    private AppointmentDao appointmentDao;
-    private LiveData<List<Appointment>> allAppointments;
-
-    public AppointmentRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
-        appointmentDao = db.appointmentDao();
-        allAppointments = appointmentDao.getAllAppointments();
+    public AppointmentRepository(AppointmentDao appointmentDao) {
+        this.appointmentDao = appointmentDao;
+        this.allAppointments = appointmentDao.getAllAppointments();
     }
 
     public LiveData<List<Appointment>> getAllAppointments() {

@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupCameraHelper(Bundle savedInstanceState) {
-        photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
+        photoViewModel = new ViewModelProvider(this, ((AeroDentApplication) getApplication()).getViewModelFactory()).get(PhotoViewModel.class);
         cameraHelper = new CameraHelper(this, photoViewModel);
         cameraHelper.setShowSuccessToast(true);
 
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
             popupView.findViewById(R.id.btn_quick_logout).setOnClickListener(btn -> {
                 popupWindow.dismiss();
-                UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+                UserViewModel userViewModel = new ViewModelProvider(this, ((AeroDentApplication) getApplication()).getViewModelFactory()).get(UserViewModel.class);
                 userViewModel.logout();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.nav_host_fragment, LoginFragment.newInstance(true))
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkAuthStatus(BottomNavigationView bottomNav) {
-        AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        AuthViewModel authViewModel = new ViewModelProvider(this, ((AeroDentApplication) getApplication()).getViewModelFactory()).get(AuthViewModel.class);
         authViewModel.getAuthState().observe(this, state -> {
             if (state == null) return;
             switch (state) {

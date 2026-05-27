@@ -27,11 +27,15 @@ public class HomeViewModel extends AndroidViewModel {
     private LiveData<List<Appointment>> todaysAppointments;
     private LiveData<List<Patient>> allPatients;
 
-    public HomeViewModel(@NonNull Application application) {
+    public HomeViewModel(
+            @NonNull Application application,
+            PatientRepository patientRepository,
+            AppointmentRepository appointmentRepository,
+            PaymentRepository paymentRepository) {
         super(application);
-        patientRepository = new PatientRepository(application);
-        appointmentRepository = new AppointmentRepository(application);
-        paymentRepository = new PaymentRepository(application);
+        this.patientRepository = patientRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.paymentRepository = paymentRepository;
 
         totalPatientsCount = patientRepository.getPatientCount();
 

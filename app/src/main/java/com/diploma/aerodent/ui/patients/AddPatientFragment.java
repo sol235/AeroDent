@@ -1,5 +1,7 @@
 package com.diploma.aerodent.ui.patients;
 
+import com.diploma.aerodent.AeroDentApplication;
+
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
@@ -62,7 +64,8 @@ public class AddPatientFragment extends Fragment {
             patientId = getArguments().getInt(ARG_PATIENT_ID, -1);
         }
 
-        patientViewModel = new ViewModelProvider(this).get(PatientViewModel.class);
+        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
+        patientViewModel = new ViewModelProvider(this, app.getViewModelFactory()).get(PatientViewModel.class);
 
         editFirstName = root.findViewById(R.id.edit_first_name);
         editMiddleName = root.findViewById(R.id.edit_middle_name);
