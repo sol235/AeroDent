@@ -15,6 +15,7 @@ import com.diploma.aerodent.ui.payment.PaymentViewModel;
 import com.diploma.aerodent.ui.photos.PhotoViewModel;
 import com.diploma.aerodent.ui.user.AuthViewModel;
 import com.diploma.aerodent.ui.user.UserViewModel;
+import com.diploma.aerodent.ui.settings.ExportViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
     private final Application application;
@@ -96,6 +97,17 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
                 application,
                 appContainer.getAppointmentRepository(),
                 appContainer.getPatientRepository(),
+                appContainer.getProcedureLogRepository()
+            );
+        }
+        if (modelClass.isAssignableFrom(ExportViewModel.class)) {
+            return (T) new ExportViewModel(
+                application,
+                appContainer.getPatientRepository(),
+                appContainer.getAppointmentRepository(),
+                appContainer.getPaymentRepository(),
+                appContainer.getUserRepository(),
+                appContainer.getToothStatusRepository(),
                 appContainer.getProcedureLogRepository()
             );
         }

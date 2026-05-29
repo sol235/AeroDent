@@ -26,6 +26,10 @@ public class PaymentRepository {
         return paymentDao.getAllPayments();
     }
 
+    public List<Payment> getAllPaymentsSync() {
+        return paymentDao.getAllPaymentsSync();
+    }
+
     public void insert(Payment payment) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             paymentDao.insert(payment);

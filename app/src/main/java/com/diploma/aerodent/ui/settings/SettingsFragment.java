@@ -38,38 +38,38 @@ public class SettingsFragment extends Fragment {
         View cardPayments = view.findViewById(R.id.card_payments);
         View cardReports = view.findViewById(R.id.card_reports);
 
-
         AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
-        UserViewModel userViewModel = new androidx.lifecycle.ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(UserViewModel.class);
+        UserViewModel userViewModel = new androidx.lifecycle.ViewModelProvider(requireActivity(),
+                app.getViewModelFactory()).get(UserViewModel.class);
         userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 android.widget.TextView textUserName = view.findViewById(R.id.text_user_name);
                 android.widget.TextView textUserRole = view.findViewById(R.id.text_user_role);
-                if (textUserName != null) textUserName.setText(user.getFullName());
-                if (textUserRole != null) textUserRole.setText(getString(user.getRole().getDisplayName()));
+                if (textUserName != null)
+                    textUserName.setText(user.getFullName());
+                if (textUserRole != null)
+                    textUserRole.setText(getString(user.getRole().getDisplayName()));
 
                 // Role Based Access Control with ViewModel
                 boolean canManage = userViewModel.canManageUsers(user);
                 boolean canViewAdvanced = userViewModel.canViewAdvancedSettings(user);
 
-                if (cardUserManagement != null) cardUserManagement.setVisibility(canManage ? View.VISIBLE : View.GONE);
+                if (cardUserManagement != null)
+                    cardUserManagement.setVisibility(canManage ? View.VISIBLE : View.GONE);
                 cardUserData.setVisibility(View.VISIBLE);
                 cardPayments.setVisibility(View.VISIBLE);
                 cardReports.setVisibility(canViewAdvanced ? View.VISIBLE : View.GONE);
-
 
                 cardUserData.setOnClickListener(v -> {
                     Bundle args = new Bundle();
                     args.putBoolean("is_edit_mode", true);
                     args.putString("user_id", user.getId());
-                    
+
                     UserFormFragment fragment = new UserFormFragment();
                     fragment.setArguments(args);
-                    
+
                     requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.nav_host_fragment, fragment)
-                            .addToBackStack(null)
-                            .commit();
+                            .replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
                 });
             }
         });
@@ -77,30 +77,26 @@ public class SettingsFragment extends Fragment {
         if (cardUserManagement != null) {
             cardUserManagement.setOnClickListener(v -> {
                 requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, new UserManagementFragment())
-                        .addToBackStack(null)
-                        .commit();
+                        .replace(R.id.nav_host_fragment, new UserManagementFragment()).addToBackStack(null).commit();
             });
         }
 
         cardPayments.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, new PaymentDetailsFragment())
-                    .addToBackStack(null)
-                    .commit();
+                    .replace(R.id.nav_host_fragment, new PaymentDetailsFragment()).addToBackStack(null).commit();
         });
 
-        cardReports.setOnClickListener(
-                v -> Toast.makeText(getContext(), R.string.settings_reports, Toast.LENGTH_SHORT).show());
-
-
+        cardReports.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new ExportFragment()).addToBackStack(null).commit();
+        });
 
         view.findViewById(R.id.btn_logout).setOnClickListener(v -> {
             userViewModel.logout();
-            requireActivity().getSupportFragmentManager().popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            requireActivity().getSupportFragmentManager().popBackStack(null,
+                    androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
             requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, LoginFragment.newInstance(false))
-                    .commit();
+                    .replace(R.id.nav_host_fragment, LoginFragment.newInstance(false)).commit();
         });
     }
 }

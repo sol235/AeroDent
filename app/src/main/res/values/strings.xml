@@ -324,4 +324,18 @@
     <string name="conflict_missing_tooth">Зъбът е отбелязан като липсващ. Не може да се добавят други състояния, освен имплант или мостокрепител.</string>
     <string name="conflict_implant_tooth">Зъбът има имплант/мостокрепител. Не може да се добавят кариеси, пулпити или лечебни процедури за зъбът.</string>
     <string name="conflict_root_canal_pulpitis">Зъбът е с депулпиран/коренов канал. Пулпитът е невъзможен.</string>
+
+    <!-- Export Screen -->
+    <string name="export_title">Експортиране на данни</string>
+    <string name="export_db_title">Резервно копие на базата данни (SQL)</string>
+    <string name="export_db_desc">Експорт на цялата база данни във .db формат</string>
+    <string name="export_option_patients">Пациенти</string>
+    <string name="export_option_appointments">Часове / График</string>
+    <string name="export_option_payments">Плащания</string>
+    <string name="export_option_users">Потребители</string>
+    <string name="export_option_dental_charts">Зъбни Статуси</string>
+    <string name="export_option_procedure_logs">История на Процедурите</string>
+    <string name="export_json_subtitle">Експорт в JSON формат</string>
+    <string name="export_success">Данните са експортирани успешно</string>
+    <string name="export_error">Възникна грешка при експортирането</string>
 </resources>

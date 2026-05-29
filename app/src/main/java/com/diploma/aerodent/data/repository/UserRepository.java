@@ -18,6 +18,10 @@ public class UserRepository {
         return userDao.getAllUsers();
     }
 
+    public List<User> getAllUsersSync() {
+        return userDao.getAllUsersSync();
+    }
+
     public LiveData<List<User>> getActiveUsers() {
         return userDao.getActiveUsers();
     }

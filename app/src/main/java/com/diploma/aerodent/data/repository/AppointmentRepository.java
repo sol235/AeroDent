@@ -23,6 +23,10 @@ public class AppointmentRepository {
         return allAppointments;
     }
 
+    public List<Appointment> getAllAppointmentsSync() {
+        return appointmentDao.getAllAppointmentsSync();
+    }
+
     public LiveData<Appointment> getAppointmentById(int id) {
         return appointmentDao.getAppointmentById(id);
     }

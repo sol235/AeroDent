@@ -33,6 +33,9 @@ public interface UserDao {
     @Query("SELECT * FROM users ORDER BY fullName ASC")
     LiveData<List<User>> getAllUsers();
 
+    @Query("SELECT * FROM users ORDER BY fullName ASC")
+    List<User> getAllUsersSync();
+
     @Query("SELECT * FROM users WHERE isActive = 1 ORDER BY fullName ASC")
     LiveData<List<User>> getActiveUsers();
 

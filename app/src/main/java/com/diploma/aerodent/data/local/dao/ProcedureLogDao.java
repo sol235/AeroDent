@@ -16,6 +16,9 @@ import java.util.List;
 @Dao
 public interface ProcedureLogDao {
 
+    @Query("SELECT * FROM procedure_logs ORDER BY dateLogged DESC, id DESC")
+    List<ProcedureLog> getAllProcedureLogsSync();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(ProcedureLog log);
 

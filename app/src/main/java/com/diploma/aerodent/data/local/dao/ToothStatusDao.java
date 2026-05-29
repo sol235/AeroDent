@@ -15,6 +15,9 @@ import java.util.List;
 @Dao
 public interface ToothStatusDao {
 
+    @Query("SELECT * FROM tooth_statuses")
+    List<ToothStatus> getAllToothStatusesSync();
+
     @Query("SELECT * FROM tooth_statuses WHERE patientId = :patientId")
     LiveData<List<ToothStatus>> getToothStatusesForPatient(int patientId);
 

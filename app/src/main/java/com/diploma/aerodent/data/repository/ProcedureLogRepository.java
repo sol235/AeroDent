@@ -23,6 +23,10 @@ public class ProcedureLogRepository {
         return procedureLogDao.getProcedureLogsForPatient(patientId);
     }
 
+    public List<ProcedureLog> getAllProcedureLogsSync() {
+        return procedureLogDao.getAllProcedureLogsSync();
+    }
+
     public void insert(ProcedureLog log) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             procedureLogDao.insert(log);

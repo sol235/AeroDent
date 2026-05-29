@@ -23,6 +23,10 @@ public class PatientRepository {
         return allPatients;
     }
 
+    public List<Patient> getAllPatientsSync() {
+        return patientDao.getAllPatientsSync();
+    }
+
     public LiveData<Patient> getPatientById(int id) {
         return patientDao.getPatientById(id);
     }

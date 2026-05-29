@@ -32,6 +32,9 @@ public interface AppointmentDao {
     @Query("SELECT * FROM appointments ORDER BY dateTime DESC")
     LiveData<List<Appointment>> getAllAppointments();
 
+    @Query("SELECT * FROM appointments ORDER BY dateTime DESC")
+    List<Appointment> getAllAppointmentsSync();
+
     @Query("SELECT * FROM appointments WHERE id = :appointmentId LIMIT 1")
     LiveData<Appointment> getAppointmentById(int appointmentId);
 

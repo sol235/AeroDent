@@ -34,4 +34,6 @@ public interface PaymentDao {
     @Query("SELECT * FROM payments ORDER BY date DESC")
     LiveData<List<Payment>> getAllPayments();
 
+    @Query("SELECT * FROM payments ORDER BY date DESC")
+    List<Payment> getAllPaymentsSync();
 }

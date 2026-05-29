@@ -27,6 +27,10 @@ public class ToothStatusRepository {
         return toothStatusDao.getToothStatusesForToothSync(patientId, toothNumber);
     }
 
+    public List<ToothStatus> getAllToothStatusesSync() {
+        return toothStatusDao.getAllToothStatusesSync();
+    }
+
     public void insert(ToothStatus toothStatus) {
         toothStatusDao.insert(toothStatus);
     }
