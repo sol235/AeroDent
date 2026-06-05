@@ -18,9 +18,6 @@ public interface PatientDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(Patient patient);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    List<Long> insertAll(List<Patient> patients);
-
     @Update
     void update(Patient patient);
 
@@ -36,15 +33,8 @@ public interface PatientDao {
     @Query("SELECT * FROM patients WHERE id = :patientId LIMIT 1")
     LiveData<Patient> getPatientById(int patientId);
 
-    @Query("SELECT * FROM patients WHERE egn = :egn LIMIT 1")
-    LiveData<Patient> getPatientByEgn(String egn);
-
     @Query("SELECT COUNT(*) FROM patients WHERE egn = :egn AND id != :excludePatientId")
     int checkEgnExistsSync(String egn, int excludePatientId);
-
-    // Lookup Health Insurance/НЗОК number for api integration
-    @Query("SELECT * FROM patients WHERE zokNumber = :zokNumber LIMIT 1")
-    LiveData<Patient> getPatientByZokNumber(String zokNumber);
 
     @Query("SELECT COUNT(*) FROM patients")
     LiveData<Integer> getPatientCount();

@@ -152,7 +152,7 @@ public class UserFormFragment extends Fragment {
             pinConfirmInputLayout.setVisibility(View.GONE);
         }
 
-        if (!isEditMode || !viewModel.canEditRole(isEditMode, editUserId)) {
+        if (!isEditMode || !viewModel.canEditRole(true, editUserId)) {
             activeSwitch.setVisibility(View.GONE);
         }
     }
@@ -199,7 +199,7 @@ public class UserFormFragment extends Fragment {
     private void setupRoleDropdown() {
         List<UserRole> roles;
         if (viewModel.isDentist()) {
-            roles = Arrays.asList(UserRole.ASSISTANT);
+            roles = List.of(UserRole.ASSISTANT);
         } else {
             roles = Arrays.asList(UserRole.DENTIST, UserRole.ASSISTANT);
         }
@@ -266,7 +266,7 @@ public class UserFormFragment extends Fragment {
             }
         }
 
-        boolean isActive = isEditMode ? activeSwitch.isChecked() : true;
+        boolean isActive = !isEditMode || activeSwitch.isChecked();
         viewModel.saveUser(editUserId, name, selectedRole, pin, pinConfirm, uin, selectedSpecialty, rzi, isActive);
     }
 }

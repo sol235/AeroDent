@@ -24,6 +24,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
 
 import com.diploma.aerodent.R;
+import com.diploma.aerodent.data.local.entity.ProcedureLog;
+import com.diploma.aerodent.data.local.entity.ToothStatus;
+import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
 import com.diploma.aerodent.util.DialogUtils;
 
 public class DentalChartFragment extends Fragment {
@@ -115,17 +118,18 @@ public class DentalChartFragment extends Fragment {
 
         if (recyclerConditions != null) {
             recyclerConditions.setLayoutManager(new LinearLayoutManager(getContext()));
-            conditionsAdapter = new GlobalConditionsAdapter(new GlobalConditionsAdapter.OnConditionInteractionListener() {
-                @Override
-                public void onDeleteClick(com.diploma.aerodent.data.local.entity.ToothStatus status) {
-                    viewModel.deleteToothStatus(status.getToothNumber(), status.getCondition());
-                }
+            conditionsAdapter = new GlobalConditionsAdapter(
+                    new GlobalConditionsAdapter.OnConditionInteractionListener() {
+                        @Override
+                        public void onDeleteClick(ToothStatus status) {
+                            viewModel.deleteToothStatus(status.getToothNumber(), status.getCondition());
+                        }
 
-                @Override
-                public void onConditionClick(com.diploma.aerodent.data.local.entity.ToothStatus status) {
-                    navigateToAppointment(status.getAppointmentId());
-                }
-            });
+                        @Override
+                        public void onConditionClick(ToothStatus status) {
+                            navigateToAppointment(status.getAppointmentId());
+                        }
+                    });
             recyclerConditions.setAdapter(conditionsAdapter);
         }
 
@@ -133,12 +137,12 @@ public class DentalChartFragment extends Fragment {
             recyclerHistory.setLayoutManager(new LinearLayoutManager(getContext()));
             historyAdapter = new ProcedureLogAdapter(new ProcedureLogAdapter.OnProcedureLogInteractionListener() {
                 @Override
-                public void onAnnulClick(com.diploma.aerodent.data.local.entity.ProcedureLog log) {
+                public void onAnnulClick(ProcedureLog log) {
                     showAnnulDialog(log);
                 }
 
                 @Override
-                public void onLogClick(com.diploma.aerodent.data.local.entity.ProcedureLog log) {
+                public void onLogClick(ProcedureLog log) {
                     navigateToAppointment(log.getAppointmentId());
                 }
             });
@@ -253,7 +257,7 @@ public class DentalChartFragment extends Fragment {
         dialog.show(getChildFragmentManager(), "ToothDetailFragment");
     }
 
-    private void showAnnulDialog(com.diploma.aerodent.data.local.entity.ProcedureLog log) {
+    private void showAnnulDialog(ProcedureLog log) {
         DialogUtils.showAnnulDialog(requireContext(), () -> {
             log.setAnnulled(true);
             viewModel.updateProcedureLog(log);
@@ -263,9 +267,8 @@ public class DentalChartFragment extends Fragment {
     public void navigateToAppointment(Integer apptId) {
         if (apptId != null) {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, com.diploma.aerodent.ui.appointments.AppointmentDetailFragment.newInstance(apptId))
-                    .addToBackStack(null)
-                    .commit();
+                    .replace(R.id.nav_host_fragment, AppointmentDetailFragment.newInstance(apptId))
+                    .addToBackStack(null).commit();
         }
     }
 }

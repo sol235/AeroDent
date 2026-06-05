@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
+import com.diploma.aerodent.data.local.entity.ProcedureLog;
 import com.diploma.aerodent.data.local.entity.Photo;
 import com.diploma.aerodent.ui.dentalchart.DentalChartFragment;
 import com.diploma.aerodent.ui.dentalchart.ProcedureLogAdapter;
@@ -170,12 +171,12 @@ public class AppointmentDetailFragment extends Fragment {
         recyclerProcedureLogs.setLayoutManager(new LinearLayoutManager(getContext()));
         procedureLogAdapter = new ProcedureLogAdapter(new ProcedureLogAdapter.OnProcedureLogInteractionListener() {
             @Override
-            public void onAnnulClick(com.diploma.aerodent.data.local.entity.ProcedureLog log) {
+            public void onAnnulClick(ProcedureLog log) {
                 showAnnulDialog(log);
             }
 
             @Override
-            public void onLogClick(com.diploma.aerodent.data.local.entity.ProcedureLog log) {
+            public void onLogClick(ProcedureLog log) {
             }
         });
         recyclerProcedureLogs.setAdapter(procedureLogAdapter);
@@ -402,7 +403,7 @@ public class AppointmentDetailFragment extends Fragment {
         }
     }
 
-    private void showAnnulDialog(com.diploma.aerodent.data.local.entity.ProcedureLog log) {
+    private void showAnnulDialog(ProcedureLog log) {
         DialogUtils.showAnnulDialog(requireContext(), () -> {
             log.setAnnulled(true);
             viewModel.updateProcedureLog(log);

@@ -13,13 +13,9 @@ import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.repository.AppointmentRepository;
 import com.diploma.aerodent.data.repository.PatientRepository;
-import com.diploma.aerodent.data.repository.PaymentRepository;
 
 public class HomeViewModel extends AndroidViewModel {
 
-    private final PatientRepository patientRepository;
-    private final AppointmentRepository appointmentRepository;
-    private final PaymentRepository paymentRepository;
 
     private LiveData<Integer> totalPatientsCount;
     private LiveData<Integer> appointmentsLeftCount;
@@ -30,16 +26,12 @@ public class HomeViewModel extends AndroidViewModel {
     public HomeViewModel(
             @NonNull Application application,
             PatientRepository patientRepository,
-            AppointmentRepository appointmentRepository,
-            PaymentRepository paymentRepository) {
+            AppointmentRepository appointmentRepository) {
         super(application);
-        this.patientRepository = patientRepository;
-        this.appointmentRepository = appointmentRepository;
-        this.paymentRepository = paymentRepository;
 
         totalPatientsCount = patientRepository.getPatientCount();
 
-        // Get todays start and end dates
+        // Get today's start and end dates
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);

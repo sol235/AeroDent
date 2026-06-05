@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.User;
+import com.diploma.aerodent.util.NameUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public class UserCardAdapter extends RecyclerView.Adapter<UserCardAdapter.UserVi
             }
             textUserRole.setText(roleStr);
             
-            textInitials.setText(com.diploma.aerodent.util.NameUtils.getInitials(user.getFullName()));
+            textInitials.setText(NameUtils.getInitials(user.getFullName()));
         }
     }
 

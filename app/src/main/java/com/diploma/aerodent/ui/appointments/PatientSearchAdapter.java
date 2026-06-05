@@ -47,10 +47,9 @@ public class PatientSearchAdapter extends ArrayAdapter<Patient> {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            List<Patient> suggestions = (constraint == null || constraint.length() == 0)
-                    ? patientListFull
+            List<Patient> suggestions = (constraint == null || constraint.length() == 0) ? patientListFull
                     : NameUtils.searchPatients(patientListFull, constraint.toString());
-            
+
             results.values = suggestions;
             results.count = suggestions.size();
             return results;
@@ -64,7 +63,7 @@ public class PatientSearchAdapter extends ArrayAdapter<Patient> {
             }
             notifyDataSetChanged();
         }
-        
+
         @Override
         public CharSequence convertResultToString(Object resultValue) {
             return NameUtils.formatFirstLastName((Patient) resultValue);

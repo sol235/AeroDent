@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Payment;
+import com.diploma.aerodent.util.NameUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class PendingPaymentAdapter extends RecyclerView.Adapter<PendingPaymentAd
         if (patientsMap != null && patientsMap.containsKey(payment.getPatientId())) {
             Patient patient = patientsMap.get(payment.getPatientId());
             if (patient != null) {
-                holder.textDesc.setText(com.diploma.aerodent.util.NameUtils.formatFirstLastName(patient));
+                holder.textDesc.setText(NameUtils.formatFirstLastName(patient));
             }
         } else {
             holder.textDesc.setText(R.string.payment_loading);

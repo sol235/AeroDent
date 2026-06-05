@@ -20,7 +20,6 @@ import com.diploma.aerodent.ui.photos.PhotoViewModel;
 import java.io.File;
 import java.io.IOException;
 
-
 // Handles photo capture and permissions
 
 public class CameraHelper {
@@ -84,7 +83,10 @@ public class CameraHelper {
         } else if (currentPhotoPath != null) {
             File file = new File(currentPhotoPath);
             if (file.exists()) {
-                file.delete();
+                boolean deleted = file.delete();
+                if (!deleted) {
+                    android.util.Log.w("CameraHelper", "Failed to delete file.");
+                }
             }
         }
     }
@@ -112,7 +114,7 @@ public class CameraHelper {
 
     private void launchCameraInternal(android.content.Context context) {
         try {
-            File photoFile = photoViewModel.createImageFile(context, patientId);
+            File photoFile = photoViewModel.createImageFile(patientId);
             if (photoFile != null) {
                 currentPhotoPath = photoFile.getAbsolutePath();
                 Uri photoUri = FileProvider.getUriForFile(context,

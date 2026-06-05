@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey;
 
 import com.diploma.aerodent.data.local.model.UserRole;
 import com.diploma.aerodent.data.local.model.DentalSpecialty;
-
 import java.util.UUID;
 
 @Entity(tableName = "users")
@@ -14,15 +13,14 @@ public class User {
 
     @PrimaryKey
     @NonNull
-    private String id;
+    private String id = UUID.randomUUID().toString();
     
     @NonNull
-    private String fullName;
+    private String fullName = "";
     
     @NonNull
-    private UserRole role;
+    private UserRole role = UserRole.ASSISTANT;
 
-    @NonNull
     private boolean isActive = true;
 
     private String pin;

@@ -12,20 +12,13 @@ import androidx.lifecycle.Transformations;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Payment;
-import com.diploma.aerodent.data.local.entity.ProcedureLog;
 import com.diploma.aerodent.data.repository.AppointmentRepository;
 import com.diploma.aerodent.data.repository.PatientRepository;
 import com.diploma.aerodent.data.repository.PaymentRepository;
-import com.diploma.aerodent.data.repository.ProcedureLogRepository;
-
 import java.util.List;
 
 public class PatientDetailViewModel extends AndroidViewModel {
 
-    private PatientRepository patientRepository;
-    private AppointmentRepository appointmentRepository;
-    private ProcedureLogRepository procedureLogRepository;
-    private PaymentRepository paymentRepository;
 
     private MutableLiveData<Integer> patientId = new MutableLiveData<>();
     private LiveData<Patient> patient;
@@ -37,14 +30,8 @@ public class PatientDetailViewModel extends AndroidViewModel {
             @NonNull Application application,
             PatientRepository patientRepository,
             AppointmentRepository appointmentRepository,
-            ProcedureLogRepository procedureLogRepository,
             PaymentRepository paymentRepository) {
         super(application);
-        this.patientRepository = patientRepository;
-        this.appointmentRepository = appointmentRepository;
-        this.procedureLogRepository = procedureLogRepository;
-        this.paymentRepository = paymentRepository;
-
         patient = Transformations.switchMap(patientId, id -> patientRepository.getPatientById(id));
         appointments = Transformations.switchMap(patientId, id -> appointmentRepository.getAppointmentsForPatient(id));
         payments = Transformations.switchMap(patientId, id -> paymentRepository.getPaymentsByPatientId(id));
@@ -84,15 +71,25 @@ public class PatientDetailViewModel extends AndroidViewModel {
         return historyItems;
     }
 
-    public LiveData<List<ProcedureLog>> getProcedureLogsForAppointment(int appointmentId) {
-        return procedureLogRepository.getProcedureLogsForAppointment(appointmentId);
-    }
-
     public LiveData<List<Payment>> getPayments() {
         return payments;
     }
 
-    public LiveData<List<Payment>> getPaymentsForAppointment(int appointmentId) {
-        return paymentRepository.getPaymentsByAppointmentId(appointmentId);
+    public static class PatientHistoryItem {
+        private Appointment appointment;
+        private List<Payment> payments;
+
+        public PatientHistoryItem(Appointment appointment, List<Payment> payments) {
+            this.appointment = appointment;
+            this.payments = payments;
+        }
+
+        public Appointment getAppointment() {
+            return appointment;
+        }
+
+        public List<Payment> getPayments() {
+            return payments;
+        }
     }
 }

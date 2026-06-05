@@ -19,7 +19,7 @@ public class ValidationUtils {
         if (phone == null || phone.isEmpty()) {
             return true;
         }
-        String cleanedPhone = phone.replaceAll("[\\s\\-\\(\\)]", "");
+        String cleanedPhone = phone.replaceAll("[\\s\\-()]", "");
 
         return PHONE_PATTERN.matcher(cleanedPhone).matches();
     }

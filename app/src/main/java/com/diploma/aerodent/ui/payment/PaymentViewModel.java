@@ -25,13 +25,8 @@ public class PaymentViewModel extends AndroidViewModel {
         return repository.getPaymentsByAppointmentId(appointmentId);
     }
 
-    public LiveData<List<Payment>> getAllPayments() {
-        return repository.getAllPayments();
-    }
-
-
-
-    public void saveOrUpdatePayment(int appointmentId, int patientId, double totalAmount, double amountPaid, double zokCovered, String paymentMethod, String description, Payment existingPayment) {
+    public void saveOrUpdatePayment(int appointmentId, int patientId, double totalAmount, double amountPaid,
+            double zokCovered, String paymentMethod, String description, Payment existingPayment) {
         Payment payment;
         if (existingPayment != null) {
             payment = existingPayment;
@@ -39,7 +34,7 @@ public class PaymentViewModel extends AndroidViewModel {
             payment = new Payment();
             payment.setAppointmentId(appointmentId);
             payment.setPatientId(patientId);
-            payment.setDate(new Date()); 
+            payment.setDate(new Date());
         }
 
         payment.setTotalAmount(totalAmount);

@@ -14,7 +14,6 @@ import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.repository.UserRepository;
 import com.diploma.aerodent.util.SessionManager;
 
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -105,8 +104,7 @@ public class AuthViewModel extends AndroidViewModel {
                 }
 
                 User user = new User();
-                String newUserId = UUID.randomUUID().toString();
-                user.setId(newUserId);
+                String newUserId = user.getId();
                 user.setFullName(fullName);
                 user.setRole(UserRole.ADMIN);
                 user.setPin(pin);

@@ -16,43 +16,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
-import com.diploma.aerodent.ui.appointments.SelectAppointmentDialogFragment;
 import com.diploma.aerodent.ui.patients.PatientsFragment;
 import com.diploma.aerodent.ui.calendar.CalendarFragment;
-import com.diploma.aerodent.ui.photos.PhotoViewModel;
-import com.diploma.aerodent.ui.user.UserViewModel;
 import com.diploma.aerodent.ui.payment.PaymentViewModel;
 import com.diploma.aerodent.ui.payment.PaymentDetailsFragment;
-import com.diploma.aerodent.util.CameraHelper;
+import com.diploma.aerodent.ui.user.UserViewModel;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private PaymentViewModel paymentViewModel;
-    private PhotoViewModel photoViewModel;
-    private CameraHelper cameraHelper;
-    
+
     private TextView textTotalPatients, textTodaysAppts, textUnpaidAccounts, textAppointmentsLeft;
     private RecyclerView recyclerSchedule;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        AeroDentApplication app = (AeroDentApplication) requireActivity().getApplication();
-        photoViewModel = new ViewModelProvider(requireActivity(), app.getViewModelFactory()).get(PhotoViewModel.class);
-        cameraHelper = new CameraHelper(this, photoViewModel);
-        cameraHelper.setShowSuccessToast(true);
-
-        if (savedInstanceState != null) {
-            cameraHelper.onRestoreInstanceState(savedInstanceState);
-        }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        cameraHelper.onSaveInstanceState(outState);
     }
 
     @Nullable
@@ -159,13 +144,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void showAppointmentSelection() {
-        SelectAppointmentDialogFragment dialog = new SelectAppointmentDialogFragment();
-        dialog.setOnAppointmentSelectedListener(appointment -> {
-            cameraHelper.takePhoto(appointment.getPatientId(), appointment.getId(), null);
-        });
-        dialog.show(getParentFragmentManager(), "SelectAppointmentDialog");
-    }
+
 
     @Override
     public void onDestroyView() {

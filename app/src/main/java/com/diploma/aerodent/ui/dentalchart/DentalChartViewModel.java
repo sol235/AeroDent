@@ -12,26 +12,24 @@ import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.ToothStatus;
 import com.diploma.aerodent.data.local.entity.ProcedureLog;
 import com.diploma.aerodent.data.local.model.DentalCondition;
-import com.diploma.aerodent.data.local.AppDatabase;
 import com.diploma.aerodent.data.repository.PatientRepository;
 import com.diploma.aerodent.data.repository.ProcedureLogRepository;
 import com.diploma.aerodent.data.repository.ToothStatusRepository;
+import com.diploma.aerodent.util.NameUtils;
 import com.diploma.aerodent.util.SessionManager;
+import com.diploma.aerodent.R;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class DentalChartViewModel extends AndroidViewModel {
 
     private final ToothStatusRepository repository;
-    private final PatientRepository patientRepository;
     private final ProcedureLogRepository procedureLogRepository;
     private final MutableLiveData<Integer> patientId = new MutableLiveData<>();
     private final MutableLiveData<Integer> appointmentId = new MutableLiveData<>();
@@ -42,42 +40,10 @@ public class DentalChartViewModel extends AndroidViewModel {
     private final LiveData<List<ProcedureLog>> procedureLogs;
     private final SessionManager sessionManager;
 
-    public static final List<DentalCondition> IMPLANT_CONFLICTS = java.util.Collections.unmodifiableList(
-        java.util.Arrays.asList(
-            DentalCondition.CARIES,
-            DentalCondition.PULPITIS,
-            DentalCondition.ROOT_CANAL,
-            DentalCondition.RADICULAR_POST,
-            DentalCondition.OBTURATION,
-            DentalCondition.CALCULUS,
-            DentalCondition.PERIODONTITIS,
-            DentalCondition.PERIODONTITIS_PA
-        )
-    );
-
-    public static final List<DentalCondition> MISSING_CONFLICTS;
-    static {
-        List<DentalCondition> list = new ArrayList<>();
-        for (DentalCondition c : DentalCondition.values()) {
-            if (c != DentalCondition.MISSING &&
-                c != DentalCondition.IMPLANT &&
-                c != DentalCondition.PONTIC_FIXED &&
-                c != DentalCondition.PONTIC_REMOVABLE &&
-                c != DentalCondition.SUPERNUMERARY) {
-                list.add(c);
-            }
-        }
-        MISSING_CONFLICTS = java.util.Collections.unmodifiableList(list);
-    }
-
-    public DentalChartViewModel(
-            @NonNull Application application,
-            ToothStatusRepository repository,
-            PatientRepository patientRepository,
-            ProcedureLogRepository procedureLogRepository) {
+    public DentalChartViewModel(@NonNull Application application, ToothStatusRepository repository,
+            PatientRepository patientRepository, ProcedureLogRepository procedureLogRepository) {
         super(application);
         this.repository = repository;
-        this.patientRepository = patientRepository;
         this.procedureLogRepository = procedureLogRepository;
         sessionManager = new SessionManager(application);
 
@@ -120,7 +86,7 @@ public class DentalChartViewModel extends AndroidViewModel {
         patientName = Transformations.map(patient, p -> {
             if (p == null)
                 return "";
-            return com.diploma.aerodent.util.NameUtils.formatFirstLastName(p);
+            return NameUtils.formatFirstLastName(p);
         });
     }
 
@@ -140,8 +106,6 @@ public class DentalChartViewModel extends AndroidViewModel {
         return toothStatuses;
     }
 
-
-
     public LiveData<Patient> getPatient() {
         return patient;
     }
@@ -158,90 +122,21 @@ public class DentalChartViewModel extends AndroidViewModel {
         return procedureLogs;
     }
 
-    public void updateToothStatus(int toothNumber, DentalCondition condition, String surfaces, boolean isCurrentAppointment) {
+    public void updateToothStatus(int toothNumber, DentalCondition condition, String surfaces,
+            boolean isCurrentAppointment) {
         Integer pid = patientId.getValue();
         if (pid == null)
             return;
 
         String currentUserId = sessionManager.getLoggedInUserId();
-        String currentUserName = sessionManager.getLoggedInUserName();
-        String currentUserRole = sessionManager.getLoggedInUserRole();
-
-        String formattedCreatorName = currentUserName;
-        if (currentUserName != null && currentUserRole != null) {
-            String lowerName = currentUserName.toLowerCase();
-            if (currentUserRole.equals("DENTIST") || currentUserRole.equals("ADMIN")) {
-                if (!lowerName.startsWith("д-р")) {
-                    formattedCreatorName = "д-р " + currentUserName;
-                }
-            } else if (currentUserRole.equals("ASSISTANT")) {
-                if (!lowerName.startsWith("ас.")) {
-                    formattedCreatorName = "ас. " + currentUserName;
-                }
-            }
-        }
+        String formattedCreatorName = sessionManager.getFormattedLoggedInUserName();
 
         Integer apptId = isCurrentAppointment ? appointmentId.getValue() : null;
         ToothStatus newStatus = new ToothStatus(pid, toothNumber, condition, surfaces, new Date(), apptId);
         newStatus.setUserId(currentUserId);
         newStatus.setCreatorName(formattedCreatorName);
 
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            AppDatabase.getDatabase(getApplication()).runInTransaction(() -> {
-                List<ToothStatus> currentStatuses = repository.getToothStatusesForToothSync(pid, toothNumber);
-
-                // Clear conflicting conditions based on new condition
-                if (condition == DentalCondition.HEALTHY) {
-                    repository.deleteAllStatusesForTooth(pid, toothNumber);
-                } else if (condition == DentalCondition.MISSING) {
-                    repository.deleteSpecificStatusesForTooth(pid, toothNumber, MISSING_CONFLICTS);
-                } else if (condition == DentalCondition.IMPLANT ||
-                           condition == DentalCondition.PONTIC_FIXED ||
-                           condition == DentalCondition.PONTIC_REMOVABLE) {
-                    repository.deleteSpecificStatusesForTooth(pid, toothNumber, IMPLANT_CONFLICTS);
-                } else if (condition == DentalCondition.ROOT_CANAL) {
-                    repository.deleteStatus(pid, toothNumber, DentalCondition.PULPITIS);
-                } else if (condition == DentalCondition.CROWN) {
-                    repository.deleteStatus(pid, toothNumber, DentalCondition.CARIES);
-                    repository.deleteStatus(pid, toothNumber, DentalCondition.FRACTURE);
-                    repository.deleteStatus(pid, toothNumber, DentalCondition.OBTURATION);
-                } else if (condition == DentalCondition.OBTURATION) {
-                    if (surfaces != null && !surfaces.isEmpty()) {
-                        String[] fillSurfaces = surfaces.split(",");
-                        Set<String> filledSet = new HashSet<>();
-                        for (String fs : fillSurfaces) {
-                            filledSet.add(fs.trim());
-                        }
-
-                        for (ToothStatus status : currentStatuses) {
-                            DentalCondition currentCond = status.getCondition();
-                            if (currentCond == DentalCondition.CARIES || currentCond == DentalCondition.FRACTURE) {
-                                String currentSurfacesStr = status.getSurfaces();
-                                if (currentSurfacesStr != null && !currentSurfacesStr.isEmpty()) {
-                                    String[] currentSurfaces = currentSurfacesStr.split(",");
-                                    List<String> remaining = new ArrayList<>();
-                                    for (String s : currentSurfaces) {
-                                        if (!filledSet.contains(s.trim())) {
-                                            remaining.add(s.trim());
-                                        }
-                                    }
-
-                                    if (remaining.isEmpty()) {
-                                        repository.deleteStatus(pid, toothNumber, currentCond);
-                                    } else {
-                                        String remainingStr = android.text.TextUtils.join(",", remaining);
-                                        status.setSurfaces(remainingStr);
-                                        repository.update(status);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                repository.insert(newStatus);
-            });
-        });
+        repository.updateToothStatusWithConflicts(pid, toothNumber, condition, surfaces, newStatus);
 
         // Save history in ProcedureLog
         if (condition != DentalCondition.HEALTHY) {
@@ -250,7 +145,7 @@ public class DentalChartViewModel extends AndroidViewModel {
             log.setToothNumber(toothNumber);
             log.setUserId(currentUserId);
             log.setCreatorName(formattedCreatorName);
-            
+
             Integer activeApptId = appointmentId.getValue();
             if (isCurrentAppointment && activeApptId != null) {
                 log.setAppointmentId(activeApptId);
@@ -260,7 +155,7 @@ public class DentalChartViewModel extends AndroidViewModel {
                 log.setEntryType(ProcedureLog.TYPE_STATUS);
             }
             log.setDateLogged(new Date());
-            
+
             log.setDiagnosis(condition.getDisplayName(getApplication()));
             log.setActionTaken(condition.name());
             log.setSurfaces(surfaces);
@@ -268,11 +163,13 @@ public class DentalChartViewModel extends AndroidViewModel {
         }
     }
 
+
     public void updateProcedureLog(ProcedureLog log) {
         procedureLogRepository.update(log);
     }
 
-    public void updateToothStatus(int toothNumber, DentalCondition condition, List<String> selectedSurfaces, boolean isCurrentAppointment) {
+    public void updateToothStatus(int toothNumber, DentalCondition condition, List<String> selectedSurfaces,
+            boolean isCurrentAppointment) {
         String surfaces = "";
         if (selectedSurfaces != null && !selectedSurfaces.isEmpty()) {
             surfaces = android.text.TextUtils.join(",", selectedSurfaces);
@@ -319,7 +216,8 @@ public class DentalChartViewModel extends AndroidViewModel {
         return visible;
     }
 
-    public String checkConditionConflict(List<ToothStatus> currentStatuses, DentalCondition newCondition, android.content.Context context) {
+    public String checkConditionConflict(List<ToothStatus> currentStatuses, DentalCondition newCondition,
+            android.content.Context context) {
         if (currentStatuses == null || currentStatuses.isEmpty()) {
             return null;
         }
@@ -332,7 +230,8 @@ public class DentalChartViewModel extends AndroidViewModel {
             DentalCondition c = status.getCondition();
             if (c == DentalCondition.MISSING) {
                 hasMissing = true;
-            } else if (c == DentalCondition.IMPLANT || c == DentalCondition.PONTIC_FIXED || c == DentalCondition.PONTIC_REMOVABLE) {
+            } else if (c == DentalCondition.IMPLANT || c == DentalCondition.PONTIC_FIXED
+                    || c == DentalCondition.PONTIC_REMOVABLE) {
                 hasImplantOrPontic = true;
             } else if (c == DentalCondition.ROOT_CANAL) {
                 hasRootCanal = true;
@@ -340,19 +239,20 @@ public class DentalChartViewModel extends AndroidViewModel {
         }
 
         if (hasMissing) {
-            if (newCondition != DentalCondition.HEALTHY && MISSING_CONFLICTS.contains(newCondition)) {
-                return context.getString(com.diploma.aerodent.R.string.conflict_missing_tooth);
+            if (newCondition != DentalCondition.HEALTHY
+                    && ToothStatusRepository.MISSING_CONFLICTS.contains(newCondition)) {
+                return context.getString(R.string.conflict_missing_tooth);
             }
         }
 
         if (hasImplantOrPontic) {
-            if (IMPLANT_CONFLICTS.contains(newCondition)) {
-                return context.getString(com.diploma.aerodent.R.string.conflict_implant_tooth);
+            if (ToothStatusRepository.IMPLANT_CONFLICTS.contains(newCondition)) {
+                return context.getString(R.string.conflict_implant_tooth);
             }
         }
 
         if (newCondition == DentalCondition.PULPITIS && hasRootCanal) {
-            return context.getString(com.diploma.aerodent.R.string.conflict_root_canal_pulpitis);
+            return context.getString(R.string.conflict_root_canal_pulpitis);
         }
 
         return null;

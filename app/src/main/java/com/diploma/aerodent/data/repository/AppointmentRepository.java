@@ -35,10 +35,6 @@ public class AppointmentRepository {
         return appointmentDao.getAppointmentsForPatient(patientId);
     }
 
-    public LiveData<List<Appointment>> getAppointmentsByStatus(String status) {
-        return appointmentDao.getAppointmentsByStatus(status);
-    }
-
     public LiveData<List<Appointment>> getAppointmentsBetweenDates(Date startDate, Date endDate) {
         return appointmentDao.getAppointmentsBetweenDates(startDate, endDate);
     }

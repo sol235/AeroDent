@@ -6,14 +6,14 @@ import java.util.Date;
 
 public class EgnUtils {
 
-    private static boolean validateFormat(String egn) {
-        return egn != null && egn.length() == 10 && egn.matches("\\d{10}");
+    private static boolean isInvalidFormat(String egn) {
+        return egn == null || egn.length() != 10 || !egn.matches("\\d{10}");
     }
 
    // Validating EGN
 
     public static boolean isValidEgn(String egn) {
-        if (!validateFormat(egn)) {
+        if (isInvalidFormat(egn)) {
             return false;
         }
 
@@ -40,7 +40,7 @@ public class EgnUtils {
     // Get date of birth from EGN
 
     public static Date getBirthDate(String egn) {
-        if (!validateFormat(egn)) {
+        if (isInvalidFormat(egn)) {
             return null;
         }
 

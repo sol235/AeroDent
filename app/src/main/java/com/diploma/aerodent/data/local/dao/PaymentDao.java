@@ -10,7 +10,6 @@ import androidx.room.Update;
 
 import com.diploma.aerodent.data.local.entity.Payment;
 
-import java.util.Date;
 import java.util.List;
 
 @Dao

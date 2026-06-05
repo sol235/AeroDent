@@ -73,7 +73,6 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
                 application,
                 appContainer.getPatientRepository(),
                 appContainer.getAppointmentRepository(),
-                appContainer.getProcedureLogRepository(),
                 appContainer.getPaymentRepository()
             );
         }
@@ -81,8 +80,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new HomeViewModel(
                 application,
                 appContainer.getPatientRepository(),
-                appContainer.getAppointmentRepository(),
-                appContainer.getPaymentRepository()
+                appContainer.getAppointmentRepository()
             );
         }
         if (modelClass.isAssignableFrom(CalendarViewModel.class)) {
@@ -103,12 +101,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(ExportViewModel.class)) {
             return (T) new ExportViewModel(
                 application,
-                appContainer.getPatientRepository(),
-                appContainer.getAppointmentRepository(),
-                appContainer.getPaymentRepository(),
-                appContainer.getUserRepository(),
-                appContainer.getToothStatusRepository(),
-                appContainer.getProcedureLogRepository()
+                appContainer.getExportRepository()
             );
         }
         throw new IllegalArgumentException("Unknown ViewModel class " + modelClass.getName());

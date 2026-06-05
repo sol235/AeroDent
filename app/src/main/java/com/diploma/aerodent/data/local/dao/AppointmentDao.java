@@ -38,17 +38,8 @@ public interface AppointmentDao {
     @Query("SELECT * FROM appointments WHERE id = :appointmentId LIMIT 1")
     LiveData<Appointment> getAppointmentById(int appointmentId);
 
-    @Query("SELECT * FROM appointments WHERE id = :appointmentId LIMIT 1")
-    Appointment getAppointmentByIdSync(int appointmentId);
-
     @Query("SELECT * FROM appointments WHERE patientId = :patientId ORDER BY dateTime DESC")
     LiveData<List<Appointment>> getAppointmentsForPatient(int patientId);
-
-    @Query("SELECT * FROM appointments WHERE patientId = :patientId ORDER BY dateTime DESC")
-    List<Appointment> getAppointmentsForPatientSync(int patientId);
-
-    @Query("SELECT * FROM appointments WHERE status = :status ORDER BY dateTime ASC")
-    LiveData<List<Appointment>> getAppointmentsByStatus(String status);
 
     //Used for calendar view integration
 

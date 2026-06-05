@@ -19,9 +19,7 @@ import com.diploma.aerodent.data.local.entity.Patient;
 import com.diploma.aerodent.data.local.entity.Payment;
 import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
 import com.diploma.aerodent.ui.patients.PatientViewModel;
-import com.diploma.aerodent.ui.payment.PaymentViewModel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.List;

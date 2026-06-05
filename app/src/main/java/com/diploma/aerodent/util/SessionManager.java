@@ -49,6 +49,29 @@ public class SessionManager {
         return prefs.getString(KEY_LOGGED_IN_USER_NAME, null);
     }
 
+    public String getFormattedLoggedInUserName() {
+        String currentUserName = getLoggedInUserName();
+        String currentUserRole = getLoggedInUserRole();
+
+        if (currentUserName == null || currentUserRole == null) {
+            return currentUserName;
+        }
+
+        String formattedName = currentUserName;
+        String lowerName = currentUserName.toLowerCase();
+        
+        if (currentUserRole.equals("DENTIST") || currentUserRole.equals("ADMIN")) {
+            if (!lowerName.startsWith("д-р")) {
+                formattedName = "д-р " + currentUserName;
+            }
+        } else if (currentUserRole.equals("ASSISTANT")) {
+            if (!lowerName.startsWith("ас.")) {
+                formattedName = "ас. " + currentUserName;
+            }
+        }
+        return formattedName;
+    }
+
 
 
     // Global Clinic Settings

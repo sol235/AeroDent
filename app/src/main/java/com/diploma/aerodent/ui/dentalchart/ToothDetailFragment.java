@@ -16,11 +16,25 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import com.diploma.aerodent.R;
+import com.diploma.aerodent.data.local.entity.ToothStatus;
 import com.diploma.aerodent.data.local.model.DentalCondition;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,14 +52,14 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
     private LinearLayout containerSurfaceToggles;
     private TextView textSurfaceLegend;
     private ToggleButton[] surfaceToggles;
-    private com.google.android.material.button.MaterialButtonToggleGroup toggleContext;
-    private com.google.android.material.button.MaterialButton btnContextAppointment;
+    private MaterialButtonToggleGroup toggleContext;
+    private MaterialButton btnContextAppointment;
     private MaterialButton btnSaveCondition;
 
     private DentalCondition pendingCondition;
     private TextView selectedConditionView;
-    private List<com.diploma.aerodent.data.local.entity.ToothStatus> currentStatuses;
-    private java.util.Map<DentalCondition, TextView> conditionViews = new java.util.HashMap<>();
+    private List<ToothStatus> currentStatuses;
+    private Map<DentalCondition, TextView> conditionViews = new HashMap<>();
 
     public static ToothDetailFragment newInstance(int toothNumber) {
         ToothDetailFragment fragment = new ToothDetailFragment();
@@ -91,15 +105,15 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
         recyclerActiveConditions.setLayoutManager(new LinearLayoutManager(getContext()));
         activeAdapter = new ActiveConditionsAdapter(new ActiveConditionsAdapter.OnConditionInteractionListener() {
             @Override
-            public void onDeleteClick(com.diploma.aerodent.data.local.entity.ToothStatus status) {
+            public void onDeleteClick(ToothStatus status) {
                 viewModel.deleteToothStatus(toothNumber, status.getCondition());
             }
 
             @Override
-            public void onConditionClick(com.diploma.aerodent.data.local.entity.ToothStatus status) {
+            public void onConditionClick(ToothStatus status) {
                 if (status.getAppointmentId() != null) {
                     dismiss();
-                    androidx.fragment.app.Fragment parent = getParentFragment();
+                    Fragment parent = getParentFragment();
                     if (parent instanceof DentalChartFragment) {
                         ((DentalChartFragment) parent).navigateToAppointment(status.getAppointmentId());
                     }
@@ -141,10 +155,10 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
                 break;
         }
 
-        android.graphics.drawable.Drawable headerDot = null;
+        Drawable headerDot = null;
         if (categoryColorResId != 0) {
-            headerDot = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.dot_circle).mutate();
-            headerDot.setTint(androidx.core.content.ContextCompat.getColor(requireContext(), categoryColorResId));
+            headerDot = ContextCompat.getDrawable(requireContext(), R.drawable.dot_circle).mutate();
+            headerDot.setTint(ContextCompat.getColor(requireContext(), categoryColorResId));
         }
 
         TextView header = new TextView(getContext(), null, 0, R.style.CategoryHeaderStyle);
@@ -152,7 +166,7 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
         header.setCompoundDrawablesWithIntrinsicBounds(
             headerDot,
             null,
-            androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_right),
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_right),
             null
         );
         header.setCompoundDrawablePadding((int) (12 * getResources().getDisplayMetrics().density));
@@ -168,14 +182,13 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
                 View child = containerCategories.getChildAt(i);
                 if (child instanceof LinearLayout) {
                     child.setVisibility(View.GONE);
-                } else if (child instanceof TextView) {
-                    TextView childTv = (TextView) child;
-                    android.graphics.drawable.Drawable[] drawables = childTv.getCompoundDrawables();
-                    android.graphics.drawable.Drawable childDot = drawables[0];
+                } else if (child instanceof TextView childTv) {
+                    Drawable[] drawables = childTv.getCompoundDrawables();
+                    Drawable childDot = drawables[0];
                     childTv.setCompoundDrawablesWithIntrinsicBounds(
                         childDot,
                         null,
-                        androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_right),
+                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_right),
                         null
                     );
                 }
@@ -183,12 +196,12 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
 
             if (!isVisible) {
                 itemsContainer.setVisibility(View.VISIBLE);
-                android.graphics.drawable.Drawable[] drawables = header.getCompoundDrawables();
-                android.graphics.drawable.Drawable currentDot = drawables[0];
+                Drawable[] drawables = header.getCompoundDrawables();
+                Drawable currentDot = drawables[0];
                 header.setCompoundDrawablesWithIntrinsicBounds(
                     currentDot,
                     null,
-                    androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_back),
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_back),
                     null
                 );
             }
@@ -201,8 +214,8 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
 
             int itemColorResId = condition.getColorResId();
             if (itemColorResId != 0) {
-                android.graphics.drawable.Drawable itemDot = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.dot_circle).mutate();
-                itemDot.setTint(androidx.core.content.ContextCompat.getColor(requireContext(), itemColorResId));
+                Drawable itemDot = ContextCompat.getDrawable(requireContext(), R.drawable.dot_circle).mutate();
+                itemDot.setTint(ContextCompat.getColor(requireContext(), itemColorResId));
                 item.setCompoundDrawablesWithIntrinsicBounds(itemDot, null, null, null);
                 item.setCompoundDrawablePadding((int) (12 * getResources().getDisplayMetrics().density));
             }
@@ -233,25 +246,25 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
     private void onConditionClicked(DentalCondition condition, TextView clickedView) {
         String conflictWarning = checkConditionConflict(condition);
         if (conflictWarning != null) {
-            com.google.android.material.snackbar.Snackbar snackbar = com.google.android.material.snackbar.Snackbar.make(
-                    requireView(), conflictWarning, com.google.android.material.snackbar.Snackbar.LENGTH_LONG);
-            android.widget.TextView tv = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+            Snackbar snackbar = Snackbar.make(
+                    requireView(), conflictWarning, Snackbar.LENGTH_LONG);
+            TextView tv = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
             if (tv != null) {
                 tv.setMaxLines(5);
-                tv.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 15);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             }
             snackbar.show();
             return;
         }
 
         if (selectedConditionView != null) {
-            selectedConditionView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            selectedConditionView.setBackgroundColor(Color.TRANSPARENT);
         }
 
         selectedConditionView = clickedView;
-        selectedConditionView.setBackgroundColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.tertiary));
-        selectedConditionView.setTypeface(null, android.graphics.Typeface.BOLD);
-        selectedConditionView.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.primary));
+        selectedConditionView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.tertiary));
+        selectedConditionView.setTypeface(null, Typeface.BOLD);
+        selectedConditionView.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary));
         selectedConditionView.setAlpha(1.0f);
         
         updateConditionViewsState();
@@ -273,7 +286,7 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
             containerSurfaceToggles.setVisibility(View.VISIBLE);
             textSurfaceLegend.setVisibility(View.VISIBLE);
 
-            java.util.List<String> existingSurfaces = viewModel.getExistingSurfaces(currentStatuses, condition);
+            List<String> existingSurfaces = viewModel.getExistingSurfaces(currentStatuses, condition);
 
             String[] codes = viewModel.getSurfaceCodes();
             for (int i = 0; i < surfaceToggles.length; i++) {
@@ -292,7 +305,7 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
 
         boolean isCurrentAppointment = toggleContext.getCheckedButtonId() == R.id.btn_context_appointment;
 
-        java.util.List<String> selectedSurfaces = new java.util.ArrayList<>();
+        List<String> selectedSurfaces = new ArrayList<>();
         if (pendingCondition.requiresSurfaces()) {
             String[] codes = viewModel.getSurfaceCodes();
             for (int i = 0; i < surfaceToggles.length; i++) {
@@ -307,7 +320,7 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
         pendingCondition = null;
 
         if (selectedConditionView != null) {
-            selectedConditionView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            selectedConditionView.setBackgroundColor(Color.TRANSPARENT);
             selectedConditionView = null;
             updateConditionViewsState();
         }
@@ -323,13 +336,13 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
 
     private void updateConditionViewsState() {
         if (conditionViews == null || currentStatuses == null) return;
-        android.content.Context context = getContext();
+        Context context = getContext();
         if (context == null) return;
 
-        int textSecondaryColor = androidx.core.content.ContextCompat.getColor(context, R.color.text_secondary);
-        int blackColor = androidx.core.content.ContextCompat.getColor(context, R.color.black);
+        int textSecondaryColor = ContextCompat.getColor(context, R.color.text_secondary);
+        int blackColor = ContextCompat.getColor(context, R.color.black);
 
-        for (java.util.Map.Entry<DentalCondition, TextView> entry : conditionViews.entrySet()) {
+        for (Map.Entry<DentalCondition, TextView> entry : conditionViews.entrySet()) {
             DentalCondition condition = entry.getKey();
             TextView view = entry.getValue();
 
@@ -338,11 +351,11 @@ public class ToothDetailFragment extends BottomSheetDialogFragment {
             boolean hasConflict = checkConditionConflict(condition) != null;
             if (hasConflict) {
                 view.setTextColor(textSecondaryColor);
-                view.setTypeface(null, android.graphics.Typeface.NORMAL);
+                view.setTypeface(null, Typeface.NORMAL);
                 view.setAlpha(0.5f);
             } else {
                 view.setTextColor(blackColor);
-                view.setTypeface(null, android.graphics.Typeface.BOLD);
+                view.setTypeface(null, Typeface.BOLD);
                 view.setAlpha(1.0f);
             }
         }

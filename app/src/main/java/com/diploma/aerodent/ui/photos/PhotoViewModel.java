@@ -1,7 +1,6 @@
 package com.diploma.aerodent.ui.photos;
 
 import android.app.Application;
-import android.content.Context;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -39,25 +38,9 @@ public class PhotoViewModel extends AndroidViewModel {
         return repository.getPhotoById(photoId);
     }
 
-    public void insertPhoto(Photo photo) {
-        repository.insert(photo);
-    }
 
-    public File createImageFile(Context context, int patientId) throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        
-        // Private storage: files/AeroDent/Photos/patient_{id}/
-        File storageDir = new File(context.getFilesDir(), "AeroDent/Photos/patient_" + patientId);
-        if (!storageDir.exists()) {
-            storageDir.mkdirs();
-        }
-        
-        return File.createTempFile(
-                imageFileName,
-                ".jpg",
-                storageDir
-        );
+    public File createImageFile(int patientId) throws IOException {
+        return repository.createImageFile(patientId);
     }
 
     public void savePhoto(int patientId, Integer appointmentId, String filePath) {
@@ -75,35 +58,12 @@ public class PhotoViewModel extends AndroidViewModel {
     }
 
     public void savePhotoFromUri(Uri uri, int patientId, Integer appointmentId) {
-        try {
-            File photoFile = createImageFile(getApplication(), patientId);
-            java.io.InputStream inputStream = getApplication().getContentResolver().openInputStream(uri);
-            if (inputStream == null) return;
-            
-            java.io.OutputStream outputStream = new java.io.FileOutputStream(photoFile);
-            
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = inputStream.read(buf)) > 0) {
-                outputStream.write(buf, 0, len);
-            }
-            
-            outputStream.close();
-            inputStream.close();
-            
-            savePhoto(patientId, appointmentId, photoFile.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Date now = new Date();
+        String description = getApplication().getString(R.string.photo_taken_on) + new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(now);
+        repository.savePhotoFromUri(uri, patientId, appointmentId, description);
     }
 
     public void deletePhoto(Photo photo) {
-        if (photo.getFilePath() != null) {
-            File file = new File(photo.getFilePath());
-            if (file.exists()) {
-                file.delete();
-            }
-        }
         repository.delete(photo);
     }
 }

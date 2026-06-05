@@ -16,7 +16,6 @@ import com.diploma.aerodent.data.repository.UserRepository;
 import com.diploma.aerodent.util.SessionManager;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,7 +25,6 @@ public class UserViewModel extends AndroidViewModel {
     private final SessionManager sessionManager;
     private final MutableLiveData<User> currentUser = new MutableLiveData<>();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    
     private final LiveData<List<User>> allUsers;
     private final LiveData<List<User>> activeUsers;
     private final MediatorLiveData<List<User>> visibleUsers = new MediatorLiveData<>();
@@ -39,10 +37,10 @@ public class UserViewModel extends AndroidViewModel {
         sessionManager = new SessionManager(application);
         allUsers = userRepository.getAllUsers();
         activeUsers = userRepository.getActiveUsers();
-        
+
         visibleUsers.addSource(allUsers, users -> updateVisibleUsers());
         visibleUsers.addSource(currentUser, user -> updateVisibleUsers());
-        
+
         loadCurrentUser();
     }
 
@@ -50,17 +48,16 @@ public class UserViewModel extends AndroidViewModel {
         return currentUser;
     }
 
-    public LiveData<List<User>> getAllUsers() { return allUsers; }
     public LiveData<List<User>> getActiveUsers() { return activeUsers; }
-    
+
     public LiveData<List<User>> getVisibleUsers() { return visibleUsers; }
-    
+
     private void updateVisibleUsers() {
         List<User> users = allUsers.getValue();
         User user = currentUser.getValue();
-        
+
         if (users == null) return;
-        
+
         if (user != null && user.getRole() == UserRole.DENTIST) {
             java.util.List<User> filtered = new java.util.ArrayList<>();
             for (User u : users) {
@@ -75,11 +72,11 @@ public class UserViewModel extends AndroidViewModel {
     }
     public LiveData<Boolean> getActionComplete() { return actionComplete; }
     public LiveData<String> getErrorMessage() { return errorMessage; }
-    
+
     public void resetActionComplete() {
         actionComplete.setValue(false);
     }
-    
+
     public void resetErrorMessage() {
         errorMessage.setValue(null);
     }
@@ -90,7 +87,7 @@ public class UserViewModel extends AndroidViewModel {
 
     public void loadCurrentUser() {
         String userId = sessionManager.getLoggedInUserId();
-        
+
         if (userId != null) {
             executorService.execute(() -> {
                 User user = userRepository.getUserByIdSync(userId);
@@ -163,7 +160,6 @@ public class UserViewModel extends AndroidViewModel {
                 User user;
                 if (isNew) {
                     user = new User();
-                    user.setId(UUID.randomUUID().toString());
                 } else {
                     user = userRepository.getUserByIdSync(userId);
                     if (user == null) {
@@ -176,7 +172,7 @@ public class UserViewModel extends AndroidViewModel {
                 user.setRole(role);
                 user.setPin(pin);
                 user.setActive(isActive);
-                
+
                 if (role == UserRole.DENTIST || role == UserRole.ADMIN) {
                     user.setUin(uin);
                     user.setSpecialty(specialty);
@@ -203,6 +199,7 @@ public class UserViewModel extends AndroidViewModel {
             }
         });
     }
+
     public void logout() {
         sessionManager.logoutUser();
         currentUser.postValue(null);

@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.diploma.aerodent.R;
-import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.ui.appointments.AddAppointmentFragment;
 import com.diploma.aerodent.ui.appointments.AppointmentDetailFragment;
 

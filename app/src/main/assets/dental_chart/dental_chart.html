@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <title>Dental Chart</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <style>
         body {
@@ -106,7 +107,7 @@
                 console.log("updateChart called with: " + JSON.stringify(colorsMap));
                 window.resetAllTeeth('#FFFFFF');
                 if (!colorsMap) return;
-                
+
                 for (var toothNumber in colorsMap) {
                     var color = colorsMap[toothNumber];
                     var element = document.getElementById('fill_' + toothNumber);

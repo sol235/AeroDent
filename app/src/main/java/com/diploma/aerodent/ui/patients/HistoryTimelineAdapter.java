@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diploma.aerodent.R;
 import com.diploma.aerodent.data.local.entity.Appointment;
 import com.diploma.aerodent.data.local.entity.Payment;
+import com.diploma.aerodent.ui.patients.PatientDetailViewModel.PatientHistoryItem;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
