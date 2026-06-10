@@ -33,6 +33,11 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
+    testOptions {
+        unitTests.all {
+            jvmArgs += ["-XX:+EnableDynamicAgentLoading"]
+        }
+    }
 }
 
 dependencies {
@@ -41,6 +46,8 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.material
     testImplementation libs.junit
+    testImplementation 'org.mockito:mockito-core:5.23.0'
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit
 
@@ -63,4 +70,7 @@ dependencies {
 
     // PhotoView for pinch to zoom
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    // Gson for JSON serialization
+    implementation 'com.google.code.gson:gson:2.14.0'
 }
