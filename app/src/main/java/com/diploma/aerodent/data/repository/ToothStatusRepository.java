@@ -73,6 +73,12 @@ public class ToothStatusRepository {
     }
 
     public void deleteStatus(int patientId, int toothNumber, DentalCondition condition) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            deleteStatusSync(patientId, toothNumber, condition);
+        });
+    }
+
+    private void deleteStatusSync(int patientId, int toothNumber, DentalCondition condition) {
         toothStatusDao.deleteStatus(patientId, toothNumber, condition);
     }
 
@@ -96,30 +102,30 @@ public class ToothStatusRepository {
 
     private void clearConflicts(int patientId, int toothNumber, DentalCondition condition, String surfaces, List<ToothStatus> currentStatuses) {
         switch (condition) {
-            case HEALTHY:
-                deleteAllStatusesForTooth(patientId, toothNumber);
-                break;
-            case MISSING:
-                deleteSpecificStatusesForTooth(patientId, toothNumber, MISSING_CONFLICTS);
-                break;
-            case IMPLANT:
-            case PONTIC_FIXED:
-            case PONTIC_REMOVABLE:
-                deleteSpecificStatusesForTooth(patientId, toothNumber, IMPLANT_CONFLICTS);
-                break;
-            case ROOT_CANAL:
-                deleteStatus(patientId, toothNumber, DentalCondition.PULPITIS);
-                break;
-            case CROWN:
-                deleteStatus(patientId, toothNumber, DentalCondition.CARIES);
-                deleteStatus(patientId, toothNumber, DentalCondition.FRACTURE);
-                deleteStatus(patientId, toothNumber, DentalCondition.OBTURATION);
-                break;
-            case OBTURATION:
-                clearObturationConflicts(patientId, toothNumber, surfaces, currentStatuses);
-                break;
-            default:
-                break;
+        case HEALTHY:
+            deleteAllStatusesForTooth(patientId, toothNumber);
+            break;
+        case MISSING:
+            deleteSpecificStatusesForTooth(patientId, toothNumber, MISSING_CONFLICTS);
+            break;
+        case IMPLANT:
+        case PONTIC_FIXED:
+        case PONTIC_REMOVABLE:
+            deleteSpecificStatusesForTooth(patientId, toothNumber, IMPLANT_CONFLICTS);
+            break;
+        case ROOT_CANAL:
+            deleteStatusSync(patientId, toothNumber, DentalCondition.PULPITIS);
+            break;
+        case CROWN:
+            deleteStatusSync(patientId, toothNumber, DentalCondition.CARIES);
+            deleteStatusSync(patientId, toothNumber, DentalCondition.FRACTURE);
+            deleteStatusSync(patientId, toothNumber, DentalCondition.OBTURATION);
+            break;
+        case OBTURATION:
+            clearObturationConflicts(patientId, toothNumber, surfaces, currentStatuses);
+            break;
+        default:
+            break;
         }
     }
 
@@ -157,7 +163,7 @@ public class ToothStatusRepository {
         }
 
         if (remaining.isEmpty()) {
-            deleteStatus(patientId, toothNumber, condition);
+            deleteStatusSync(patientId, toothNumber, condition);
         } else {
             String remainingStr = android.text.TextUtils.join(",", remaining);
             status.setSurfaces(remainingStr);

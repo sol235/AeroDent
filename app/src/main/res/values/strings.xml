@@ -80,7 +80,7 @@
     <string name="patient_details_zok">Номер на ЗОК: %1$s</string>
     <string name="patient_details_phone_label">Телефон</string>
     <string name="patient_details_email_label">Имейл</string>
-    <string name="patient_details_dob">Роден: %1$s</string>
+    <string name="patient_details_dob">Дата на раждане: %1$s</string>
     <string name="payment_status_due">Дължимо %1$.2f EUR</string>
 
     <!-- General -->
@@ -234,8 +234,8 @@
     <string name="setup_admin_uin">УИН на лекаря</string>
     <string name="setup_admin_uin_helper">(Уникален идентификационен номер)</string>
     <string name="setup_admin_specialty">Специалност</string>
-    <string name="setup_admin_rzi">РЗИ код (10 цифри)</string>
-    <string name="setup_admin_rzi_helper">(Код на Регионална здравна инспекция на клиниката)</string>
+    <string name="setup_admin_rzi">Код на лечебното заведение (10 цифри)</string>
+    <string name="setup_admin_rzi_helper">(Код на лечебното заведение в РЗИ)</string>
     <string name="setup_admin_save">Създай профил</string>
     <string name="setup_admin_error_empty">Попълнете всички задължителни полета</string>
     <string name="setup_admin_error_pin_match">ПИН кодовете не съвпадат</string>
@@ -270,11 +270,11 @@
     <string name="user_role">Роля</string>
     <string name="user_saved_success">Данните са запазени успешно</string>
     <string name="user_edit_title">Редактиране</string>
-    <string name="user_add_title">Добавяне на служител</string>
+    <string name="user_add_title">Добавяне на потребител</string>
     <string name="user_save_changes">Запази промените</string>
-    <string name="user_save_employee">Запази служител</string>
+    <string name="user_save_employee">Запази потребител</string>
     <string name="user_edit_admin_title">Редактиране на администратор</string>
-    <string name="user_edit_employee_title">Редактиране на служител</string>
+    <string name="user_edit_employee_title">Редактиране на потребител</string>
 
     <!-- Login -->
     <string name="login_select_user">Изберете потребител</string>
